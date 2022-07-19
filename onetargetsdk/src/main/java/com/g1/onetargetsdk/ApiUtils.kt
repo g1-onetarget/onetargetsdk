@@ -5,7 +5,7 @@ class ApiUtils {
         private const val baseURL = "https://api.stackexchange.com/2.2/"
 
         @JvmStatic
-        val sOService: SOService
-            get() = RetrofitClient.getClient(baseURL).create(SOService::class.java)
+        val sOService: TrackingService
+            get() = RetrofitClient.getClient(baseURL).create(TrackingService::class.java)
     }
 }

@@ -7,10 +7,6 @@ import java.io.Serializable
 
 @Keep
 class SOAnswersResponse : Serializable {
-    @SerializedName("items")
-    @Expose
-    var items: List<Item>? = null
-
     @SerializedName("has_more")
     @Expose
     var hasMore: Boolean? = null
