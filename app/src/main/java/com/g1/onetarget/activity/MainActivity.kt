@@ -1,17 +1,15 @@
 package com.g1.onetarget.activity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.g1.onetarget.R
-import com.g1.onetarget.adapter.AnswersAdapter
 import com.g1.onetargetsdk.ApiUtils
 import com.g1.onetargetsdk.SOService
 import com.g1.onetargetsdk.model.SOAnswersResponse
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +22,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var mService: SOService? = null
-    private var mAdapter: AnswersAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,52 +49,21 @@ class MainActivity : AppCompatActivity() {
         btTestTracking.setOnClickListener {
             track()
         }
-
-        mAdapter = AnswersAdapter(
-            mItems = ArrayList(0),
-            mItemListener = object : AnswersAdapter.PostItemListener {
-                override fun onPostClick(id: Long) {
-
-                }
-            }
-        )
-
-        rvAnswers.apply {
-            this.layoutManager = LinearLayoutManager(context)
-            this.adapter = mAdapter
-            this.setHasFixedSize(true)
-            val itemDecoration: RecyclerView.ItemDecoration =
-                DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            this.addItemDecoration(itemDecoration)
-        }
-
     }
 
+    @SuppressLint("SetTextI18n")
     private fun track() {
-        loadAnswers()
-    }
-
-    private fun loadAnswers() {
-        log("loadAnswers")
+        tv.text = "Loading..."
         mService?.answers?.enqueue(object : Callback<SOAnswersResponse> {
             override fun onResponse(
                 call: Call<SOAnswersResponse>,
                 response: Response<SOAnswersResponse>
             ) {
-                log("onResponse ${response.body()}")
-                if (response.isSuccessful) {
-                    response.body()?.items?.let {
-                        mAdapter?.updateAnswers(it)
-                    }
-                } else {
-                    val statusCode = response.code()
-                    print(statusCode)
-                    // handle request errors depending on status code
-                }
+                tv.text = "onResponse ${Gson().toJson(response.body())}"
             }
 
             override fun onFailure(call: Call<SOAnswersResponse>, t: Throwable) {
-                log("onFailure $t")
+                tv.text = "onFailure $t"
             }
         })
     }
