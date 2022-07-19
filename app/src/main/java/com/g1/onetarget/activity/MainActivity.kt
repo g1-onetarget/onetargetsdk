@@ -3,7 +3,6 @@ package com.g1.onetarget.activity
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetarget.R
 import com.g1.onetargetsdk.Analytics
@@ -57,12 +56,14 @@ class MainActivity : AppCompatActivity() {
                 call: Call<Void>,
                 response: Response<Void>
             ) {
-                Log.e("loitpp", "response ${response.isSuccessful}")
-                tv.text = "onResponse ${Gson().toJson(response.body())}"
+                tv.text =
+                    "onResponse" +
+                            "\nisSuccessful: ${response.isSuccessful}" +
+                            "\ncode: ${response.code()}" +
+                            "\nbody: ${Gson().toJson(response.body())}"
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Log.e("loitpp", "onFailure $t")
                 tv.text = "onFailure $t"
             }
         })
