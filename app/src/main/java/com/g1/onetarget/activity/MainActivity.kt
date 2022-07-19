@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetarget.R
 import com.g1.onetargetsdk.ApiUtils
-import com.g1.onetargetsdk.model.SOAnswersResponse
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -46,15 +45,15 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun track() {
         tv.text = "Loading..."
-        ApiUtils.sOService.answers.enqueue(object : Callback<SOAnswersResponse> {
+        ApiUtils.sOService.answers.enqueue(object : Callback<Any> {
             override fun onResponse(
-                call: Call<SOAnswersResponse>,
-                response: Response<SOAnswersResponse>
+                call: Call<Any>,
+                response: Response<Any>
             ) {
                 tv.text = "onResponse ${Gson().toJson(response.body())}"
             }
 
-            override fun onFailure(call: Call<SOAnswersResponse>, t: Throwable) {
+            override fun onFailure(call: Call<Any>, t: Throwable) {
                 tv.text = "onFailure $t"
             }
         })

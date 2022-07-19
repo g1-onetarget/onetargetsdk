@@ -1,10 +1,9 @@
 package com.g1.onetargetsdk
 
-import com.g1.onetargetsdk.model.SOAnswersResponse
 import retrofit2.Call
 import retrofit2.http.GET
 
 interface TrackingService {
     @get:GET("/answers?order=desc&sort=activity&site=stackoverflow")
-    val answers: Call<SOAnswersResponse>
+    val answers: Call<Any>
 }
