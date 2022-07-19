@@ -1,11 +1,11 @@
 package com.g1.onetargetsdk
 
-class ApiUtils {
+class Analytics {
     companion object {
-        private const val baseURL = "https://api.stackexchange.com/2.2/"
+        private const val baseURL = "https://dev-pixel.cdp.link/"
 
         @JvmStatic
-        val sOService: TrackingService
+        val service: TrackingService
             get() = RetrofitClient.getClient(baseURL).create(TrackingService::class.java)
     }
 }
