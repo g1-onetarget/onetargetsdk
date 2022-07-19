@@ -1,6 +1,6 @@
-package com.g1.onetarget
+package com.g1.onetargetsdk
 
-import com.g1.onetarget.model.SOAnswersResponse
+import com.g1.onetargetsdk.model.SOAnswersResponse
 import retrofit2.Call
 import retrofit2.http.GET
 

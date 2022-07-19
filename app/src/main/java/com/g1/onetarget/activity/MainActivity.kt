@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.g1.onetarget.AnswersAdapter
-import com.g1.onetarget.ApiUtils
 import com.g1.onetarget.R
-import com.g1.onetarget.SOService
-import com.g1.onetarget.model.SOAnswersResponse
+import com.g1.onetarget.adapter.AnswersAdapter
+import com.g1.onetargetsdk.ApiUtils
+import com.g1.onetargetsdk.SOService
+import com.g1.onetargetsdk.model.SOAnswersResponse
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback

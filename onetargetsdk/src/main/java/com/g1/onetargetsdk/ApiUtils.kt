@@ -1,4 +1,4 @@
-package com.g1.onetarget
+package com.g1.onetargetsdk
 
 class ApiUtils {
     companion object {

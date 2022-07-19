@@ -1,4 +1,4 @@
-package com.g1.onetarget.model
+package com.g1.onetargetsdk.model
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.Expose

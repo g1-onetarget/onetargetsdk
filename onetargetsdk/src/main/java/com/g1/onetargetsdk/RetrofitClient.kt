@@ -1,4 +1,4 @@
-package com.g1.onetarget
+package com.g1.onetargetsdk
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

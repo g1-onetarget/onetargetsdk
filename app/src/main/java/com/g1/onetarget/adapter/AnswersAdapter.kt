@@ -1,4 +1,4 @@
-package com.g1.onetarget
+package com.g1.onetarget.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.g1.onetarget.model.Item
+import com.g1.onetarget.R
+import com.g1.onetargetsdk.model.Item
 
 class AnswersAdapter(
     private var mItems: List<Item>,
