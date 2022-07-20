@@ -44,14 +44,15 @@ class MainActivity : AppCompatActivity() {
         tv.text = "Loading..."
         Analytics.track(
             eventName = "page_view",
-            eventData = "{pageTitle:Passenger Information,pagePath:/passengers/}",
+            properties = "{pageTitle:Passenger Information,pagePath:/passengers/}",
             { response ->
                 tv.text =
                     "onResponse" +
                             "\nisSuccessful: ${response.isSuccessful}" +
                             "\ncode: ${response.code()}" +
                             "\nbody: ${Gson().toJson(response.body())}"
-            }, { t ->
+            },
+            { t ->
                 tv.text = "onFailure $t"
             }
         )

@@ -6,7 +6,6 @@ import retrofit2.Response
 
 class Analytics {
     companion object {
-        private const val baseURL = "https://dev-pixel.cdp.link/"
         private var analyticsConfiguration: AnalyticsConfiguration? = null
 
         fun setup(analyticsConfiguration: AnalyticsConfiguration) {
@@ -17,36 +16,45 @@ class Analytics {
         }
 
         @JvmStatic
-        private val service: TrackingService
-            get() = RetrofitClient.getClient(baseURL).create(TrackingService::class.java)
+        private fun service(): TrackingService? {
+            if (this.analyticsConfiguration == null) {
+                throw IllegalArgumentException("analyticsConfiguration not found")
+            }
+            val baseUrl = this.analyticsConfiguration?.getBaseUrl()
+            if (baseUrl.isNullOrEmpty()) {
+                throw IllegalArgumentException("base url cannot be null or empty")
+            }
+            return RetrofitClient.getClient(baseUrl).create(TrackingService::class.java)
+        }
 
         @JvmStatic
         fun track(
             eventName: String?,
-            eventData: String?,
+            properties: String?,
             onResponse: ((Response<Void>) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             if (eventName.isNullOrEmpty()) {
                 return
             }
-            if (eventData.isNullOrEmpty()) {
+            if (properties.isNullOrEmpty()) {
                 return
             }
             val workspaceId = this.analyticsConfiguration?.writeKey
             if (workspaceId.isNullOrEmpty()) {
                 return
             }
+            //TODO iplm
             val identityId =
                 "{web_push_player_id:cda154be-a37d-11ec-9d5f-52ceecedd8ea,email:example@gmail.com,phone:039889981}"
             val eventDate = System.currentTimeMillis()
-            service.track(
+            service()?.track(
                 workspace_id = workspaceId,
                 identity_id = identityId,
                 event_name = eventName,
                 event_date = eventDate.toString(),
-                eventData = eventData,
-            ).enqueue(object : Callback<Void> {
+                eventData = properties,
+            )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
                     call: Call<Void>,
                     response: Response<Void>
