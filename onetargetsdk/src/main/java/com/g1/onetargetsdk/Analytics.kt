@@ -1,5 +1,9 @@
 package com.g1.onetargetsdk
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.provider.Settings
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,9 +49,13 @@ class Analytics {
                 return
             }
 
-            //TODO
-            val deviceId = "cda154be-a37d-11ec-9d5f-52ceecedd8ea"
-            val dataDeviceId = "web_push_player_id:$deviceId"
+            val deviceId = this.analyticsConfiguration?.deviceId
+            var dataDeviceId = ""
+            if (deviceId.isNullOrEmpty()) {
+                //do nothing
+            } else {
+                dataDeviceId = "web_push_player_id:$deviceId"
+            }
 
             val email = this.analyticsConfiguration?.email
             var dataEmail = ""
@@ -66,6 +74,7 @@ class Analytics {
             }
 
             val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
+            Log.e("loitpp", "identityId $identityId")
             val eventDate = System.currentTimeMillis().toString()
             service()?.track(
                 workspace_id = workspaceId,
@@ -85,6 +94,14 @@ class Analytics {
                     onFailure?.invoke(t)
                 }
             })
+        }
+
+        @SuppressLint("HardwareIds")
+        fun getDeviceId(context: Context): String {
+            return Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
         }
     }
 }
