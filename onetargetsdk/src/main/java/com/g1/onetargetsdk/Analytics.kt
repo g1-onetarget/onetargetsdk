@@ -44,15 +44,34 @@ class Analytics {
             if (workspaceId.isNullOrEmpty()) {
                 return
             }
-            //TODO iplm
-            val identityId =
-                "{web_push_player_id:cda154be-a37d-11ec-9d5f-52ceecedd8ea,email:example@gmail.com,phone:039889981}"
-            val eventDate = System.currentTimeMillis()
+
+            //TODO
+            val deviceId = "cda154be-a37d-11ec-9d5f-52ceecedd8ea"
+            val dataDeviceId = "web_push_player_id:$deviceId"
+
+            val email = this.analyticsConfiguration?.email
+            var dataEmail = ""
+            if (email.isNullOrEmpty()) {
+                //do nothing
+            } else {
+                dataEmail = ",email:$email"
+            }
+
+            val phone = this.analyticsConfiguration?.phone
+            var dataPhone = ""
+            if (phone.isNullOrEmpty()) {
+                //do nothing
+            } else {
+                dataPhone = ",phone:$phone"
+            }
+
+            val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
+            val eventDate = System.currentTimeMillis().toString()
             service()?.track(
                 workspace_id = workspaceId,
                 identity_id = identityId,
                 event_name = eventName,
-                event_date = eventDate.toString(),
+                event_date = eventDate,
                 eventData = properties,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(

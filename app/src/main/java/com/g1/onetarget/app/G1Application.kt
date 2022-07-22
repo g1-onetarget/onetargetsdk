@@ -12,6 +12,8 @@ class G1Application : Application() {
         val configuration = AnalyticsConfiguration()
         configuration.setEnvironmentDev()
         configuration.writeKey = "ab44219f-dc9e-4080-943c-a127bd071da3"
+        configuration.email = "example@gmail.com"
+        configuration.phone = "039889981"
 
         Analytics.setup(configuration)
     }
