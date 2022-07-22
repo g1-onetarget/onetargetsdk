@@ -2,15 +2,22 @@ package com.g1.onetargetsdk
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+
 
 class Analytics {
     companion object {
         private var analyticsConfiguration: AnalyticsConfiguration? = null
+
+        private fun logD(msg: String) {
+            Log.e("loitpp", msg)
+        }
 
         fun setup(analyticsConfiguration: AnalyticsConfiguration) {
             if (analyticsConfiguration.writeKey.isNullOrEmpty()) {
@@ -74,7 +81,7 @@ class Analytics {
             }
 
             val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
-            Log.e("loitpp", "identityId $identityId")
+            logD("identityId $identityId")
             val eventDate = System.currentTimeMillis().toString()
             service()?.track(
                 workspace_id = workspaceId,
@@ -98,10 +105,25 @@ class Analytics {
 
         @SuppressLint("HardwareIds")
         fun getDeviceId(context: Context): String {
-            return Settings.Secure.getString(
+
+            val androidId = Settings.Secure.getString(
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
+            logD("androidId $androidId")
+            if (androidId.isNotEmpty()) {
+                return androidId
+            }
+
+            val uniquePseudoID =
+                "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
+            logD("uniquePseudoID $uniquePseudoID")
+            val serial = Build.getRadioVersion()
+            logD("serial $serial")
+            val uuid: String =
+                UUID(uniquePseudoID.hashCode().toLong(), serial.hashCode().toLong()).toString()
+            logD("uuid $uuid")
+            return uuid
         }
     }
 }
