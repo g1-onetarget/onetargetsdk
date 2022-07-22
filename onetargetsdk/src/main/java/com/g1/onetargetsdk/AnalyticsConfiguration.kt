@@ -3,7 +3,7 @@ package com.g1.onetargetsdk
 class AnalyticsConfiguration {
     companion object {
         const val BASE_URL_DEV = "https://dev-pixel.cdp.link/"
-        const val BASE_URL_PROD = ""//TODO
+        const val BASE_URL_PROD = "https://pixel.cdp.link/"
     }
 
     var writeKey: String? = null
