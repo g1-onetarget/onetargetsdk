@@ -20,21 +20,33 @@ class Analytics {
             Log.d(Analytics::class.java.simpleName, msg)
         }
 
-        fun setup(analyticsConfiguration: AnalyticsConfiguration) {
+        private fun logE(msg: String) {
+            Log.d(Analytics::class.java.simpleName, msg)
+        }
+
+        fun setup(analyticsConfiguration: AnalyticsConfiguration): Boolean {
             if (analyticsConfiguration.writeKey.isNullOrEmpty()) {
-                throw IllegalArgumentException("writeKey cannot be null or empty")
+                logE("writeKey cannot be null or empty")
+                return false
+            }
+            if (analyticsConfiguration.getBaseUrl().isEmpty()) {
+                logE("base url cannot be null or empty")
+                return false
             }
             this.analyticsConfiguration = analyticsConfiguration
+            return true
         }
 
         @JvmStatic
         private fun service(): TrackingService? {
             if (this.analyticsConfiguration == null) {
-                throw IllegalArgumentException("analyticsConfiguration not found")
+                logE("analyticsConfiguration not found")
+                return null
             }
             val baseUrl = this.analyticsConfiguration?.getBaseUrl()
             if (baseUrl.isNullOrEmpty()) {
-                throw IllegalArgumentException("base url cannot be null or empty")
+                logE("base url cannot be null or empty")
+                return null
             }
             return RetrofitClient.getClient(baseUrl).create(TrackingService::class.java)
         }
@@ -48,13 +60,16 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             if (eventName.isNullOrEmpty()) {
+                onFailure?.invoke(Throwable("Event name is invalid"))
                 return
             }
             if (properties.isNullOrEmpty()) {
+                onFailure?.invoke(Throwable("properties is invalid"))
                 return
             }
             val workspaceId = this.analyticsConfiguration?.writeKey
             if (workspaceId.isNullOrEmpty()) {
+                onFailure?.invoke(Throwable("writeKey is invalid"))
                 return
             }
 
@@ -114,7 +129,6 @@ class Analytics {
 
         @SuppressLint("HardwareIds")
         fun getDeviceId(context: Context): String {
-
             val androidId = Settings.Secure.getString(
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
