@@ -14,7 +14,7 @@ import com.google.gson.Gson
 class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btTestTracking: AppCompatButton? = null
-    private var tv: AppCompatTextView? = null
+    private var tvOutput: AppCompatTextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
         btTestTracking = findViewById(R.id.btTestTracking)
-        tv = findViewById(R.id.tv)
+        tvOutput = findViewById(R.id.tvOutput)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let { actionBar ->
@@ -52,19 +52,19 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun track() {
-        tv?.text = "Loading..."
+        tvOutput?.text = "Loading..."
         Analytics.track(
             eventName = "page_view",
             properties = "{pageTitle:Passenger Information,pagePath:/passengers/}",
             { response ->
-                tv?.text =
+                tvOutput?.text =
                     "onResponse" +
                             "\nisSuccessful: ${response.isSuccessful}" +
                             "\ncode: ${response.code()}" +
                             "\nbody: ${Gson().toJson(response.body())}"
             },
             { t ->
-                tv?.text = "onFailure $t"
+                tvOutput?.text = "onFailure $t"
             }
         )
     }
