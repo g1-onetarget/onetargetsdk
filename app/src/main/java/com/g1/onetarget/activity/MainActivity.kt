@@ -3,6 +3,7 @@ package com.g1.onetarget.activity
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -10,10 +11,12 @@ import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetargetsdk.Analytics
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btTestTracking: AppCompatButton? = null
+    private var tvInput: AppCompatTextView? = null
     private var tvOutput: AppCompatTextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
         btTestTracking = findViewById(R.id.btTestTracking)
+        tvInput = findViewById(R.id.tvInput)
         tvOutput = findViewById(R.id.tvOutput)
 
         setSupportActionBar(toolbar)
@@ -52,20 +56,32 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun track() {
+        tvInput?.text = ""
         tvOutput?.text = "Loading..."
         Analytics.track(
             eventName = "page_view",
             properties = "{pageTitle:Passenger Information,pagePath:/passengers/}",
-            { response ->
+            onPreExecute = { input ->
+                printBeautyJson(input, tvInput)
+            },
+            onResponse = { response ->
                 tvOutput?.text =
                     "onResponse" +
                             "\nisSuccessful: ${response.isSuccessful}" +
                             "\ncode: ${response.code()}" +
                             "\nbody: ${Gson().toJson(response.body())}"
             },
-            { t ->
+            onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
             }
         )
+    }
+
+    private fun printBeautyJson(o: Any, textView: TextView?) {
+        textView?.let { tv ->
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val json = gson.toJson(o)
+            tv.text = json
+        }
     }
 }

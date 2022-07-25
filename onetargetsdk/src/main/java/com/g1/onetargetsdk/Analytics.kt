@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import com.g1.onetargetsdk.model.Input
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,7 +17,7 @@ class Analytics {
         private var analyticsConfiguration: AnalyticsConfiguration? = null
 
         private fun logD(msg: String) {
-            Log.e("loitpp", msg)
+            Log.d(Analytics::class.java.simpleName, msg)
         }
 
         fun setup(analyticsConfiguration: AnalyticsConfiguration) {
@@ -42,6 +43,7 @@ class Analytics {
         fun track(
             eventName: String?,
             properties: String?,
+            onPreExecute: ((Input) -> Unit)? = null,
             onResponse: ((Response<Void>) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
@@ -83,6 +85,13 @@ class Analytics {
             val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
             logD("identityId $identityId")
             val eventDate = System.currentTimeMillis().toString()
+            val input = Input()
+            input.workspaceId = workspaceId
+            input.identityId = identityId
+            input.eventName = eventName
+            input.eventDate = eventDate
+            input.eventData = properties
+            onPreExecute?.invoke(input)
             service()?.track(
                 workspace_id = workspaceId,
                 identity_id = identityId,
