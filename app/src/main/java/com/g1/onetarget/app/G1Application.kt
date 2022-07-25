@@ -10,6 +10,10 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        setupTracking()
+    }
+
+    private fun setupTracking() {
         val configuration = AnalyticsConfiguration()
         configuration.setEnvironmentDev()
 //        configuration.setEnvironmentProd()
