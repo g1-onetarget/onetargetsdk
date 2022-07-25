@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetargetsdk.Analytics
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private var toolbar: Toolbar? = null
+    private var btTestTracking: AppCompatButton? = null
+    private var tv: AppCompatTextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,37 +28,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
+        toolbar = findViewById(R.id.toolbar)
+        btTestTracking = findViewById(R.id.btTestTracking)
+        tv = findViewById(R.id.tv)
+
         setSupportActionBar(toolbar)
         supportActionBar?.let { actionBar ->
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
-            toolbar.title = getString(R.string.app_name)
-            toolbar.setTitleTextColor(Color.WHITE)
-            toolbar.setNavigationOnClickListener {
-                onBackPressed()
+            toolbar?.apply {
+                title = getString(R.string.app_name)
+                setTitleTextColor(Color.WHITE)
+                setNavigationOnClickListener {
+                    onBackPressed()
+                }
             }
         }
 
-        btTestTracking.setOnClickListener {
+        btTestTracking?.setOnClickListener {
             track()
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun track() {
-        tv.text = "Loading..."
+        tv?.text = "Loading..."
         Analytics.track(
             eventName = "page_view",
             properties = "{pageTitle:Passenger Information,pagePath:/passengers/}",
             { response ->
-                tv.text =
+                tv?.text =
                     "onResponse" +
                             "\nisSuccessful: ${response.isSuccessful}" +
                             "\ncode: ${response.code()}" +
                             "\nbody: ${Gson().toJson(response.body())}"
             },
             { t ->
-                tv.text = "onFailure $t"
+                tv?.text = "onFailure $t"
             }
         )
     }
