@@ -44,7 +44,7 @@ class Analytics {
             eventName: String?,
             properties: String?,
             onPreExecute: ((Input) -> Unit)? = null,
-            onResponse: ((Response<Void>) -> Unit)? = null,
+            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             if (eventName.isNullOrEmpty()) {
@@ -103,7 +103,7 @@ class Analytics {
                     call: Call<Void>,
                     response: Response<Void>
                 ) {
-                    onResponse?.invoke(response)
+                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {

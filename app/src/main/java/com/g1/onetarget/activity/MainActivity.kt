@@ -64,12 +64,12 @@ class MainActivity : AppCompatActivity() {
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
             },
-            onResponse = { response ->
+            onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
                     "onResponse" +
-                            "\nisSuccessful: ${response.isSuccessful}" +
-                            "\ncode: ${response.code()}" +
-                            "\nbody: ${Gson().toJson(response.body())}"
+                            "\nisSuccessful: $isSuccessful" +
+                            "\ncode: $code" +
+                            "\nresponse body: ${Gson().toJson(response)}"
             },
             onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
