@@ -58,9 +58,14 @@ class MainActivity : AppCompatActivity() {
     private fun track() {
         tvInput?.text = ""
         tvOutput?.text = "Loading..."
-        Analytics.track(
-            eventName = "page_view",
-            properties = "{pageTitle:Passenger Information,pagePath:/passengers/}",
+
+        val properties = HashMap<String, String>()
+        properties["pageTitle"] = "Passenger Information"
+        properties["pagePath"] = "/home"
+
+        Analytics.trackEvent(
+            eventName = "event_name",
+            properties = Gson().toJson(properties),
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
             },

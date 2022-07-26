@@ -14,7 +14,7 @@ import java.util.*
 
 class Analytics {
     companion object {
-        private var analyticsConfiguration: AnalyticsConfiguration? = null
+        private var configuration: Configuration? = null
 
         private fun logD(msg: String) {
             Log.d(Analytics::class.java.simpleName, msg)
@@ -24,26 +24,26 @@ class Analytics {
             Log.d(Analytics::class.java.simpleName, msg)
         }
 
-        fun setup(analyticsConfiguration: AnalyticsConfiguration): Boolean {
-            if (analyticsConfiguration.writeKey.isNullOrEmpty()) {
+        fun setup(configuration: Configuration): Boolean {
+            if (configuration.writeKey.isNullOrEmpty()) {
                 logE("writeKey cannot be null or empty")
                 return false
             }
-            if (analyticsConfiguration.getBaseUrl().isEmpty()) {
+            if (configuration.getBaseUrl().isEmpty()) {
                 logE("base url cannot be null or empty")
                 return false
             }
-            this.analyticsConfiguration = analyticsConfiguration
+            this.configuration = configuration
             return true
         }
 
         @JvmStatic
         private fun service(): TrackingService? {
-            if (this.analyticsConfiguration == null) {
+            if (this.configuration == null) {
                 logE("analyticsConfiguration not found")
                 return null
             }
-            val baseUrl = this.analyticsConfiguration?.getBaseUrl()
+            val baseUrl = this.configuration?.getBaseUrl()
             if (baseUrl.isNullOrEmpty()) {
                 logE("base url cannot be null or empty")
                 return null
@@ -52,7 +52,7 @@ class Analytics {
         }
 
         @JvmStatic
-        fun track(
+        fun trackEvent(
             eventName: String?,
             properties: String?,
             onPreExecute: ((Input) -> Unit)? = null,
@@ -67,13 +67,13 @@ class Analytics {
                 onFailure?.invoke(Throwable("properties is invalid"))
                 return
             }
-            val workspaceId = this.analyticsConfiguration?.writeKey
+            val workspaceId = this.configuration?.writeKey
             if (workspaceId.isNullOrEmpty()) {
                 onFailure?.invoke(Throwable("writeKey is invalid"))
                 return
             }
 
-            val deviceId = this.analyticsConfiguration?.deviceId
+            val deviceId = this.configuration?.deviceId
             var dataDeviceId = ""
             if (deviceId.isNullOrEmpty()) {
                 //do nothing
@@ -81,7 +81,7 @@ class Analytics {
                 dataDeviceId = "web_push_player_id:$deviceId"
             }
 
-            val email = this.analyticsConfiguration?.email
+            val email = this.configuration?.email
             var dataEmail = ""
             if (email.isNullOrEmpty()) {
                 //do nothing
@@ -89,7 +89,7 @@ class Analytics {
                 dataEmail = ",email:$email"
             }
 
-            val phone = this.analyticsConfiguration?.phone
+            val phone = this.configuration?.phone
             var dataPhone = ""
             if (phone.isNullOrEmpty()) {
                 //do nothing
