@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
             toolbar?.apply {
-                title = getString(R.string.app_name)
+                title = getString(R.string.app_name_sample)
                 setTitleTextColor(Color.WHITE)
                 setNavigationOnClickListener {
                     onBackPressed()

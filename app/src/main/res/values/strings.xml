@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">OneTarget</string>
+    <string name="app_name">OneTargetMobileSDK</string>
+    <string name="app_name_sample">OneTarget Sample</string>
 </resources>
