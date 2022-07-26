@@ -96,23 +96,20 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventByObject() {
-        val identityId = HashMap<String, Any>()
-        identityId["user_id"] = "User${System.currentTimeMillis()}"
-        identityId["phone"] = "0123456789"
-        identityId["email"] = "loitp@galaxy.one"
-        identityId["deviceId"] = Analytics.getDeviceId(this)
-        val eventName = "event_name"
-        val eventDate = System.currentTimeMillis()
-        val eventData = HashMap<String, Any>()
-        eventData["pageTitle"] = "Passenger Information"
-        eventData["pagePath"] = "/home"
-
         val monitorEvent = MonitorEvent()
         monitorEvent.workspaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
-        monitorEvent.identityId = identityId
-        monitorEvent.eventName = eventName
-        monitorEvent.eventDate = eventDate
-        monitorEvent.eventData = eventData
+        monitorEvent.identityId = hashMapOf(
+            "user_id" to "User${System.currentTimeMillis()}",
+            "phone" to "0123456789",
+            "email" to "loitp@galaxy.one",
+            "deviceId" to Analytics.getDeviceId(this)
+        )
+        monitorEvent.eventName = "event_name"
+        monitorEvent.eventDate = System.currentTimeMillis()
+        monitorEvent.eventData = hashMapOf(
+            "pageTitle" to "Passenger Information",
+            "pagePath" to "/home"
+        )
 
         Analytics.trackEvent(
             monitorEvent = monitorEvent,
