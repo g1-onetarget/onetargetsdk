@@ -16,7 +16,8 @@ import com.google.gson.GsonBuilder
 
 class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
-    private var btTestTracking: AppCompatButton? = null
+    private var btTestTrackingByParams: AppCompatButton? = null
+    private var btTestTrackingByObject: AppCompatButton? = null
     private var tvInput: AppCompatTextView? = null
     private var tvOutput: AppCompatTextView? = null
 
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
-        btTestTracking = findViewById(R.id.btTestTracking)
+        btTestTrackingByParams = findViewById(R.id.btTestTrackingByParams)
+        btTestTrackingByObject = findViewById(R.id.btTestTrackingByObject)
         tvInput = findViewById(R.id.tvInput)
         tvOutput = findViewById(R.id.tvOutput)
 
@@ -50,9 +52,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        btTestTracking?.setOnClickListener {
-            //you have 2 options
-//            trackEventByParams()
+        btTestTrackingByParams?.setOnClickListener {
+            trackEventByParams()
+        }
+        btTestTrackingByObject?.setOnClickListener {
             trackEventByObject()
         }
     }
@@ -60,16 +63,18 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun trackEventByParams() {
         val workSpaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
-        val identityId = HashMap<String, Any>()
-        identityId["user_id"] = "User${System.currentTimeMillis()}"
-        identityId["phone"] = "0123456789"
-        identityId["email"] = "loitp@galaxy.one"
-        identityId["deviceId"] = Analytics.getDeviceId(this)
+        val identityId = hashMapOf<String, Any>(
+            "user_id" to "Params${System.currentTimeMillis()}",
+            "phone" to "0123456789",
+            "email" to "loitp@galaxy.one",
+            "deviceId" to Analytics.getDeviceId(this)
+        )
         val eventName = "event_name"
         val eventDate = System.currentTimeMillis()
-        val eventData = HashMap<String, Any>()
-        eventData["pageTitle"] = "Passenger Information"
-        eventData["pagePath"] = "/home"
+        val eventData = hashMapOf<String, Any>(
+            "pageTitle" to "Passenger Information",
+            "pagePath" to "/home"
+        )
 
         Analytics.trackEvent(
             workSpaceId = workSpaceId,
@@ -99,16 +104,17 @@ class MainActivity : AppCompatActivity() {
         val monitorEvent = MonitorEvent()
         monitorEvent.workspaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
         monitorEvent.identityId = hashMapOf(
-            "user_id" to "User${System.currentTimeMillis()}",
+            "user_id" to "Object${System.currentTimeMillis()}",
             "phone" to "0123456789",
             "email" to "loitp@galaxy.one",
             "deviceId" to Analytics.getDeviceId(this)
         )
-        monitorEvent.eventName = "event_name"
+        monitorEvent.eventName = "track_now_event"
         monitorEvent.eventDate = System.currentTimeMillis()
         monitorEvent.eventData = hashMapOf(
-            "pageTitle" to "Passenger Information",
-            "pagePath" to "/home"
+            "name" to "Loitp",
+            "bod" to "01/01/2000",
+            "player_id" to 123456
         )
 
         Analytics.trackEvent(
