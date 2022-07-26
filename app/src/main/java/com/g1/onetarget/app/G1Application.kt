@@ -18,10 +18,6 @@ class G1Application : Application() {
         configuration.setEnvironmentDev()
 //        configuration.setEnvironmentProd()
         configuration.writeKey = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
-        configuration.email = "loitp@galaxy.one"
-        configuration.phone = "039889981"
-        configuration.deviceId = Analytics.getDeviceId(this)
-
         val result = Analytics.setup(configuration)
         Log.d(G1Application::class.java.simpleName, "setup result $result")
     }

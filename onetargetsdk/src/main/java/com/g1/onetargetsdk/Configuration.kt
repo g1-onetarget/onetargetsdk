@@ -7,9 +7,6 @@ class Configuration {
     }
 
     var writeKey: String? = null
-    var email: String? = null
-    var phone: String? = null
-    var deviceId: String? = null
     private var baseUrl: String = BASE_URL_DEV//default dev environment
 
     fun setEnvironmentDev() {

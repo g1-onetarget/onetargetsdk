@@ -54,51 +54,30 @@ class Analytics {
         @JvmStatic
         fun trackEvent(
             eventName: String?,
+            identityId: String?,
             properties: String?,
             onPreExecute: ((Input) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
+            val workspaceId = this.configuration?.writeKey
+            if (workspaceId.isNullOrEmpty()) {
+                onFailure?.invoke(Throwable("writeKey is invalid"))
+                return
+            }
+            logD("identityId $identityId")
             if (eventName.isNullOrEmpty()) {
                 onFailure?.invoke(Throwable("Event name is invalid"))
+                return
+            }
+            if (identityId.isNullOrEmpty()) {
+                onFailure?.invoke(Throwable("identityId is invalid"))
                 return
             }
             if (properties.isNullOrEmpty()) {
                 onFailure?.invoke(Throwable("properties is invalid"))
                 return
             }
-            val workspaceId = this.configuration?.writeKey
-            if (workspaceId.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("writeKey is invalid"))
-                return
-            }
-
-            val deviceId = this.configuration?.deviceId
-            var dataDeviceId = ""
-            if (deviceId.isNullOrEmpty()) {
-                //do nothing
-            } else {
-                dataDeviceId = "web_push_player_id:$deviceId"
-            }
-
-            val email = this.configuration?.email
-            var dataEmail = ""
-            if (email.isNullOrEmpty()) {
-                //do nothing
-            } else {
-                dataEmail = ",email:$email"
-            }
-
-            val phone = this.configuration?.phone
-            var dataPhone = ""
-            if (phone.isNullOrEmpty()) {
-                //do nothing
-            } else {
-                dataPhone = ",phone:$phone"
-            }
-
-            val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
-            logD("identityId $identityId")
             val eventDate = System.currentTimeMillis().toString()
             val input = Input()
             input.workspaceId = workspaceId

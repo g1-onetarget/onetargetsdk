@@ -59,12 +59,19 @@ class MainActivity : AppCompatActivity() {
         tvInput?.text = ""
         tvOutput?.text = "Loading..."
 
+        val identityId = HashMap<String, String>()
+        identityId["user_id"] = "123"
+        identityId["phone"] = "0123456789"
+        identityId["email"] = "loitp@galaxy.one"
+        identityId["deviceId"] = Analytics.getDeviceId(this)
+
         val properties = HashMap<String, String>()
         properties["pageTitle"] = "Passenger Information"
         properties["pagePath"] = "/home"
 
         Analytics.trackEvent(
             eventName = "event_name",
+            identityId = Gson().toJson(identityId),
             properties = Gson().toJson(properties),
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
