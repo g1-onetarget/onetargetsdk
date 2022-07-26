@@ -26,10 +26,10 @@ class Analytics {
         }
 
         fun setup(configuration: Configuration): Boolean {
-            if (configuration.writeKey.isNullOrEmpty()) {
-                logE("writeKey cannot be null or empty")
-                return false
-            }
+//            if (configuration.writeKey.isNullOrEmpty()) {
+//                logE("writeKey cannot be null or empty")
+//                return false
+//            }
             if (configuration.getBaseUrl().isEmpty()) {
                 logE("base url cannot be null or empty")
                 return false
