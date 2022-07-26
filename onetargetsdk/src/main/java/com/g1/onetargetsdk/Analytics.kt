@@ -100,7 +100,7 @@ class Analytics {
                 workspace_id = tmpWorkspaceId,
                 identity_id = identityId,
                 event_name = eventName,
-                event_date = eventDate,
+                event_date = tmpEventDate,
                 eventData = eventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
