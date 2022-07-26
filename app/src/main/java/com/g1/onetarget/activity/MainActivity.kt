@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetargetsdk.Analytics
+import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -50,7 +51,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         btTestTracking?.setOnClickListener {
-            trackEventByParams()
+            //you have 2 options
+//            trackEventByParams()
+            trackEventByObject()
         }
     }
 
@@ -74,6 +77,45 @@ class MainActivity : AppCompatActivity() {
             eventName = eventName,
             eventDate = eventDate,
             eventData = eventData,
+            onPreExecute = { input ->
+                printBeautyJson(input, tvInput)
+                tvOutput?.text = "Loading..."
+            },
+            onResponse = { isSuccessful, code, response ->
+                tvOutput?.text =
+                    "onResponse" +
+                            "\nisSuccessful: $isSuccessful" +
+                            "\ncode: $code" +
+                            "\nresponse body: ${Gson().toJson(response)}"
+            },
+            onFailure = { t ->
+                tvOutput?.text = "onFailure $t"
+            }
+        )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun trackEventByObject() {
+        val identityId = HashMap<String, Any>()
+        identityId["user_id"] = "User${System.currentTimeMillis()}"
+        identityId["phone"] = "0123456789"
+        identityId["email"] = "loitp@galaxy.one"
+        identityId["deviceId"] = Analytics.getDeviceId(this)
+        val eventName = "event_name"
+        val eventDate = System.currentTimeMillis()
+        val eventData = HashMap<String, Any>()
+        eventData["pageTitle"] = "Passenger Information"
+        eventData["pagePath"] = "/home"
+
+        val monitorEvent = MonitorEvent()
+        monitorEvent.workspaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
+        monitorEvent.identityId = identityId
+        monitorEvent.eventName = eventName
+        monitorEvent.eventDate = eventDate
+        monitorEvent.eventData = eventData
+
+        Analytics.trackEvent(
+            monitorEvent = monitorEvent,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
                 tvOutput?.text = "Loading..."

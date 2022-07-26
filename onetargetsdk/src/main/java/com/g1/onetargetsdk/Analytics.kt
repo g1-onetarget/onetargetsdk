@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import com.g1.onetargetsdk.model.Input
+import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,12 +54,34 @@ class Analytics {
 
         @JvmStatic
         fun trackEvent(
+            monitorEvent: MonitorEvent,
+            onPreExecute: ((MonitorEvent) -> Unit)? = null,
+            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+            onFailure: ((Throwable) -> Unit)? = null,
+        ) {
+            val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
+            val jsonEventData = Gson().toJson(monitorEvent.eventData)
+            val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
+            onPreExecute?.invoke(monitorEvent)
+            callApiTrack(
+                monitorEvent.workspaceId,
+                jsonIdentityId,
+                monitorEvent.eventName,
+                tmpEventDate,
+                jsonEventData,
+                onResponse,
+                onFailure,
+            )
+        }
+
+        @JvmStatic
+        fun trackEvent(
             workSpaceId: String?,
             identityId: HashMap<String, Any>?,
             eventName: String?,
             eventDate: Long?,
             eventData: HashMap<String, Any>?,
-            onPreExecute: ((Input) -> Unit)? = null,
+            onPreExecute: ((MonitorEvent) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
@@ -86,21 +108,41 @@ class Analytics {
 //                return
 //            }
             val tmpEventDate = eventDate ?: System.currentTimeMillis()
-            val input = Input()
-            input.workspaceId = tmpWorkspaceId
-            input.identityId = identityId
-            input.eventName = eventName
-            input.eventDate = tmpEventDate
-            input.eventData = eventData
-            onPreExecute?.invoke(input)
+            val monitorEvent = MonitorEvent()
+            monitorEvent.workspaceId = tmpWorkspaceId
+            monitorEvent.identityId = identityId
+            monitorEvent.eventName = eventName
+            monitorEvent.eventDate = tmpEventDate
+            monitorEvent.eventData = eventData
+            onPreExecute?.invoke(monitorEvent)
 
             val jsonIdentityId = Gson().toJson(identityId)
             val jsonEventData = Gson().toJson(eventData)
+            callApiTrack(
+                tmpWorkspaceId,
+                jsonIdentityId,
+                eventName,
+                tmpEventDate,
+                jsonEventData,
+                onResponse,
+                onFailure,
+            )
+        }
+
+        private fun callApiTrack(
+            workSpaceId: String?,
+            jsonIdentityId: String?,
+            eventName: String?,
+            eventDate: Long,
+            jsonEventData: String?,
+            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+            onFailure: ((Throwable) -> Unit)? = null,
+        ) {
             service()?.track(
-                workspace_id = tmpWorkspaceId,
+                workspace_id = workSpaceId,
                 identity_id = jsonIdentityId,
                 event_name = eventName,
-                event_date = tmpEventDate.toString(),
+                event_date = eventDate.toString(),
                 eventData = jsonEventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
