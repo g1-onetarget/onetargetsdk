@@ -60,18 +60,16 @@ class MainActivity : AppCompatActivity() {
         tvOutput?.text = "Loading..."
 
         val workSpaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
-        val mapIdentityId = HashMap<String, String>()
-        mapIdentityId["user_id"] = "User${System.currentTimeMillis()}"
-        mapIdentityId["phone"] = "0123456789"
-        mapIdentityId["email"] = "loitp@galaxy.one"
-        mapIdentityId["deviceId"] = Analytics.getDeviceId(this)
-        val identityId = Gson().toJson(mapIdentityId)
+        val identityId = HashMap<String, Any>()
+        identityId["user_id"] = "User${System.currentTimeMillis()}"
+        identityId["phone"] = "0123456789"
+        identityId["email"] = "loitp@galaxy.one"
+        identityId["deviceId"] = Analytics.getDeviceId(this)
         val eventName = "event_name"
-        val eventDate = System.currentTimeMillis().toString()
-        val mapEventData = HashMap<String, String>()
-        mapEventData["pageTitle"] = "Passenger Information"
-        mapEventData["pagePath"] = "/home"
-        val eventData = Gson().toJson(mapEventData)
+        val eventDate = System.currentTimeMillis()
+        val eventData = HashMap<String, Any>()
+        eventData["pageTitle"] = "Passenger Information"
+        eventData["pagePath"] = "/home"
 
         Analytics.trackEvent(
             workSpaceId = workSpaceId,

@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import com.g1.onetargetsdk.model.Input
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,10 +55,10 @@ class Analytics {
         @JvmStatic
         fun trackEvent(
             workSpaceId: String?,
-            identityId: String?,
+            identityId: HashMap<String, Any>?,
             eventName: String?,
-            eventDate: String?,
-            eventData: String?,
+            eventDate: Long?,
+            eventData: HashMap<String, Any>?,
             onPreExecute: ((Input) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
@@ -84,11 +85,7 @@ class Analytics {
 //                onFailure?.invoke(Throwable("properties is invalid"))
 //                return
 //            }
-            val tmpEventDate = if (eventDate.isNullOrEmpty()) {
-                System.currentTimeMillis().toString()
-            } else {
-                eventDate
-            }
+            val tmpEventDate = eventDate ?: System.currentTimeMillis()
             val input = Input()
             input.workspaceId = tmpWorkspaceId
             input.identityId = identityId
@@ -96,12 +93,15 @@ class Analytics {
             input.eventDate = tmpEventDate
             input.eventData = eventData
             onPreExecute?.invoke(input)
+
+            val jsonIdentityId = Gson().toJson(identityId)
+            val jsonEventData = Gson().toJson(eventData)
             service()?.track(
                 workspace_id = tmpWorkspaceId,
-                identity_id = identityId,
+                identity_id = jsonIdentityId,
                 event_name = eventName,
-                event_date = tmpEventDate,
-                eventData = eventData,
+                event_date = tmpEventDate.toString(),
+                eventData = jsonEventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
                     call: Call<Void>,
