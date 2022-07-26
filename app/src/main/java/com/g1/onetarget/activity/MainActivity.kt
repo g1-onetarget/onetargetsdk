@@ -50,15 +50,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         btTestTracking?.setOnClickListener {
-            trackEvent()
+            trackEventByParams()
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun trackEvent() {
-        tvInput?.text = ""
-        tvOutput?.text = "Loading..."
-
+    private fun trackEventByParams() {
         val workSpaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
         val identityId = HashMap<String, Any>()
         identityId["user_id"] = "User${System.currentTimeMillis()}"
@@ -79,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
+                tvOutput?.text = "Loading..."
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
