@@ -53,45 +53,55 @@ class Analytics {
 
         @JvmStatic
         fun trackEvent(
-            eventName: String?,
+            workSpaceId: String?,
             identityId: String?,
-            properties: String?,
+            eventName: String?,
+            eventDate: String?,
+            eventData: String?,
             onPreExecute: ((Input) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
-            val workspaceId = this.configuration?.writeKey
-            if (workspaceId.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("writeKey is invalid"))
-                return
+            val tmpWorkspaceId = if (workSpaceId.isNullOrEmpty()) {
+                this.configuration?.writeKey
+            } else {
+                workSpaceId
             }
-            logD("identityId $identityId")
-            if (eventName.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("Event name is invalid"))
-                return
+//            if (tmpWorkspaceId.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("writeKey is invalid"))
+//                return
+//            }
+//            logD("identityId $identityId")
+//            if (eventName.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("Event name is invalid"))
+//                return
+//            }
+//            if (identityId.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("identityId is invalid"))
+//                return
+//            }
+//            if (properties.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("properties is invalid"))
+//                return
+//            }
+            val tmpEventDate = if (eventDate.isNullOrEmpty()) {
+                System.currentTimeMillis().toString()
+            } else {
+                eventDate
             }
-            if (identityId.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("identityId is invalid"))
-                return
-            }
-            if (properties.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("properties is invalid"))
-                return
-            }
-            val eventDate = System.currentTimeMillis().toString()
             val input = Input()
-            input.workspaceId = workspaceId
+            input.workspaceId = tmpWorkspaceId
             input.identityId = identityId
             input.eventName = eventName
-            input.eventDate = eventDate
-            input.eventData = properties
+            input.eventDate = tmpEventDate
+            input.eventData = eventData
             onPreExecute?.invoke(input)
             service()?.track(
-                workspace_id = workspaceId,
+                workspace_id = tmpWorkspaceId,
                 identity_id = identityId,
                 event_name = eventName,
                 event_date = eventDate,
-                eventData = properties,
+                eventData = eventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
                     call: Call<Void>,

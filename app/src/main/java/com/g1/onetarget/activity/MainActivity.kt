@@ -50,29 +50,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         btTestTracking?.setOnClickListener {
-            track()
+            trackEvent()
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun track() {
+    private fun trackEvent() {
         tvInput?.text = ""
         tvOutput?.text = "Loading..."
 
-        val identityId = HashMap<String, String>()
-        identityId["user_id"] = "123"
-        identityId["phone"] = "0123456789"
-        identityId["email"] = "loitp@galaxy.one"
-        identityId["deviceId"] = Analytics.getDeviceId(this)
-
-        val properties = HashMap<String, String>()
-        properties["pageTitle"] = "Passenger Information"
-        properties["pagePath"] = "/home"
+        val workSpaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
+        val mapIdentityId = HashMap<String, String>()
+        mapIdentityId["user_id"] = "123"
+        mapIdentityId["phone"] = "0123456789"
+        mapIdentityId["email"] = "loitp@galaxy.one"
+        mapIdentityId["deviceId"] = Analytics.getDeviceId(this)
+        val identityId = Gson().toJson(mapIdentityId)
+        val eventName = "event_name"
+        val eventDate = System.currentTimeMillis().toString()
+        val mapEventData = HashMap<String, String>()
+        mapEventData["pageTitle"] = "Passenger Information"
+        mapEventData["pagePath"] = "/home"
+        val eventData = Gson().toJson(mapEventData)
 
         Analytics.trackEvent(
-            eventName = "event_name",
-            identityId = Gson().toJson(identityId),
-            properties = Gson().toJson(properties),
+            workSpaceId = workSpaceId,
+            identityId = identityId,
+            eventName = eventName,
+            eventDate = eventDate,
+            eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
             },
