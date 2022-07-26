@@ -5,16 +5,16 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import com.g1.onetargetsdk.model.Input
+import com.g1.onetargetsdk.model.MonitorEvent
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-
 class Analytics {
     companion object {
-        private var analyticsConfiguration: AnalyticsConfiguration? = null
+        private var configuration: Configuration? = null
 
         private fun logD(msg: String) {
             Log.d(Analytics::class.java.simpleName, msg)
@@ -24,26 +24,26 @@ class Analytics {
             Log.d(Analytics::class.java.simpleName, msg)
         }
 
-        fun setup(analyticsConfiguration: AnalyticsConfiguration): Boolean {
-            if (analyticsConfiguration.writeKey.isNullOrEmpty()) {
-                logE("writeKey cannot be null or empty")
-                return false
-            }
-            if (analyticsConfiguration.getBaseUrl().isEmpty()) {
+        fun setup(configuration: Configuration): Boolean {
+//            if (configuration.writeKey.isNullOrEmpty()) {
+//                logE("writeKey cannot be null or empty")
+//                return false
+//            }
+            if (configuration.getBaseUrl().isEmpty()) {
                 logE("base url cannot be null or empty")
                 return false
             }
-            this.analyticsConfiguration = analyticsConfiguration
+            this.configuration = configuration
             return true
         }
 
         @JvmStatic
         private fun service(): TrackingService? {
-            if (this.analyticsConfiguration == null) {
+            if (this.configuration == null) {
                 logE("analyticsConfiguration not found")
                 return null
             }
-            val baseUrl = this.analyticsConfiguration?.getBaseUrl()
+            val baseUrl = this.configuration?.getBaseUrl()
             if (baseUrl.isNullOrEmpty()) {
                 logE("base url cannot be null or empty")
                 return null
@@ -52,67 +52,97 @@ class Analytics {
         }
 
         @JvmStatic
-        fun track(
-            eventName: String?,
-            properties: String?,
-            onPreExecute: ((Input) -> Unit)? = null,
+        fun trackEvent(
+            monitorEvent: MonitorEvent,
+            onPreExecute: ((MonitorEvent) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
-            if (eventName.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("Event name is invalid"))
-                return
-            }
-            if (properties.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("properties is invalid"))
-                return
-            }
-            val workspaceId = this.analyticsConfiguration?.writeKey
-            if (workspaceId.isNullOrEmpty()) {
-                onFailure?.invoke(Throwable("writeKey is invalid"))
-                return
-            }
+            val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
+            val jsonEventData = Gson().toJson(monitorEvent.eventData)
+            val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
+            onPreExecute?.invoke(monitorEvent)
+            callApiTrack(
+                monitorEvent.workspaceId,
+                jsonIdentityId,
+                monitorEvent.eventName,
+                tmpEventDate,
+                jsonEventData,
+                onResponse,
+                onFailure,
+            )
+        }
 
-            val deviceId = this.analyticsConfiguration?.deviceId
-            var dataDeviceId = ""
-            if (deviceId.isNullOrEmpty()) {
-                //do nothing
+        @JvmStatic
+        fun trackEvent(
+            workSpaceId: String?,
+            identityId: HashMap<String, Any>?,
+            eventName: String?,
+            eventDate: Long?,
+            eventData: HashMap<String, Any>?,
+            onPreExecute: ((MonitorEvent) -> Unit)? = null,
+            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+            onFailure: ((Throwable) -> Unit)? = null,
+        ) {
+            val tmpWorkspaceId = if (workSpaceId.isNullOrEmpty()) {
+                this.configuration?.writeKey
             } else {
-                dataDeviceId = "web_push_player_id:$deviceId"
+                workSpaceId
             }
+//            if (tmpWorkspaceId.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("writeKey is invalid"))
+//                return
+//            }
+//            logD("identityId $identityId")
+//            if (eventName.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("Event name is invalid"))
+//                return
+//            }
+//            if (identityId.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("identityId is invalid"))
+//                return
+//            }
+//            if (properties.isNullOrEmpty()) {
+//                onFailure?.invoke(Throwable("properties is invalid"))
+//                return
+//            }
+            val tmpEventDate = eventDate ?: System.currentTimeMillis()
+            val monitorEvent = MonitorEvent()
+            monitorEvent.workspaceId = tmpWorkspaceId
+            monitorEvent.identityId = identityId
+            monitorEvent.eventName = eventName
+            monitorEvent.eventDate = tmpEventDate
+            monitorEvent.eventData = eventData
+            onPreExecute?.invoke(monitorEvent)
 
-            val email = this.analyticsConfiguration?.email
-            var dataEmail = ""
-            if (email.isNullOrEmpty()) {
-                //do nothing
-            } else {
-                dataEmail = ",email:$email"
-            }
+            val jsonIdentityId = Gson().toJson(identityId)
+            val jsonEventData = Gson().toJson(eventData)
+            callApiTrack(
+                tmpWorkspaceId,
+                jsonIdentityId,
+                eventName,
+                tmpEventDate,
+                jsonEventData,
+                onResponse,
+                onFailure,
+            )
+        }
 
-            val phone = this.analyticsConfiguration?.phone
-            var dataPhone = ""
-            if (phone.isNullOrEmpty()) {
-                //do nothing
-            } else {
-                dataPhone = ",phone:$phone"
-            }
-
-            val identityId = "{$dataDeviceId$dataEmail$dataPhone}"
-            logD("identityId $identityId")
-            val eventDate = System.currentTimeMillis().toString()
-            val input = Input()
-            input.workspaceId = workspaceId
-            input.identityId = identityId
-            input.eventName = eventName
-            input.eventDate = eventDate
-            input.eventData = properties
-            onPreExecute?.invoke(input)
+        private fun callApiTrack(
+            workSpaceId: String?,
+            jsonIdentityId: String?,
+            eventName: String?,
+            eventDate: Long,
+            jsonEventData: String?,
+            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+            onFailure: ((Throwable) -> Unit)? = null,
+        ) {
             service()?.track(
-                workspace_id = workspaceId,
-                identity_id = identityId,
+                workspace_id = workSpaceId,
+                identity_id = jsonIdentityId,
                 event_name = eventName,
-                event_date = eventDate,
-                eventData = properties,
+                event_date = eventDate.toString(),
+                eventData = jsonEventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
                     call: Call<Void>,

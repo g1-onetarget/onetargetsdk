@@ -4,10 +4,10 @@ import androidx.annotation.Keep
 import java.io.Serializable
 
 @Keep
-class Input : Serializable {
+class MonitorEvent : Serializable {
     var workspaceId: String? = null
-    var identityId: String? = null
+    var identityId: HashMap<String, Any>? = null
     var eventName: String? = null
-    var eventDate: String? = null
-    var eventData: String? = null
+    var eventDate: Long? = null
+    var eventData: HashMap<String, Any>? = null
 }
