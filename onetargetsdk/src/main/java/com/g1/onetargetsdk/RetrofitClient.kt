@@ -8,17 +8,20 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private var retrofit: Retrofit? = null
+    var isShowLogAPI = false
 
     fun getClient(baseUrl: String): Retrofit {
         if (retrofit == null) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-            val client = OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+            val builder = OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .build()
+            if (isShowLogAPI) {
+                builder.addInterceptor(interceptor)
+            }
+            val client = builder.build()
 
             retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
