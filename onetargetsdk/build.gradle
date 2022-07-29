@@ -29,6 +29,7 @@ android {
         jvmTarget = '1.8'
     }
 
+    //https://gitlab.com/g1-data/onetarget-android/-/tags
     //https://jitpack.io/private#com.gitlab.g1-data/onetarget-android
     //Users/loitp/StudioProjects/g1/onetarget-android/onetarget-android/onetargetsdk/build/outputs/aar
     libraryVariants.all { variant ->

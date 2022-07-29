@@ -8,6 +8,7 @@ class Configuration {
 
     var writeKey: String? = null
     private var baseUrl: String = BASE_URL_DEV//default dev environment
+    var isShowLog = false
 
     fun setEnvironmentDev() {
         this.baseUrl = BASE_URL_DEV
