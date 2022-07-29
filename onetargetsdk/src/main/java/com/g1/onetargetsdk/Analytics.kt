@@ -48,7 +48,12 @@ class Analytics {
                 logE("base url cannot be null or empty")
                 return null
             }
-            return RetrofitClient.getClient(baseUrl).create(TrackingService::class.java)
+            val isShowLog = this.configuration?.isShowLog
+            return RetrofitClient.getClient(
+                baseUrl = baseUrl,
+                isShowLogAPI = isShowLog,
+            )
+                .create(TrackingService::class.java)
         }
 
         @JvmStatic
