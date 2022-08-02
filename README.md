@@ -18,8 +18,6 @@ dependencies {
 }
 ```
 
-Xem các version release tại [ĐÂY](https://jitpack.io/private#com.gitlab.g1-data/onetarget-android)
-
 Sau đó,  sync lại project.
 
 
