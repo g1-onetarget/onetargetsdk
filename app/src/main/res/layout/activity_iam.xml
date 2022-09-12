@@ -28,18 +28,12 @@
             android:padding="@dimen/margin_padding_medium">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btSampleTracking"
+                android:id="@+id/btNext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ALLL"
+                android:text="Next"
                 tools:ignore="HardcodedText" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btSampleIAM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ALLLALLL"
-                tools:ignore="HardcodedText" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>
