@@ -12,6 +12,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
+/**
+ * Created by Loitp on 12.09.2022
+ * Galaxy One company,
+ * Vietnam
+ * +840766040293
+ * freuss47@gmail.com
+ */
 class Analytics {
     companion object {
         private var configuration: Configuration? = null

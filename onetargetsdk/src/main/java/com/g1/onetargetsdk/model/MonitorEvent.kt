@@ -3,6 +3,13 @@ package com.g1.onetargetsdk.model
 import androidx.annotation.Keep
 import java.io.Serializable
 
+/**
+ * Created by Loitp on 12.09.2022
+ * Galaxy One company,
+ * Vietnam
+ * +840766040293
+ * freuss47@gmail.com
+ */
 @Keep
 class MonitorEvent : Serializable {
     var workspaceId: String? = null

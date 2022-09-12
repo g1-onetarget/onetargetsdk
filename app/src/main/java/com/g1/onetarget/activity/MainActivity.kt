@@ -14,6 +14,13 @@ import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
+/**
+ * Created by Loitp on 12.09.2022
+ * Galaxy One company,
+ * Vietnam
+ * +840766040293
+ * freuss47@gmail.com
+ */
 class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btTestTrackingByParams: AppCompatButton? = null

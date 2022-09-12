@@ -8,6 +8,13 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetarget.R
 
+/**
+ * Created by Loitp on 12.09.2022
+ * Galaxy One company,
+ * Vietnam
+ * +840766040293
+ * freuss47@gmail.com
+ */
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
