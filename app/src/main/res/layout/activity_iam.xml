@@ -31,14 +31,14 @@
                 android:id="@+id/btSampleTracking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sample Tracking"
+                android:text="ALLL"
                 tools:ignore="HardcodedText" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btSampleIAM"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sample IAM"
+                android:text="ALLLALLL"
                 tools:ignore="HardcodedText" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>

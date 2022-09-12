@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">OneTargetMobileSDK</string>
     <string name="app_name_sample">OneTarget Sample</string>
+    <string name="sample_tracking">Sample Tracking</string>
+    <string name="sample_iam">Sample IAM</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.g1.onetarget.activity
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -15,14 +14,14 @@ import com.g1.onetarget.R
  * +840766040293
  * freuss47@gmail.com
  */
-class MainActivity : AppCompatActivity() {
+class IAMActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btSampleTracking: AppCompatButton? = null
     private var btSampleIAM: AppCompatButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_iam)
 
         setupViews()
     }
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.let { actionBar ->
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
-            actionBar.title = getString(R.string.app_name_sample)
+            actionBar.title = getString(R.string.sample_iam)
             toolbar?.apply {
                 setTitleTextColor(Color.WHITE)
                 setNavigationOnClickListener {
@@ -50,20 +49,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         btSampleTracking?.setOnClickListener {
-            goToTrackingScreen()
         }
         btSampleIAM?.setOnClickListener {
-            goToIAMScreen()
         }
     }
 
-    private fun goToTrackingScreen() {
-        val i = Intent(this, TrackingActivity::class.java)
-        startActivity(i)
-    }
-
-    private fun goToIAMScreen() {
-        val i = Intent(this, IAMActivity::class.java)
-        startActivity(i)
-    }
 }
