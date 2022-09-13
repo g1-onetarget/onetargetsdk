@@ -65,7 +65,17 @@ class IAM {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
-            if (activity == null || activity.isDestroyed || activity.isFinishing) {
+
+            fun isValid(): Boolean {
+                logD("checkIMA activity == null ${activity == null}")
+                logD("checkIMA activity.isDestroyed ${activity?.isDestroyed}")
+                logD("checkIMA activity.isFinishing ${activity?.isFinishing}")
+                if (activity == null || activity.isDestroyed || activity.isFinishing) {
+                    return false
+                }
+                return true
+            }
+            if (!isValid()) {
                 return
             }
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
@@ -79,11 +89,15 @@ class IAM {
                     call: Call<IAMResponse>,
                     response: Response<IAMResponse>
                 ) {
-                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+                    if (isValid()) {
+                        onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+                    }
                 }
 
                 override fun onFailure(call: Call<IAMResponse>, t: Throwable) {
-                    onFailure?.invoke(t)
+                    if (isValid()) {
+                        onFailure?.invoke(t)
+                    }
                 }
             })
         }
