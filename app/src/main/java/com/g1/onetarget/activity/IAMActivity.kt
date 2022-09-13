@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.IAM
+import java.util.*
 
 /**
  * Created by Loitp on 12.09.2022
@@ -20,14 +20,15 @@ import com.g1.onetargetsdk.IAM
  */
 class IAMActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
-    private var btNext: AppCompatButton? = null
     private var tvResponse: AppCompatTextView? = null
+    private var responseData = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_iam)
 
         setupViews()
+        checkIAM()
     }
 
     private fun setupViews() {
@@ -36,7 +37,6 @@ class IAMActivity : AppCompatActivity() {
 
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
-        btNext = findViewById(R.id.btNext)
         tvResponse = findViewById(R.id.tvResponse)
 
         setSupportActionBar(toolbar)
@@ -51,27 +51,33 @@ class IAMActivity : AppCompatActivity() {
                 }
             }
         }
-
-        btNext?.setOnClickListener {
-            onClickButtonNext()
-        }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun onClickButtonNext() {
+    private fun checkIAM() {
         val workSpaceId = C.workSpaceIdForIAM
         val identityId = C.identityIdForIAM
-        tvResponse?.text = "Loading"
+        if (responseData.length > 50_000) {
+            responseData = "..."
+        }
+        responseData = "$responseData\n\n\n>>>Loading ${Calendar.getInstance().time}"
+        tvResponse?.text = responseData
         IAM.checkIAM(
+            activity = this,
             workSpaceId = workSpaceId,
             identityId = identityId,
             onResponse = { isSuccessful, code, response ->
-                tvResponse?.text =
-                    "onResponse isSuccessful $isSuccessful\ncode $code\nresponse $response"
+                responseData = "$responseData\n<<<onResponse isSuccessful $isSuccessful, " +
+                        "code $code, response $response"
+                tvResponse?.text = responseData
+                checkIAM()
             },
             onFailure = { t ->
-                tvResponse?.text = "onFailure $t"
+                responseData = "$responseData\n<<<onFailure $t"
+                tvResponse?.text = responseData
+                checkIAM()
             }
         )
     }
+
 }

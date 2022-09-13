@@ -1,5 +1,6 @@
 package com.g1.onetargetsdk
 
+import android.app.Activity
 import android.util.Log
 import com.g1.onetargetsdk.model.IAMResponse
 import retrofit2.Call
@@ -58,11 +59,15 @@ class IAM {
         }
 
         fun checkIAM(
+            activity: Activity?,
             workSpaceId: String?,
             identityId: String?,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
+            if (activity == null || activity.isDestroyed || activity.isFinishing) {
+                return
+            }
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
