@@ -36,7 +36,7 @@ class Analytics {
 //                logE("writeKey cannot be null or empty")
 //                return false
 //            }
-            if (configuration.getBaseUrl().isEmpty()) {
+            if (configuration.getBaseUrlTracking().isEmpty()) {
                 logE("base url cannot be null or empty")
                 return false
             }
@@ -45,12 +45,12 @@ class Analytics {
         }
 
         @JvmStatic
-        private fun service(): TrackingService? {
+        private fun service(): OneTargetService? {
             if (this.configuration == null) {
-                logE("analyticsConfiguration not found")
+                logE("configuration not found")
                 return null
             }
-            val baseUrl = this.configuration?.getBaseUrl()
+            val baseUrl = this.configuration?.getBaseUrlTracking()
             if (baseUrl.isNullOrEmpty()) {
                 logE("base url cannot be null or empty")
                 return null
@@ -60,7 +60,7 @@ class Analytics {
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
             )
-                .create(TrackingService::class.java)
+                .create(OneTargetService::class.java)
         }
 
         @JvmStatic
@@ -150,10 +150,10 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             service()?.track(
-                workspace_id = workSpaceId,
-                identity_id = jsonIdentityId,
-                event_name = eventName,
-                event_date = eventDate.toString(),
+                workspaceId = workSpaceId,
+                identityId = jsonIdentityId,
+                eventName = eventName,
+                eventDate = eventDate.toString(),
                 eventData = jsonEventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(

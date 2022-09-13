@@ -1,11 +1,15 @@
 package com.g1.onetarget.activity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
+import com.g1.onetarget.common.C
+import com.g1.onetargetsdk.IAM
 
 /**
  * Created by Loitp on 12.09.2022
@@ -17,6 +21,7 @@ import com.g1.onetarget.R
 class IAMActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btNext: AppCompatButton? = null
+    private var tvResponse: AppCompatTextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +37,7 @@ class IAMActivity : AppCompatActivity() {
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
         btNext = findViewById(R.id.btNext)
+        tvResponse = findViewById(R.id.tvResponse)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let { actionBar ->
@@ -47,7 +53,25 @@ class IAMActivity : AppCompatActivity() {
         }
 
         btNext?.setOnClickListener {
+            onClickButtonNext()
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun onClickButtonNext() {
+        val workSpaceId = C.workSpaceIdForIAM
+        val identityId = C.identityIdForIAM
+        tvResponse?.text = "Loading"
+        IAM.checkIAM(
+            workSpaceId = workSpaceId,
+            identityId = identityId,
+            onResponse = { isSuccessful, code, response ->
+                tvResponse?.text =
+                    "onResponse isSuccessful $isSuccessful\ncode $code\nresponse $response"
+            },
+            onFailure = { t ->
+                tvResponse?.text = "onFailure $t"
+            }
+        )
+    }
 }

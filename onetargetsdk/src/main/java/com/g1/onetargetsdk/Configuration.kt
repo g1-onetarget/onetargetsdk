@@ -9,23 +9,35 @@ package com.g1.onetargetsdk
  */
 class Configuration {
     companion object {
-        const val BASE_URL_DEV = "https://dev-pixel.cdp.link/"
-        const val BASE_URL_PROD = "https://pixel.cdp.link/"
+        const val BASE_URL_TRACKING_DEV = "https://dev-pixel.cdp.link/"
+        const val BASE_URL_TRACKING_PROD = "https://pixel.cdp.link/"
+
+        const val BASE_URL_IAM_DEV = "https://api-dev.predict.marketing/"
+
+        //TODO
+        const val BASE_URL_IAM_PROD = ""
     }
 
     var writeKey: String? = null
-    private var baseUrl: String = BASE_URL_DEV//default dev environment
+    private var baseUrlTracking: String = BASE_URL_TRACKING_DEV//default dev environment
+    private var baseUrlIAM: String = BASE_URL_IAM_DEV//default dev environment
     var isShowLog = false
 
     fun setEnvironmentDev() {
-        this.baseUrl = BASE_URL_DEV
+        this.baseUrlTracking = BASE_URL_TRACKING_DEV
+        this.baseUrlIAM = BASE_URL_IAM_DEV
     }
 
     fun setEnvironmentProd() {
-        this.baseUrl = BASE_URL_PROD
+        this.baseUrlTracking = BASE_URL_TRACKING_PROD
+        this.baseUrlIAM = BASE_URL_IAM_PROD
     }
 
-    fun getBaseUrl(): String {
-        return baseUrl
+    fun getBaseUrlTracking(): String {
+        return baseUrlTracking
+    }
+
+    fun getBaseUrlIAM(): String {
+        return baseUrlIAM
     }
 }

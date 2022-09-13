@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
+import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
@@ -69,7 +70,7 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventByParams() {
-        val workSpaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
+        val workSpaceId = C.workSpaceIdForTracking
         val identityId = hashMapOf<String, Any>(
             "user_id" to "Params${System.currentTimeMillis()}",
             "phone" to "0123456789",
@@ -109,7 +110,7 @@ class TrackingActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun trackEventByObject() {
         val monitorEvent = MonitorEvent()
-        monitorEvent.workspaceId = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
+        monitorEvent.workspaceId = C.workSpaceIdForTracking
         monitorEvent.identityId = hashMapOf(
             "user_id" to "Object${System.currentTimeMillis()}",
             "phone" to "0123456789",
