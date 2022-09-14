@@ -51,7 +51,7 @@ class IAM {
                 return null
             }
             val isShowLog = this.configuration?.isShowLog
-            return RetrofitClient.getClient(
+            return RetrofitClient.getClientIAM(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
             )

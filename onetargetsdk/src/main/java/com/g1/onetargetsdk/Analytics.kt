@@ -56,7 +56,7 @@ class Analytics {
                 return null
             }
             val isShowLog = this.configuration?.isShowLog
-            return RetrofitClient.getClient(
+            return RetrofitClient.getClientTracking(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
             )
