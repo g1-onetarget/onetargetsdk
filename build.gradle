@@ -13,7 +13,15 @@ allprojects {
             url "https://jitpack.io"
             credentials { username authToken }
         }
+//        flatDir {
+//            dirs 'libs/aars'
+//        }
     }
+//    configurations.all {
+//        resolutionStrategy {
+//            force 'org.xerial:sqlite-jdbc:3.34.0'
+//        }
+//    }
 }
 
 task clean(type: Delete) {

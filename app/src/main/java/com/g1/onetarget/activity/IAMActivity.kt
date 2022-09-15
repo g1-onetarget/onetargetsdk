@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.IAM
-import com.g1.onetargetsdk.Utils
 import java.util.*
 
 /**
