@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
+import com.g1.onetargetsdk.Utils
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -70,12 +71,11 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventByParams() {
-        val workSpaceId = C.workSpaceIdForTracking
+        val workSpaceId = C.workSpaceId
         val identityId = hashMapOf<String, Any>(
-            "user_id" to "Params${System.currentTimeMillis()}",
-            "phone" to "0123456789",
+            "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
-            "deviceId" to Analytics.getDeviceId(this)
+            "one_target_user_id" to Utils.getDeviceId(this)
         )
         val eventName = "event_name"
         val eventDate = System.currentTimeMillis()
@@ -110,12 +110,11 @@ class TrackingActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun trackEventByObject() {
         val monitorEvent = MonitorEvent()
-        monitorEvent.workspaceId = C.workSpaceIdForTracking
+        monitorEvent.workspaceId = C.workSpaceId
         monitorEvent.identityId = hashMapOf(
-            "user_id" to "Object${System.currentTimeMillis()}",
-            "phone" to "0123456789",
+            "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
-            "deviceId" to Analytics.getDeviceId(this)
+            "one_target_user_id" to Utils.getDeviceId(this)
         )
         monitorEvent.eventName = "track_now_event"
         monitorEvent.eventDate = System.currentTimeMillis()

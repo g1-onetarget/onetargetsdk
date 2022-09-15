@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.IAM
+import com.g1.onetargetsdk.Utils
 import java.util.*
 
 /**
@@ -55,8 +56,8 @@ class IAMActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun checkIAM() {
-        val workSpaceId = C.workSpaceIdForIAM
-        val identityId = C.identityIdForIAM
+        val workSpaceId = C.workSpaceId
+        val identityId = Utils.getDeviceId(this)
         if (responseData.length > 50_000) {
             responseData = "..."
         }
