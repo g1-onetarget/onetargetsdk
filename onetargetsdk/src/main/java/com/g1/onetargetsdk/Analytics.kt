@@ -1,16 +1,11 @@
 package com.g1.onetargetsdk
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
-import android.provider.Settings
-import android.util.Log
+import com.g1.onetargetsdk.Utils.logE
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 /**
  * Created by Loitp on 12.09.2022
@@ -21,23 +16,16 @@ import java.util.*
  */
 class Analytics {
     companion object {
+        private val logTag = Analytics::class.java.simpleName
         private var configuration: Configuration? = null
-
-        private fun logD(msg: String) {
-            Log.d(Analytics::class.java.simpleName, msg)
-        }
-
-        private fun logE(msg: String) {
-            Log.d(Analytics::class.java.simpleName, msg)
-        }
 
         fun setup(configuration: Configuration): Boolean {
 //            if (configuration.writeKey.isNullOrEmpty()) {
 //                logE("writeKey cannot be null or empty")
 //                return false
 //            }
-            if (configuration.getBaseUrl().isEmpty()) {
-                logE("base url cannot be null or empty")
+            if (configuration.getBaseUrlTracking().isEmpty()) {
+                logE(logTag, "base url cannot be null or empty")
                 return false
             }
             this.configuration = configuration
@@ -45,22 +33,22 @@ class Analytics {
         }
 
         @JvmStatic
-        private fun service(): TrackingService? {
+        private fun service(): OneTargetService? {
             if (this.configuration == null) {
-                logE("analyticsConfiguration not found")
+                logE(logTag, "configuration not found")
                 return null
             }
-            val baseUrl = this.configuration?.getBaseUrl()
+            val baseUrl = this.configuration?.getBaseUrlTracking()
             if (baseUrl.isNullOrEmpty()) {
-                logE("base url cannot be null or empty")
+                logE(logTag, "base url cannot be null or empty")
                 return null
             }
             val isShowLog = this.configuration?.isShowLog
-            return RetrofitClient.getClient(
+            return RetrofitClient.getClientTracking(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
             )
-                .create(TrackingService::class.java)
+                .create(OneTargetService::class.java)
         }
 
         @JvmStatic
@@ -71,12 +59,14 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
+            val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(monitorEvent.eventData)
             val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
             onPreExecute?.invoke(monitorEvent)
             callApiTrack(
                 monitorEvent.workspaceId,
                 jsonIdentityId,
+                jsonProfile,
                 monitorEvent.eventName,
                 tmpEventDate,
                 jsonEventData,
@@ -89,6 +79,7 @@ class Analytics {
         fun trackEvent(
             workSpaceId: String?,
             identityId: HashMap<String, Any>?,
+            profile: HashMap<String, Any>?,
             eventName: String?,
             eventDate: Long?,
             eventData: HashMap<String, Any>?,
@@ -122,16 +113,19 @@ class Analytics {
             val monitorEvent = MonitorEvent()
             monitorEvent.workspaceId = tmpWorkspaceId
             monitorEvent.identityId = identityId
+            monitorEvent.profile = profile
             monitorEvent.eventName = eventName
             monitorEvent.eventDate = tmpEventDate
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
             val jsonIdentityId = Gson().toJson(identityId)
+            val jsonProfile = Gson().toJson(profile)
             val jsonEventData = Gson().toJson(eventData)
             callApiTrack(
                 tmpWorkspaceId,
                 jsonIdentityId,
+                jsonProfile,
                 eventName,
                 tmpEventDate,
                 jsonEventData,
@@ -143,6 +137,7 @@ class Analytics {
         private fun callApiTrack(
             workSpaceId: String?,
             jsonIdentityId: String?,
+            jsonProfile: String?,
             eventName: String?,
             eventDate: Long,
             jsonEventData: String?,
@@ -150,10 +145,11 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             service()?.track(
-                workspace_id = workSpaceId,
-                identity_id = jsonIdentityId,
-                event_name = eventName,
-                event_date = eventDate.toString(),
+                workspaceId = workSpaceId,
+                identityId = jsonIdentityId,
+                profile = jsonProfile,
+                eventName = eventName,
+                eventDate = eventDate.toString(),
                 eventData = jsonEventData,
             )?.enqueue(object : Callback<Void> {
                 override fun onResponse(
@@ -167,28 +163,6 @@ class Analytics {
                     onFailure?.invoke(t)
                 }
             })
-        }
-
-        @SuppressLint("HardwareIds")
-        fun getDeviceId(context: Context): String {
-            val androidId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-            logD("androidId $androidId")
-            if (androidId.isNotEmpty()) {
-                return androidId
-            }
-
-            val uniquePseudoID =
-                "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
-            logD("uniquePseudoID $uniquePseudoID")
-            val serial = Build.getRadioVersion()
-            logD("serial $serial")
-            val uuid: String =
-                UUID(uniquePseudoID.hashCode().toLong(), serial.hashCode().toLong()).toString()
-            logD("uuid $uuid")
-            return uuid
         }
     }
 }

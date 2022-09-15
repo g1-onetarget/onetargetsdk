@@ -2,8 +2,10 @@ package com.g1.onetarget.app
 
 import android.app.Application
 import android.util.Log
+import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
 import com.g1.onetargetsdk.Configuration
+import com.g1.onetargetsdk.IAM
 
 /**
  * Created by Loitp on 12.09.2022
@@ -17,15 +19,18 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        setupTracking()
+        setupSDK()
     }
 
-    private fun setupTracking() {
+    private fun setupSDK() {
         val configuration = Configuration()
         configuration.setEnvironmentDev()
 //        configuration.setEnvironmentProd()
-        configuration.writeKey = "490bf1f1-2e88-4d6d-8ec4-2bb7de74f9a8"
-        val result = Analytics.setup(configuration)
-        Log.d(G1Application::class.java.simpleName, "setup result $result")
+        configuration.writeKey = C.workSpaceId
+        configuration.isShowLog = true
+        val resultSetupTracking = Analytics.setup(configuration)
+        val resultSetupIAM = IAM.setup(configuration)
+        Log.d(G1Application::class.java.simpleName, "resultSetupTracking $resultSetupTracking")
+        Log.d(G1Application::class.java.simpleName, "resultSetupIAM $resultSetupIAM")
     }
 }

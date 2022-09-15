@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -27,19 +26,12 @@
             android:orientation="vertical"
             android:padding="@dimen/margin_padding_medium">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btSampleTracking"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvResponse"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sample Tracking"
-                tools:ignore="HardcodedText" />
+                android:layout_height="match_parent"
+                android:textSize="@dimen/txt_small" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btSampleIAM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sample IAM"
-                tools:ignore="HardcodedText" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>

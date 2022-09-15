@@ -14,10 +14,12 @@ import java.util.concurrent.TimeUnit
  * freuss47@gmail.com
  */
 object RetrofitClient {
-    private var retrofit: Retrofit? = null
+    private var retrofitTracking: Retrofit? = null
+    private var retrofitIAM: Retrofit? = null
 
-    fun getClient(baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
-        if (retrofit == null) {
+    private fun getClient(retrofit: Retrofit?, baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
+        var tmpRetrofit = retrofit
+        if (tmpRetrofit == null) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -29,12 +31,20 @@ object RetrofitClient {
             }
             val client = builder.build()
 
-            retrofit = Retrofit.Builder()
+            tmpRetrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
-        return retrofit!!
+        return tmpRetrofit!!
+    }
+
+    fun getClientTracking(baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
+        return getClient(retrofitTracking, baseUrl, isShowLogAPI)
+    }
+
+    fun getClientIAM(baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
+        return getClient(retrofitIAM, baseUrl, isShowLogAPI)
     }
 }
