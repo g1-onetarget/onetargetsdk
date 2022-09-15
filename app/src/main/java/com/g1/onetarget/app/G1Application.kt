@@ -1,9 +1,7 @@
 package com.g1.onetarget.app
 
-import android.content.Context
+import android.app.Application
 import android.util.Log
-import androidx.multidex.MultiDex
-import androidx.multidex.MultiDexApplication
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
 import com.g1.onetargetsdk.Configuration
@@ -16,12 +14,7 @@ import com.g1.onetargetsdk.IAM
  * +840766040293
  * freuss47@gmail.com
  */
-class G1Application : MultiDexApplication() {
-
-    override fun attachBaseContext(c: Context?) {
-        super.attachBaseContext(c)
-        MultiDex.install(this)
-    }
+class G1Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
