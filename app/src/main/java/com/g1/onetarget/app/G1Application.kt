@@ -23,7 +23,7 @@ class G1Application : Application() {
     }
 
     private fun setupSDK() {
-        val configuration = Configuration()
+        val configuration = Configuration(this)
         configuration.setEnvironmentDev()
 //        configuration.setEnvironmentProd()
         configuration.writeKey = C.workSpaceId

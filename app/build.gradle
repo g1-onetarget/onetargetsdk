@@ -55,7 +55,7 @@ android {
 
 dependencies {
     implementation project(':onetargetsdk')
-//    implementation 'com.gitlab.g1-data:onetarget-android:1.0.3'
+//    compile(name: 'libs_aar', ext: 'aar')
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.google.code.gson:gson:2.9.1'

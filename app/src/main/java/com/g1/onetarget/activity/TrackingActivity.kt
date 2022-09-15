@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
-import com.g1.onetargetsdk.Utils
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -75,11 +74,8 @@ class TrackingActivity : AppCompatActivity() {
         val identityId = hashMapOf<String, Any>(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
-            "one_target_user_id" to Utils.getDeviceId(this)
         )
-        val profile = hashMapOf<String, Any>(
-            "one_target_user_id" to Utils.getDeviceId(this)
-        )
+        val profile = hashMapOf<String, Any>()
         val eventName = "event_name"
         val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
@@ -118,11 +114,8 @@ class TrackingActivity : AppCompatActivity() {
         monitorEvent.identityId = hashMapOf(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
-            "one_target_user_id" to Utils.getDeviceId(this)
         )
-        monitorEvent.profile = hashMapOf(
-            "one_target_user_id" to Utils.getDeviceId(this)
-        )
+        monitorEvent.profile = hashMapOf()
         monitorEvent.eventName = "track_now_event"
         monitorEvent.eventDate = System.currentTimeMillis()
         monitorEvent.eventData = hashMapOf(

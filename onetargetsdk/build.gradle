@@ -30,9 +30,11 @@ android {
     //https://gitlab.com/g1-data/onetarget-android/-/tags
     //https://jitpack.io/private#com.gitlab.g1-data/onetarget-android
     //Users/loitp/StudioProjects/g1/onetarget-android/onetarget-android/onetargetsdk/build/outputs/aar
+
+//    https://stackoverflow.com/questions/24309950/create-aar-file-in-android-studio
     libraryVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "${archivesBaseName}_${variant.name}_${defaultConfig.versionName}_${defaultConfig.versionCode}.aar"
+            outputFileName = "${archivesBaseName}_${variant.name}.aar"
         }
     }
 }

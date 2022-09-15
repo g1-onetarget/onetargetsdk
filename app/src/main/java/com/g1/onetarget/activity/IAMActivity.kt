@@ -57,7 +57,6 @@ class IAMActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun checkIAM() {
         val workSpaceId = C.workSpaceId
-        val identityId = Utils.getDeviceId(this)
         if (responseData.length > 50_000) {
             responseData = "..."
         }
@@ -66,7 +65,6 @@ class IAMActivity : AppCompatActivity() {
         IAM.checkIAM(
             activity = this,
             workSpaceId = workSpaceId,
-            identityId = identityId,
             onResponse = { isSuccessful, code, response ->
                 responseData = "$responseData\n<<<onResponse isSuccessful $isSuccessful, " +
                         "code $code, response $response"

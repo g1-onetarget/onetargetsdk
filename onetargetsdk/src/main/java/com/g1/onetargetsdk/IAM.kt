@@ -61,7 +61,6 @@ class IAM {
         fun checkIAM(
             activity: Activity?,
             workSpaceId: String?,
-            identityId: String?,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
@@ -78,6 +77,7 @@ class IAM {
             if (!isValid()) {
                 return
             }
+            val identityId = this.configuration?.deviceId
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }

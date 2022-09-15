@@ -1,5 +1,7 @@
 package com.g1.onetargetsdk
 
+import android.content.Context
+
 /**
  * Created by Loitp on 12.09.2022
  * Galaxy One company,
@@ -7,7 +9,7 @@ package com.g1.onetargetsdk
  * +840766040293
  * freuss47@gmail.com
  */
-class Configuration {
+class Configuration(context: Context) {
     companion object {
         const val BASE_URL_TRACKING_DEV = "https://dev-pixel.cdp.link/"
         const val BASE_URL_TRACKING_PROD = "https://pixel.cdp.link/"
@@ -22,6 +24,11 @@ class Configuration {
     private var baseUrlTracking: String = BASE_URL_TRACKING_DEV//default dev environment
     private var baseUrlIAM: String = BASE_URL_IAM_DEV//default dev environment
     var isShowLog = false
+    var deviceId: String? = null
+
+    init {
+        deviceId = Utils.getDeviceId(context)
+    }
 
     fun setEnvironmentDev() {
         this.baseUrlTracking = BASE_URL_TRACKING_DEV
