@@ -11,7 +11,7 @@ allprojects {
         mavenCentral()
         maven {
             url "https://jitpack.io"
-            credentials { username authToken }
+//            credentials { username authToken }
         }
 //        flatDir {
 //            dirs 'libs/aars'
