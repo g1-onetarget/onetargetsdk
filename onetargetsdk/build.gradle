@@ -30,8 +30,8 @@ android {
 
     //https://gitlab.com/g1-data/onetarget-android/-/tags
     //https://jitpack.io/private#com.gitlab.g1-data/onetarget-android
-    //Users/loitp/StudioProjects/g1/onetarget-android/onetarget-android/onetargetsdk/build/outputs/aar
 
+//    Users/loitp/StudioProjects/g1/onetarget-android/onetarget-android/onetargetsdk/build/outputs/aar
 //    https://stackoverflow.com/questions/24309950/create-aar-file-in-android-studio
     libraryVariants.all { variant ->
         variant.outputs.all { output ->
@@ -43,7 +43,7 @@ android {
 dependencies {
 //    implementation 'androidx.core:core-ktx:1.8.0'
 //    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
+//    implementation 'com.google.android.material:material:1.6.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
