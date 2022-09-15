@@ -19,6 +19,7 @@ interface OneTargetService {
     fun track(
         @Query("workspace_id") workspaceId: String?,
         @Query("identity_id") identityId: String?,
+        @Query("profile") profile: String?,
         @Query("event_name") eventName: String?,
         @Query("event_date") eventDate: String?,
         @Query("eventData") eventData: String?,

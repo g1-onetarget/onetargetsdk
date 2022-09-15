@@ -59,12 +59,14 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
+            val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(monitorEvent.eventData)
             val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
             onPreExecute?.invoke(monitorEvent)
             callApiTrack(
                 monitorEvent.workspaceId,
                 jsonIdentityId,
+                jsonProfile,
                 monitorEvent.eventName,
                 tmpEventDate,
                 jsonEventData,
@@ -77,6 +79,7 @@ class Analytics {
         fun trackEvent(
             workSpaceId: String?,
             identityId: HashMap<String, Any>?,
+            profile: HashMap<String, Any>?,
             eventName: String?,
             eventDate: Long?,
             eventData: HashMap<String, Any>?,
@@ -110,16 +113,19 @@ class Analytics {
             val monitorEvent = MonitorEvent()
             monitorEvent.workspaceId = tmpWorkspaceId
             monitorEvent.identityId = identityId
+            monitorEvent.profile = profile
             monitorEvent.eventName = eventName
             monitorEvent.eventDate = tmpEventDate
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
             val jsonIdentityId = Gson().toJson(identityId)
+            val jsonProfile = Gson().toJson(profile)
             val jsonEventData = Gson().toJson(eventData)
             callApiTrack(
                 tmpWorkspaceId,
                 jsonIdentityId,
+                jsonProfile,
                 eventName,
                 tmpEventDate,
                 jsonEventData,
@@ -131,6 +137,7 @@ class Analytics {
         private fun callApiTrack(
             workSpaceId: String?,
             jsonIdentityId: String?,
+            jsonProfile: String?,
             eventName: String?,
             eventDate: Long,
             jsonEventData: String?,
@@ -140,6 +147,7 @@ class Analytics {
             service()?.track(
                 workspaceId = workSpaceId,
                 identityId = jsonIdentityId,
+                profile = jsonProfile,
                 eventName = eventName,
                 eventDate = eventDate.toString(),
                 eventData = jsonEventData,

@@ -77,6 +77,9 @@ class TrackingActivity : AppCompatActivity() {
             "email" to "loitp@galaxy.one",
             "one_target_user_id" to Utils.getDeviceId(this)
         )
+        val profile = hashMapOf<String, Any>(
+            "one_target_user_id" to Utils.getDeviceId(this)
+        )
         val eventName = "event_name"
         val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
@@ -87,6 +90,7 @@ class TrackingActivity : AppCompatActivity() {
         Analytics.trackEvent(
             workSpaceId = workSpaceId,
             identityId = identityId,
+            profile = profile,
             eventName = eventName,
             eventDate = eventDate,
             eventData = eventData,
@@ -114,6 +118,9 @@ class TrackingActivity : AppCompatActivity() {
         monitorEvent.identityId = hashMapOf(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
+            "one_target_user_id" to Utils.getDeviceId(this)
+        )
+        monitorEvent.profile = hashMapOf(
             "one_target_user_id" to Utils.getDeviceId(this)
         )
         monitorEvent.eventName = "track_now_event"
