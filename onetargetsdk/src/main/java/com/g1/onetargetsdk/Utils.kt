@@ -27,7 +27,10 @@ object Utils {
     }
 
     @SuppressLint("HardwareIds")
-    fun getDeviceId(context: Context): String {
+    fun getDeviceId(context: Context?): String? {
+        if (context == null) {
+            return null
+        }
         val androidId = Settings.Secure.getString(
             context.contentResolver,
             Settings.Secure.ANDROID_ID

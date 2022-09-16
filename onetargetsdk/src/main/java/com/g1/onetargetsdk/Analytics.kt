@@ -58,6 +58,23 @@ class Analytics {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
+            val deviceId = configuration?.deviceId ?: ""
+            val tmpIdentityId = hashMapOf<String, Any>(
+                "one_target_user_id" to deviceId
+            )
+            monitorEvent.identityId?.let { map ->
+                tmpIdentityId.putAll(map)
+            }
+            val tmpProfile = hashMapOf<String, Any>(
+                "one_target_user_id" to deviceId
+            )
+            monitorEvent.profile?.let { map ->
+                tmpProfile.putAll(map)
+            }
+
+            monitorEvent.identityId = tmpIdentityId
+            monitorEvent.profile = tmpProfile
+
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(monitorEvent.eventData)
@@ -92,36 +109,35 @@ class Analytics {
             } else {
                 workSpaceId
             }
-//            if (tmpWorkspaceId.isNullOrEmpty()) {
-//                onFailure?.invoke(Throwable("writeKey is invalid"))
-//                return
-//            }
-//            logD("identityId $identityId")
-//            if (eventName.isNullOrEmpty()) {
-//                onFailure?.invoke(Throwable("Event name is invalid"))
-//                return
-//            }
-//            if (identityId.isNullOrEmpty()) {
-//                onFailure?.invoke(Throwable("identityId is invalid"))
-//                return
-//            }
-//            if (properties.isNullOrEmpty()) {
-//                onFailure?.invoke(Throwable("properties is invalid"))
-//                return
-//            }
             val tmpEventDate = eventDate ?: System.currentTimeMillis()
             val monitorEvent = MonitorEvent()
+
+            val deviceId = configuration?.deviceId ?: ""
+            val tmpIdentityId = hashMapOf<String, Any>(
+                "one_target_user_id" to deviceId
+            )
+            identityId?.let { map ->
+                tmpIdentityId.putAll(map)
+            }
+            val tmpProfile = hashMapOf<String, Any>(
+                "one_target_user_id" to deviceId
+            )
+            profile?.let { map ->
+                tmpProfile.putAll(map)
+            }
+
             monitorEvent.workspaceId = tmpWorkspaceId
-            monitorEvent.identityId = identityId
-            monitorEvent.profile = profile
+            monitorEvent.identityId = tmpIdentityId
+            monitorEvent.profile = tmpProfile
             monitorEvent.eventName = eventName
             monitorEvent.eventDate = tmpEventDate
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
-            val jsonIdentityId = Gson().toJson(identityId)
-            val jsonProfile = Gson().toJson(profile)
+            val jsonIdentityId = Gson().toJson(tmpIdentityId)
+            val jsonProfile = Gson().toJson(tmpProfile)
             val jsonEventData = Gson().toJson(eventData)
+
             callApiTrack(
                 tmpWorkspaceId,
                 jsonIdentityId,
