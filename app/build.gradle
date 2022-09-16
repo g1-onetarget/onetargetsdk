@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.g1.onetarget"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0.0"
 
@@ -52,11 +52,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'com.g1.onetarget'
 }
 
 dependencies {
     api project(':onetargetsdk')
 //    api 'com.github.g1mobile:onetargetsdk:1.0.2'
-
     api 'com.google.android.material:material:1.6.1'
 }
