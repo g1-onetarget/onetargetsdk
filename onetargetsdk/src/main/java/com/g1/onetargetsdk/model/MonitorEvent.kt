@@ -14,7 +14,7 @@ import java.io.Serializable
 class MonitorEvent : Serializable {
     var workspaceId: String? = null
     var identityId: HashMap<String, Any>? = null
-    var profile: HashMap<String, Any>? = null
+    var profile: List<HashMap<String, Any>>? = null
     var eventName: String? = null
     var eventDate: Long? = null
     var eventData: HashMap<String, Any>? = null

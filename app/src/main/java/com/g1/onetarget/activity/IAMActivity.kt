@@ -47,7 +47,7 @@ class IAMActivity : AppCompatActivity() {
             toolbar?.apply {
                 setTitleTextColor(Color.WHITE)
                 setNavigationOnClickListener {
-                    onBackPressed()
+                    finish()
                 }
             }
         }
@@ -55,7 +55,7 @@ class IAMActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun checkIAM() {
-        val workSpaceId = C.workSpaceId
+        val workSpaceId = C.getWorkSpaceId()
         if (responseData.length > 50_000) {
             responseData = "..."
         }
