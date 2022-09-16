@@ -11,13 +11,16 @@ import android.content.Context
  */
 class Configuration(context: Context) {
     companion object {
+        //https://app-dev.predict.marketing/login
         const val BASE_URL_TRACKING_DEV = "https://dev-pixel.cdp.link/"
+
+        //https://app-stag.onetarget.vn/
+        const val BASE_URL_TRACKING_STAG = "https://pixel-stag.onetarget.vn/"
         const val BASE_URL_TRACKING_PROD = "https://pixel.cdp.link/"
 
         const val BASE_URL_IAM_DEV = "https://api-dev.predict.marketing/"
-
-        //TODO
-        const val BASE_URL_IAM_PROD = ""
+        const val BASE_URL_IAM_STAG = ""//TODO fill
+        const val BASE_URL_IAM_PROD = ""//TODO fill
     }
 
     var writeKey: String? = null
@@ -33,6 +36,11 @@ class Configuration(context: Context) {
     fun setEnvironmentDev() {
         this.baseUrlTracking = BASE_URL_TRACKING_DEV
         this.baseUrlIAM = BASE_URL_IAM_DEV
+    }
+
+    fun setEnvironmentStag() {
+        this.baseUrlTracking = BASE_URL_TRACKING_STAG
+        this.baseUrlIAM = BASE_URL_IAM_STAG
     }
 
     fun setEnvironmentProd() {

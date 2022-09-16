@@ -70,7 +70,7 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventByParams() {
-        val workSpaceId = C.workSpaceId
+        val workSpaceId = C.getWorkSpaceId()
         val identityId = hashMapOf<String, Any>(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
@@ -115,7 +115,7 @@ class TrackingActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun trackEventByObject() {
         val monitorEvent = MonitorEvent()
-        monitorEvent.workspaceId = C.workSpaceId
+        monitorEvent.workspaceId = C.getWorkSpaceId()
         monitorEvent.identityId = hashMapOf(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",

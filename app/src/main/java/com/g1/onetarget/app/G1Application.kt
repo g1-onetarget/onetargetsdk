@@ -19,14 +19,22 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
+//        C.setEnv(C.DEV)
+        C.setEnv(C.STAG)
+//        C.setEnv(C.PROD)
         setupSDK()
     }
 
     private fun setupSDK() {
         val configuration = Configuration(this)
-        configuration.setEnvironmentDev()
-//        configuration.setEnvironmentProd()
-        configuration.writeKey = C.workSpaceId
+        if (C.isEnvDev()) {
+            configuration.setEnvironmentDev()
+        } else if (C.isEnvStag()) {
+            configuration.setEnvironmentStag()
+        } else if (C.isEnvProd()) {
+            configuration.setEnvironmentProd()
+        }
+        configuration.writeKey = C.getWorkSpaceId()
         configuration.isShowLog = true
         val resultSetupTracking = Analytics.setup(configuration)
         val resultSetupIAM = IAM.setup(configuration)
