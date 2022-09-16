@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             toolbar?.apply {
                 setTitleTextColor(Color.WHITE)
                 setNavigationOnClickListener {
-                    onBackPressed()
+                    finish()
                 }
             }
         }

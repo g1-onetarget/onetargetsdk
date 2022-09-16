@@ -65,15 +65,26 @@ class Analytics {
             monitorEvent.identityId?.let { map ->
                 tmpIdentityId.putAll(map)
             }
-            val tmpProfile = hashMapOf<String, Any>(
-                "one_target_user_id" to deviceId
-            )
-            monitorEvent.profile?.let { map ->
-                tmpProfile.putAll(map)
-            }
-
             monitorEvent.identityId = tmpIdentityId
-            monitorEvent.profile = tmpProfile
+
+//            val tmpProfile = hashMapOf<String, Any>(
+//                "one_target_user_id" to deviceId
+//            )
+//            monitorEvent.profile?.let { map ->
+//                tmpProfile.putAll(map)
+//            }
+//            monitorEvent.profile = tmpProfile
+
+            if (monitorEvent.profile.isNullOrEmpty()) {
+                val tmpProfile = ArrayList<HashMap<String, Any>>()
+                val itemFirst = hashMapOf<String, Any>(
+                    "one_target_user_id" to deviceId
+                )
+                tmpProfile.add(itemFirst)
+                monitorEvent.profile = tmpProfile
+            } else {
+                monitorEvent.profile?.firstOrNull()?.put("one_target_user_id", deviceId)
+            }
 
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
@@ -96,7 +107,7 @@ class Analytics {
         fun trackEvent(
             workSpaceId: String?,
             identityId: HashMap<String, Any>?,
-            profile: HashMap<String, Any>?,
+            profile: List<HashMap<String, Any>>?,
             eventName: String?,
             eventDate: Long?,
             eventData: HashMap<String, Any>?,
@@ -119,11 +130,23 @@ class Analytics {
             identityId?.let { map ->
                 tmpIdentityId.putAll(map)
             }
-            val tmpProfile = hashMapOf<String, Any>(
-                "one_target_user_id" to deviceId
-            )
-            profile?.let { map ->
-                tmpProfile.putAll(map)
+//            val tmpProfile = hashMapOf<String, Any>(
+//                "one_target_user_id" to deviceId
+//            )
+//            profile?.let { map ->
+//                tmpProfile.putAll(map)
+//            }
+
+            val tmpProfile = ArrayList<HashMap<String, Any>>()
+            if (profile.isNullOrEmpty()) {
+                val itemFirst = hashMapOf<String, Any>(
+                    "one_target_user_id" to deviceId
+                )
+                tmpProfile.add(itemFirst)
+            } else {
+                tmpProfile.addAll(profile)
+                val itemFirst = profile.first()
+                itemFirst["one_target_user_id"] = deviceId
             }
 
             monitorEvent.workspaceId = tmpWorkspaceId
@@ -134,8 +157,8 @@ class Analytics {
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
-            val jsonIdentityId = Gson().toJson(tmpIdentityId)
-            val jsonProfile = Gson().toJson(tmpProfile)
+            val jsonIdentityId = Gson().toJson(monitorEvent.workspaceId)
+            val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(eventData)
 
             callApiTrack(

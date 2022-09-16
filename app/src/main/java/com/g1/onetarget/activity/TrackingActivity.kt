@@ -55,7 +55,7 @@ class TrackingActivity : AppCompatActivity() {
             toolbar?.apply {
                 setTitleTextColor(Color.WHITE)
                 setNavigationOnClickListener {
-                    onBackPressed()
+                    finish()
                 }
             }
         }
@@ -75,14 +75,19 @@ class TrackingActivity : AppCompatActivity() {
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
         )
-        val profile = hashMapOf<String, Any>()
+        val profile = ArrayList<HashMap<String, Any>>()
+        profile.add(
+            hashMapOf(
+                "profile" to "Loi1",
+                "email" to "Loi1@galaxy.one",
+            )
+        )
         val eventName = "event_name"
         val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
             "pageTitle" to "Passenger Information",
             "pagePath" to "/home"
         )
-
         Analytics.trackEvent(
             workSpaceId = workSpaceId,
             identityId = identityId,
@@ -115,7 +120,26 @@ class TrackingActivity : AppCompatActivity() {
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
         )
-        monitorEvent.profile = hashMapOf()
+        val profile = ArrayList<HashMap<String, Any>>()
+        profile.add(
+            hashMapOf(
+                "profile" to "Loi1",
+                "email" to "Loi1@galaxy.one",
+            )
+        )
+        profile.add(
+            hashMapOf(
+                "profile" to "Loi2",
+                "email" to "Loi2@galaxy.one",
+            )
+        )
+        profile.add(
+            hashMapOf(
+                "profile" to "Loi3",
+                "email" to "Loi3@galaxy.one",
+            )
+        )
+        monitorEvent.profile = profile
         monitorEvent.eventName = "track_now_event"
         monitorEvent.eventDate = System.currentTimeMillis()
         monitorEvent.eventData = hashMapOf(
