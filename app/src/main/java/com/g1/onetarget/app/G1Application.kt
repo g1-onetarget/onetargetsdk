@@ -19,8 +19,8 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-//        C.setEnv(C.DEV)
-        C.setEnv(C.STAG)
+        C.setEnv(C.DEV)
+//        C.setEnv(C.STAG)
 //        C.setEnv(C.PROD)
         setupSDK()
     }
