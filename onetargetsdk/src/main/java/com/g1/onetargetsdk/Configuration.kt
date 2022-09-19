@@ -24,8 +24,8 @@ class Configuration(context: Context) {
     }
 
     var writeKey: String? = null
-    private var baseUrlTracking: String = BASE_URL_TRACKING_DEV//default dev environment
-    private var baseUrlIAM: String = BASE_URL_IAM_DEV//default dev environment
+    private var baseUrlTracking: String = BASE_URL_TRACKING_PROD//default dev environment
+    private var baseUrlIAM: String = BASE_URL_IAM_PROD//default dev environment
     var isShowLog = false
     var deviceId: String? = null
 
