@@ -157,7 +157,7 @@ class Analytics {
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
-            val jsonIdentityId = Gson().toJson(monitorEvent.workspaceId)
+            val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(eventData)
 
