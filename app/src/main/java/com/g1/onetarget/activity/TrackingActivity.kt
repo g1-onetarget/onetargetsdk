@@ -2,12 +2,14 @@ package com.g1.onetarget.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
+import com.g1.onetarget.BuildConfig
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.Analytics
@@ -247,7 +249,7 @@ class TrackingActivity : AppCompatActivity() {
         profile.add(
             hashMapOf(
                 "index" to 1,
-                "full_name" to "Loi Android Native",
+                "full_name" to "Loi Android Native ${Build.MODEL}",
                 "gender" to "Male",
                 "address" to "45A Nguyễn Thị Minh Khai, phường 3, quận 3",
                 "skyclub" to "hoangkim2512",
