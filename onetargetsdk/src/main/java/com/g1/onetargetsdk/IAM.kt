@@ -61,7 +61,7 @@ class IAM {
         fun checkIAM(
             activity: Activity?,
             workSpaceId: String?,
-            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+            onResponse: ((isSuccessful: Boolean, code: Int, response: IAMResponse?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
 

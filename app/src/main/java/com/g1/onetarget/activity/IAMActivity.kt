@@ -3,6 +3,7 @@ package com.g1.onetarget.activity
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
@@ -67,6 +68,9 @@ class IAMActivity : AppCompatActivity() {
             onResponse = { isSuccessful, code, response ->
                 responseData = "$responseData\n<<<onResponse isSuccessful $isSuccessful, " +
                         "code $code, response $response"
+
+                Log.d("loitpp", "data: ${response?.data}")
+
                 tvResponse?.text = responseData
                 checkIAM()
             },
