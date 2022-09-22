@@ -78,7 +78,9 @@ class TrackingActivity : AppCompatActivity() {
         btInputPassengerInfo?.setOnClickListener {
             trackEventInputPassengerInfo()
         }
-        btPurchase?.setOnClickListener { }
+        btPurchase?.setOnClickListener {
+            trackEventPurchase()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -270,6 +272,79 @@ class TrackingActivity : AppCompatActivity() {
             "profile.0.unsubscribed_from_emails" to "false",
             "profile.0.email" to "myemail@gmail.com",
             "profile.0.phone" to "0969696969",
+        )
+        Analytics.trackEvent(
+            workSpaceId = workSpaceId,
+            identityId = identityId,
+            profile = profile,
+            eventName = eventName,
+            eventDate = eventDate,
+            eventData = eventData,
+            onPreExecute = { input ->
+                printBeautyJson(input, tvInput)
+                tvOutput?.text = "Loading..."
+            },
+            onResponse = { isSuccessful, code, response ->
+                tvOutput?.text =
+                    "onResponse" +
+                            "\nisSuccessful: $isSuccessful" +
+                            "\ncode: $code" +
+                            "\nresponse body: ${Gson().toJson(response)}"
+            },
+            onFailure = { t ->
+                tvOutput?.text = "onFailure $t"
+            }
+        )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun trackEventPurchase() {
+        val workSpaceId = C.getWorkSpaceId()
+        val identityId = hashMapOf<String, Any>()
+        val profile = ArrayList<HashMap<String, Any>>()
+        val eventName = "purchase"
+        val eventDate = System.currentTimeMillis()
+        val eventData = hashMapOf<String, Any>(
+            "platform" to "Android",
+            "ecommerce.currency" to "VND",
+            "ecommerce.transaction_id" to "33AJV3",
+            "ecommerce.value" to "2899800",
+            "ecommerce.items.0.item_id" to "VJ197",
+            "ecommerce.items.0.item_name" to "Flight:SGN:HAN",
+            "ecommerce.items.0.item_category" to "FareOption",
+            "ecommerce.items.0.item_variant" to "Deluxe",
+            "ecommerce.items.0.flight_time" to "05:15-07:25",
+            "ecommerce.items.0.flight_date" to "2020-11-19",
+            "ecommerce.items.0.flight_from" to "SGN",
+            "ecommerce.items.0.flight_to" to "HAN",
+            "ecommerce.items.0.item_list_id" to "Outbound:HAN:SGN",
+            "ecommerce.items.0.index" to "1",
+            "ecommerce.items.0.quantity" to "1",
+            "ecommerce.items.0.price" to "899000",
+            "ecommerce.items.1.item_id" to "VJ120",
+            "ecommerce.items.1.item_name" to "Flight:HAN:SGN",
+            "ecommerce.items.1.item_category" to "FareOption",
+            "ecommerce.items.1.item_variant" to "SkyBoss",
+            "ecommerce.items.1.flight_time" to "20:50-23:45",
+            "ecommerce.items.1.flight_date" to "2020-11-27",
+            "ecommerce.items.1.flight_from" to "HAN",
+            "ecommerce.items.1.flight_to" to "SGN",
+            "ecommerce.items.1.item_list_id" to "Outbound:HAN:SGN",
+            "ecommerce.items.1.index" to "2",
+            "ecommerce.items.1.quantity" to "1",
+            "ecommerce.items.1.price" to "2000800",
+            "ecommerce.items.2.item_id" to "VJ120",
+            "ecommerce.items.2.item_name" to "Flight:HAN:SGN",
+            "ecommerce.items.2.item_category" to "FareOption",
+            "ecommerce.items.2.item_variant" to "SkyBoss",
+            "ecommerce.items.2.flight_time" to "20:50-23:45",
+            "ecommerce.items.2.flight_date" to "2020-11-27",
+            "ecommerce.items.2.flight_from" to "HAN",
+            "ecommerce.items.2.flight_to" to "SGN",
+            "ecommerce.items.2.item_list_id" to "Outbound:HAN:SGN",
+            "ecommerce.items.2.index" to "2",
+            "ecommerce.items.2.quantity" to "1",
+            "ecommerce.items.2.price" to "2000800",
         )
         Analytics.trackEvent(
             workSpaceId = workSpaceId,
