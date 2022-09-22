@@ -26,6 +26,9 @@ class TrackingActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btTestTrackingByParams: AppCompatButton? = null
     private var btTestTrackingByObject: AppCompatButton? = null
+    private var btAddToCart: AppCompatButton? = null
+    private var btInputPassengerInfo: AppCompatButton? = null
+    private var btPurchase: AppCompatButton? = null
     private var tvInput: AppCompatTextView? = null
     private var tvOutput: AppCompatTextView? = null
 
@@ -44,6 +47,9 @@ class TrackingActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         btTestTrackingByParams = findViewById(R.id.btTestTrackingByParams)
         btTestTrackingByObject = findViewById(R.id.btTestTrackingByObject)
+        btAddToCart = findViewById(R.id.btAddToCart)
+        btInputPassengerInfo = findViewById(R.id.btInputPassengerInfo)
+        btPurchase = findViewById(R.id.btPurchase)
         tvInput = findViewById(R.id.tvInput)
         tvOutput = findViewById(R.id.tvOutput)
 
@@ -66,6 +72,11 @@ class TrackingActivity : AppCompatActivity() {
         btTestTrackingByObject?.setOnClickListener {
             trackEventByObject()
         }
+        btAddToCart?.setOnClickListener {
+            trackEventAddToCart()
+        }
+        btInputPassengerInfo?.setOnClickListener { }
+        btPurchase?.setOnClickListener { }
     }
 
     @SuppressLint("SetTextI18n")
@@ -150,6 +161,63 @@ class TrackingActivity : AppCompatActivity() {
 
         Analytics.trackEvent(
             monitorEvent = monitorEvent,
+            onPreExecute = { input ->
+                printBeautyJson(input, tvInput)
+                tvOutput?.text = "Loading..."
+            },
+            onResponse = { isSuccessful, code, response ->
+                tvOutput?.text =
+                    "onResponse" +
+                            "\nisSuccessful: $isSuccessful" +
+                            "\ncode: $code" +
+                            "\nresponse body: ${Gson().toJson(response)}"
+            },
+            onFailure = { t ->
+                tvOutput?.text = "onFailure $t"
+            }
+        )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun trackEventAddToCart() {
+        val workSpaceId = C.getWorkSpaceId()
+        val identityId = hashMapOf<String, Any>()
+        val profile = ArrayList<HashMap<String, Any>>()
+        val eventName = "add_to_cart"
+        val eventDate = System.currentTimeMillis()
+        val eventData = hashMapOf<String, Any>(
+            "platform" to "APP",
+            "ecommerce.currency" to "VND",
+            "ecommerce.trip_from" to "HAN",
+            "ecommerce.trip_to" to "SGN",
+            "ecommerce.trip_start_date" to "2022-09-23",
+            "ecommerce.trip_return_date" to "2022-09-23",
+            "ecommerce.trip_passengers" to "1",
+            "ecommerce.trip_passengers_adult" to "2",
+            "ecommerce.trip_passengers_children" to "1",
+            "ecommerce.trip_passengers_infant" to "0",
+            "ecommerce.trip_type" to "roundTrip",
+            "ecommerce.items.0.item_id" to "VJ197",
+            "ecommerce.items.0.item_name" to "Flight:HAN:SGN",
+            "ecommerce.items.0.item_category" to "FareOption",
+            "ecommerce.items.0.item_variant" to "Eco",
+            "ecommerce.items.0.item_list_id" to "Outbound:HAN:SGN",
+            "ecommerce.items.0.index" to "1",
+            "ecommerce.items.0.quantity" to "1",
+            "ecommerce.items.0.price" to "39.000đ",
+            "ecommerce.items.0.flight_time" to "06:20-08:30",
+            "ecommerce.items.0.flight_from" to "HAN",
+            "ecommerce.items.0.flight_to" to "SGN",
+            "ecommerce.items.0.flight_date" to "2022-09-23",
+            "ecommerce.trip_route" to "SGN-HN",
+        )
+        Analytics.trackEvent(
+            workSpaceId = workSpaceId,
+            identityId = identityId,
+            profile = profile,
+            eventName = eventName,
+            eventDate = eventDate,
+            eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
                 tvOutput?.text = "Loading..."
