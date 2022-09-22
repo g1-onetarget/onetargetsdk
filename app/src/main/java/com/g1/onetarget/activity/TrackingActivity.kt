@@ -75,7 +75,9 @@ class TrackingActivity : AppCompatActivity() {
         btAddToCart?.setOnClickListener {
             trackEventAddToCart()
         }
-        btInputPassengerInfo?.setOnClickListener { }
+        btInputPassengerInfo?.setOnClickListener {
+            trackEventInputPassengerInfo()
+        }
         btPurchase?.setOnClickListener { }
     }
 
@@ -210,6 +212,64 @@ class TrackingActivity : AppCompatActivity() {
             "ecommerce.items.0.flight_to" to "SGN",
             "ecommerce.items.0.flight_date" to "2022-09-23",
             "ecommerce.trip_route" to "SGN-HN",
+        )
+        Analytics.trackEvent(
+            workSpaceId = workSpaceId,
+            identityId = identityId,
+            profile = profile,
+            eventName = eventName,
+            eventDate = eventDate,
+            eventData = eventData,
+            onPreExecute = { input ->
+                printBeautyJson(input, tvInput)
+                tvOutput?.text = "Loading..."
+            },
+            onResponse = { isSuccessful, code, response ->
+                tvOutput?.text =
+                    "onResponse" +
+                            "\nisSuccessful: $isSuccessful" +
+                            "\ncode: $code" +
+                            "\nresponse body: ${Gson().toJson(response)}"
+            },
+            onFailure = { t ->
+                tvOutput?.text = "onFailure $t"
+            }
+        )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun trackEventInputPassengerInfo() {
+        val workSpaceId = C.getWorkSpaceId()
+        val identityId = hashMapOf<String, Any>()
+        val profile = ArrayList<HashMap<String, Any>>()
+        profile.add(
+            hashMapOf(
+                "index" to 1,
+                "full_name" to "Loi Android Native",
+                "gender" to "Male",
+                "address" to "45A Nguyễn Thị Minh Khai, phường 3, quận 3",
+                "skyclub" to "hoangkim2512",
+                "city" to "Ho Chi Minh",
+                "country" to "Viet Nam",
+                "email" to "myemail@gmail.com",
+                "phone" to "0969696969",
+                "Unsubscribed from emails" to "False",
+            )
+        )
+        val eventName = "input_passenger_info"
+        val eventDate = System.currentTimeMillis()
+        val eventData = hashMapOf<String, Any>(
+            "ecommerce.trip_type" to "roundTrip",
+            "ecommerce.trip_route" to "SGN-HN",
+            "ecommerce.value" to "hoangkim2512",
+            "profile.0.full_name" to "Loi Android Native",
+            "profile.0.gender" to "Male",
+            "profile.0.address" to "45A Nguyễn Thị Minh Khai, phường 3, quận 3",
+            "profile.0.city" to "Ho Chi Minh",
+            "profile.0.country" to "Vietnam",
+            "profile.0.unsubscribed_from_emails" to "false",
+            "profile.0.email" to "myemail@gmail.com",
+            "profile.0.phone" to "0969696969",
         )
         Analytics.trackEvent(
             workSpaceId = workSpaceId,
