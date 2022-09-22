@@ -35,6 +35,33 @@
         android:text="Send Event (Object)"
         tools:ignore="HardcodedText" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_medium"
+        android:layout_marginEnd="@dimen/margin_padding_medium"
+        android:text="add_to_cart"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btInputPassengerInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_medium"
+        android:layout_marginEnd="@dimen/margin_padding_medium"
+        android:text="input_passenger_info"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btPurchase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_medium"
+        android:layout_marginEnd="@dimen/margin_padding_medium"
+        android:text="purchase"
+        tools:ignore="HardcodedText" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
