@@ -1,6 +1,6 @@
 package com.g1.onetargetsdk
 
-import android.app.Activity
+import android.content.Context
 import android.util.Log
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
@@ -28,17 +28,37 @@ class IAM {
             Log.d(IAM::class.java.simpleName, msg)
         }
 
-        fun setup(configuration: Configuration): Boolean {
-//            if (configuration.writeKey.isNullOrEmpty()) {
-//                logE("writeKey cannot be null or empty")
-//                return false
-//            }
+        fun setup(configuration: Configuration, context: Context?): Boolean {
+            if (configuration.writeKey.isNullOrEmpty()) {
+                logE("writeKey cannot be null or empty")
+                return false
+            }
             if (configuration.getBaseUrlIAM().isEmpty()) {
                 logE("base url cannot be null or empty")
                 return false
             }
             this.configuration = configuration
+            if (configuration.isEnableIAM) {
+                checkIAM(context)
+            }
             return true
+        }
+
+        private fun checkIAM(context: Context?) {
+            checkIAM(
+                context,
+                onResponse = { isSuccessful, code, response, data ->
+                    logD("isSuccessful $isSuccessful")
+                    logD("code $code")
+                    logD("response $response")
+                    logD("checkIAM data $data")
+                    checkIAM(context)
+                },
+                onFailure = { t ->
+                    t.printStackTrace()
+                    checkIAM(context)
+                },
+            )
         }
 
         @JvmStatic
@@ -59,9 +79,8 @@ class IAM {
             ).create(OneTargetService::class.java)
         }
 
-        fun checkIAM(
-            activity: Activity?,
-            workSpaceId: String?,
+        private fun checkIAM(
+            context: Context?,
             onResponse: ((isSuccessful: Boolean, code: Int, response: IAMResponse?, data: IAMData?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
@@ -70,7 +89,11 @@ class IAM {
 //                logD("checkIMA activity == null ${activity == null}")
 //                logD("checkIMA activity.isDestroyed ${activity?.isDestroyed}")
 //                logD("checkIMA activity.isFinishing ${activity?.isFinishing}")
-                if (activity == null || activity.isDestroyed || activity.isFinishing) {
+//                if (activity == null || activity.isDestroyed || activity.isFinishing) {
+//                    return false
+//                }
+
+                if (context?.applicationContext == null) {
                     return false
                 }
                 return true
@@ -78,10 +101,12 @@ class IAM {
             if (!isValid()) {
                 return
             }
+            val workSpaceId = this.configuration?.writeKey
             val identityId = this.configuration?.deviceId
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
+            logD("loitpp >>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
             service()?.checkIAM(
                 workspaceId = workSpaceId,
                 identityId = identityId,
@@ -91,16 +116,6 @@ class IAM {
                 ) {
                     if (isValid()) {
                         val jsonString = response.body()?.data
-
-//                        var map: Map<String, Any> = HashMap()
-//                        map = Gson().fromJson(jsonString, map.javaClass)
-//                        logD("closingAfter: ${map["closingAfter"]}")
-//                        logD("activeType: ${map["activeType"]}")
-//                        logD("activeValue: ${map["activeValue"]}")
-//                        logD("actionClick: ${map["actionClick"]}")
-//                        logD("name: ${map["name"]}")
-//                        logD("message: ${map["message"]}")
-
                         var iamData: IAMData? = null
                         jsonString?.let { s ->
                             iamData = Gson().fromJson(s, IAMData::class.java)

@@ -57,20 +57,20 @@ class IAMActivity : AppCompatActivity() {
     private fun checkIAM() {
         logD("loitpp ~~~~~~currentTimeMillis ${System.currentTimeMillis()}")
         val workSpaceId = C.getWorkSpaceId()
-        IAM.checkIAM(
-            activity = this,
-            workSpaceId = workSpaceId,
-            onResponse = { isSuccessful, code, response, data ->
-                logD("loitpp isSuccessful $isSuccessful")
-                logD("loitpp code $code")
-                logD("loitpp response $response")
-                logD("loitpp checkIAM data $data")
-                checkIAM()
-            },
-            onFailure = { t ->
-                t.printStackTrace()
-                checkIAM()
-            }
-        )
+//        IAM.checkIAM(
+//            context = this,
+//            workSpaceId = workSpaceId,
+//            onResponse = { isSuccessful, code, response, data ->
+//                logD("loitpp isSuccessful $isSuccessful")
+//                logD("loitpp code $code")
+//                logD("loitpp response $response")
+//                logD("loitpp checkIAM data $data")
+//                checkIAM()
+//            },
+//            onFailure = { t ->
+//                t.printStackTrace()
+//                checkIAM()
+//            }
+//        )
     }
 }

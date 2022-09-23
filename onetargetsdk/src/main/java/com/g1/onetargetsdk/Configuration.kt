@@ -27,6 +27,7 @@ class Configuration(context: Context) {
     private var baseUrlTracking: String = BASE_URL_TRACKING_PROD//default dev environment
     private var baseUrlIAM: String = BASE_URL_IAM_PROD//default dev environment
     var isShowLog = false
+    var isEnableIAM = true
     var deviceId: String? = null
 
     init {
