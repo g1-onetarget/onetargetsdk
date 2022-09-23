@@ -2,6 +2,7 @@ package com.g1.onetargetsdk
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
 import com.google.gson.Gson
@@ -106,7 +107,10 @@ class IAM {
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
-            logD("loitpp >>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
+//            logD(">>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
+            if (this.configuration?.isShowLog == true && BuildConfig.DEBUG) {
+                Toast.makeText(context, "checkIAM", Toast.LENGTH_LONG).show()
+            }
             service()?.checkIAM(
                 workspaceId = workSpaceId,
                 identityId = identityId,
@@ -121,10 +125,7 @@ class IAM {
                             iamData = Gson().fromJson(s, IAMData::class.java)
                         }
                         onResponse?.invoke(
-                            response.isSuccessful,
-                            response.code(),
-                            response.body(),
-                            iamData
+                            response.isSuccessful, response.code(), response.body(), iamData
                         )
                     }
                 }

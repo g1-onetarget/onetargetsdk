@@ -18,7 +18,6 @@ import com.g1.onetarget.R
 class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var btSampleTracking: AppCompatButton? = null
-    private var btSampleIAM: AppCompatButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
         btSampleTracking = findViewById(R.id.btSampleTracking)
-        btSampleIAM = findViewById(R.id.btSampleIAM)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let { actionBar ->
@@ -52,18 +50,10 @@ class MainActivity : AppCompatActivity() {
         btSampleTracking?.setOnClickListener {
             goToTrackingScreen()
         }
-        btSampleIAM?.setOnClickListener {
-            goToIAMScreen()
-        }
     }
 
     private fun goToTrackingScreen() {
         val i = Intent(this, TrackingActivity::class.java)
-        startActivity(i)
-    }
-
-    private fun goToIAMScreen() {
-        val i = Intent(this, IAMActivity::class.java)
         startActivity(i)
     }
 }
