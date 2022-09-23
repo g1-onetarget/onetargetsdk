@@ -53,28 +53,29 @@ class IAM {
                     logD("code $code")
                     logD("response $response")
 
+                    val gson = Gson()
                     data?.message?.let { jsonStringMessage ->
-                        logD("loitpp jsonString: $jsonStringMessage")
+//                        logD("jsonString: $jsonStringMessage")
                         var mapJsonContent: Map<String, Any> = HashMap()
                         mapJsonContent =
-                            Gson().fromJson(jsonStringMessage, mapJsonContent.javaClass)
+                            gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
 
                         val jsonContent = mapJsonContent["jsonContent"]
-                        logD("loitpp jsonContent: $jsonContent")
-                        logD("loitpp jsonContent: " + Gson().toJson(jsonContent))
+//                        logD("jsonContent: $jsonContent")
+//                        logD("jsonContent: " + gson.toJson(jsonContent))
 
-                        Gson().toJson(jsonContent)?.let { jsonStringJsonContent ->
+                        gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
                             var mapMessage: Map<String, Any> = HashMap()
                             mapMessage =
-                                Gson().fromJson(jsonStringJsonContent, mapMessage.javaClass)
+                                gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
 
                             val message = mapMessage["message"]
-                            logD("loitpp message: $message")
+//                            logD("message: $message")
 
                             message?.toString()?.let { jsonString ->
                                 var mapHtmlContent: Map<String, Any> = HashMap()
                                 mapHtmlContent =
-                                    Gson().fromJson(jsonString, mapHtmlContent.javaClass)
+                                    gson.fromJson(jsonString, mapHtmlContent.javaClass)
 
                                 val htmlContent = mapHtmlContent["htmlContent"]
                                 logD("loitpp htmlContent: $htmlContent")
