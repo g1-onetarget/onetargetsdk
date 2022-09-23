@@ -22,11 +22,15 @@ class IAM {
         private var configuration: Configuration? = null
 
         private fun logD(msg: String) {
-            Log.d(IAM::class.java.simpleName, msg)
+            if (this.configuration?.isShowLog == true) {
+                Log.d(IAM::class.java.simpleName, msg)
+            }
         }
 
         private fun logE(msg: String) {
-            Log.e(IAM::class.java.simpleName, msg)
+            if (this.configuration?.isShowLog == true) {
+                Log.e(IAM::class.java.simpleName, msg)
+            }
         }
 
         fun setup(configuration: Configuration, context: Context?): Boolean {
@@ -55,6 +59,7 @@ class IAM {
 
                     getHtmlContent(data)?.let { htmlContent ->
                         logE("loitpp htmlContent $htmlContent")
+                        //TODO
                     }
 
                     checkIAM(context)
