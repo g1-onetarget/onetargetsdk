@@ -26,7 +26,7 @@ class IAM {
         }
 
         private fun logE(msg: String) {
-            Log.d(IAM::class.java.simpleName, msg)
+            Log.e(IAM::class.java.simpleName, msg)
         }
 
         fun setup(configuration: Configuration, context: Context?): Boolean {
@@ -53,35 +53,8 @@ class IAM {
                     logD("code $code")
                     logD("response $response")
 
-                    val gson = Gson()
-                    data?.message?.let { jsonStringMessage ->
-//                        logD("jsonString: $jsonStringMessage")
-                        var mapJsonContent: Map<String, Any> = HashMap()
-                        mapJsonContent =
-                            gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
-
-                        val jsonContent = mapJsonContent["jsonContent"]
-//                        logD("jsonContent: $jsonContent")
-//                        logD("jsonContent: " + gson.toJson(jsonContent))
-
-                        gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
-                            var mapMessage: Map<String, Any> = HashMap()
-                            mapMessage =
-                                gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
-
-                            val message = mapMessage["message"]
-//                            logD("message: $message")
-
-                            message?.toString()?.let { jsonString ->
-                                var mapHtmlContent: Map<String, Any> = HashMap()
-                                mapHtmlContent =
-                                    gson.fromJson(jsonString, mapHtmlContent.javaClass)
-
-                                val htmlContent = mapHtmlContent["htmlContent"]
-                                logD("loitpp htmlContent: $htmlContent")
-
-                            }
-                        }
+                    getHtmlContent(data)?.let { htmlContent ->
+                        logE("loitpp htmlContent $htmlContent")
                     }
 
                     checkIAM(context)
@@ -91,6 +64,40 @@ class IAM {
                     checkIAM(context)
                 },
             )
+        }
+
+        private fun getHtmlContent(data: IAMData?): String? {
+            val gson = Gson()
+            data?.message?.let { jsonStringMessage ->
+//                        logD("jsonString: $jsonStringMessage")
+                var mapJsonContent: Map<String, Any> = HashMap()
+                mapJsonContent =
+                    gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
+
+                val jsonContent = mapJsonContent["jsonContent"]
+//                        logD("jsonContent: $jsonContent")
+//                        logD("jsonContent: " + gson.toJson(jsonContent))
+
+                gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
+                    var mapMessage: Map<String, Any> = HashMap()
+                    mapMessage =
+                        gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
+
+                    val message = mapMessage["message"]
+//                            logD("message: $message")
+
+                    message?.toString()?.let { jsonString ->
+                        var mapHtmlContent: Map<String, Any> = HashMap()
+                        mapHtmlContent =
+                            gson.fromJson(jsonString, mapHtmlContent.javaClass)
+
+                        val htmlContent = mapHtmlContent["htmlContent"]
+//                        logD("htmlContent: $htmlContent")
+                        return htmlContent?.toString()
+                    }
+                }
+            }
+            return null
         }
 
         @JvmStatic
