@@ -53,21 +53,33 @@ class IAM {
                     logD("code $code")
                     logD("response $response")
 
-                    data?.message?.let { jsonString ->
-                        logD("loitpp jsonString: $jsonString")
+                    data?.message?.let { jsonStringMessage ->
+                        logD("loitpp jsonString: $jsonStringMessage")
                         var mapJsonContent: Map<String, Any> = HashMap()
-                        mapJsonContent = Gson().fromJson(jsonString, mapJsonContent.javaClass)
+                        mapJsonContent =
+                            Gson().fromJson(jsonStringMessage, mapJsonContent.javaClass)
 
                         val jsonContent = mapJsonContent["jsonContent"]
                         logD("loitpp jsonContent: $jsonContent")
                         logD("loitpp jsonContent: " + Gson().toJson(jsonContent))
 
-                        Gson().toJson(jsonContent)?.let { js ->
+                        Gson().toJson(jsonContent)?.let { jsonStringJsonContent ->
                             var mapMessage: Map<String, Any> = HashMap()
-                            mapMessage = Gson().fromJson(js, mapMessage.javaClass)
+                            mapMessage =
+                                Gson().fromJson(jsonStringJsonContent, mapMessage.javaClass)
 
                             val message = mapMessage["message"]
                             logD("loitpp message: $message")
+
+                            message?.toString()?.let { jsonString ->
+                                var mapHtmlContent: Map<String, Any> = HashMap()
+                                mapHtmlContent =
+                                    Gson().fromJson(jsonString, mapHtmlContent.javaClass)
+
+                                val htmlContent = mapHtmlContent["htmlContent"]
+                                logD("loitpp htmlContent: $htmlContent")
+
+                            }
                         }
                     }
 
