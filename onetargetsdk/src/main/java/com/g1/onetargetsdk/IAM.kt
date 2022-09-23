@@ -2,7 +2,9 @@ package com.g1.onetargetsdk
 
 import android.app.Activity
 import android.util.Log
+import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,21 +56,20 @@ class IAM {
             return RetrofitClient.getClientIAM(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
-            )
-                .create(OneTargetService::class.java)
+            ).create(OneTargetService::class.java)
         }
 
         fun checkIAM(
             activity: Activity?,
             workSpaceId: String?,
-            onResponse: ((isSuccessful: Boolean, code: Int, response: IAMResponse?) -> Unit)? = null,
+            onResponse: ((isSuccessful: Boolean, code: Int, response: IAMResponse?, data: IAMData?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
 
             fun isValid(): Boolean {
-                logD("checkIMA activity == null ${activity == null}")
-                logD("checkIMA activity.isDestroyed ${activity?.isDestroyed}")
-                logD("checkIMA activity.isFinishing ${activity?.isFinishing}")
+//                logD("checkIMA activity == null ${activity == null}")
+//                logD("checkIMA activity.isDestroyed ${activity?.isDestroyed}")
+//                logD("checkIMA activity.isFinishing ${activity?.isFinishing}")
                 if (activity == null || activity.isDestroyed || activity.isFinishing) {
                     return false
                 }
@@ -86,11 +87,30 @@ class IAM {
                 identityId = identityId,
             )?.enqueue(object : Callback<IAMResponse> {
                 override fun onResponse(
-                    call: Call<IAMResponse>,
-                    response: Response<IAMResponse>
+                    call: Call<IAMResponse>, response: Response<IAMResponse>
                 ) {
                     if (isValid()) {
-                        onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+                        val jsonString = response.body()?.data
+
+//                        var map: Map<String, Any> = HashMap()
+//                        map = Gson().fromJson(jsonString, map.javaClass)
+//                        logD("closingAfter: ${map["closingAfter"]}")
+//                        logD("activeType: ${map["activeType"]}")
+//                        logD("activeValue: ${map["activeValue"]}")
+//                        logD("actionClick: ${map["actionClick"]}")
+//                        logD("name: ${map["name"]}")
+//                        logD("message: ${map["message"]}")
+
+                        var iamData: IAMData? = null
+                        jsonString?.let { s ->
+                            iamData = Gson().fromJson(s, IAMData::class.java)
+                        }
+                        onResponse?.invoke(
+                            response.isSuccessful,
+                            response.code(),
+                            response.body(),
+                            iamData
+                        )
                     }
                 }
 

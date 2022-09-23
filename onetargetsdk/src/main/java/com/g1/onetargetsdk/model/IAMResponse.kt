@@ -11,7 +11,7 @@ import androidx.annotation.Keep
  */
 @Keep
 data class IAMResponse(
-    val code: String?,
-    val data: String?,
-    val message: String?
+    val code: String? = null,
+    val data: String? = null,
+    val message: String? = null,
 )

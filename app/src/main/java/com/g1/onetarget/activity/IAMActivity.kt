@@ -5,12 +5,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.IAM
-import java.util.*
 
 /**
  * Created by Loitp on 12.09.2022
@@ -21,8 +19,10 @@ import java.util.*
  */
 class IAMActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
-    private var tvResponse: AppCompatTextView? = null
-    private var responseData = ""
+
+    private fun logD(s: String) {
+        Log.d(IAMActivity::class.java.simpleName, s)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,6 @@ class IAMActivity : AppCompatActivity() {
 
     private fun setupActionBar() {
         toolbar = findViewById(R.id.toolbar)
-        tvResponse = findViewById(R.id.tvResponse)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let { actionBar ->
@@ -56,30 +55,22 @@ class IAMActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun checkIAM() {
+        logD("loitpp ~~~~~~currentTimeMillis ${System.currentTimeMillis()}")
         val workSpaceId = C.getWorkSpaceId()
-        if (responseData.length > 50_000) {
-            responseData = "..."
-        }
-        responseData = "$responseData\n\n\n>>>Loading ${Calendar.getInstance().time}"
-        tvResponse?.text = responseData
         IAM.checkIAM(
             activity = this,
             workSpaceId = workSpaceId,
-            onResponse = { isSuccessful, code, response ->
-                responseData = "$responseData\n<<<onResponse isSuccessful $isSuccessful, " +
-                        "code $code, response $response"
-
-                Log.d("loitpp", "data: ${response?.data}")
-
-                tvResponse?.text = responseData
+            onResponse = { isSuccessful, code, response, data ->
+                logD("loitpp isSuccessful $isSuccessful")
+                logD("loitpp code $code")
+                logD("loitpp response $response")
+                logD("loitpp checkIAM data $data")
                 checkIAM()
             },
             onFailure = { t ->
-                responseData = "$responseData\n<<<onFailure $t"
-                tvResponse?.text = responseData
+                t.printStackTrace()
                 checkIAM()
             }
         )
     }
-
 }
