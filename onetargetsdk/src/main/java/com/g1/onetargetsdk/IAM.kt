@@ -3,6 +3,9 @@ package com.g1.onetargetsdk
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
 import com.google.gson.Gson
@@ -46,6 +49,17 @@ class IAM {
             if (configuration.isEnableIAM) {
                 checkIAM(context)
             }
+            ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_START -> {
+                        logE(">>>loitpp onAppInForeground")
+                    }
+                    Lifecycle.Event.ON_STOP -> {
+                        logE(">>>loitpp onAppInBackground")
+                    }
+                    else -> {}
+                }
+            })
             return true
         }
 

@@ -14,6 +14,7 @@ import com.g1.onetargetsdk.IAM
  * +840766040293
  * freuss47@gmail.com
  */
+
 class G1Application : Application() {
 
     override fun onCreate() {
@@ -42,4 +43,5 @@ class G1Application : Application() {
         Log.d(G1Application::class.java.simpleName, "resultSetupTracking $resultSetupTracking")
         Log.d(G1Application::class.java.simpleName, "resultSetupIAM $resultSetupIAM")
     }
+
 }
