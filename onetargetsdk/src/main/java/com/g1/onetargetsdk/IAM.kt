@@ -23,6 +23,7 @@ import retrofit2.Response
 class IAM {
     companion object {
         private var configuration: Configuration? = null
+        private var isAppInForeground: Boolean? = null
 
         private fun logD(msg: String) {
             if (this.configuration?.isShowLog == true) {
@@ -47,19 +48,21 @@ class IAM {
             }
             this.configuration = configuration
             if (configuration.isEnableIAM) {
+                ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
+                    when (event) {
+                        Lifecycle.Event.ON_START -> {
+//                        logE(">>>onAppInForeground")
+                            isAppInForeground = true
+                        }
+                        Lifecycle.Event.ON_STOP -> {
+//                        logE(">>>onAppInBackground")
+                            isAppInForeground = false
+                        }
+                        else -> {}
+                    }
+                })
                 checkIAM(context)
             }
-            ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
-                when (event) {
-                    Lifecycle.Event.ON_START -> {
-                        logE(">>>loitpp onAppInForeground")
-                    }
-                    Lifecycle.Event.ON_STOP -> {
-                        logE(">>>loitpp onAppInBackground")
-                    }
-                    else -> {}
-                }
-            })
             return true
         }
 
@@ -72,8 +75,11 @@ class IAM {
                     logD("response $response")
 
                     getHtmlContent(data)?.let { htmlContent ->
-                        logE("loitpp htmlContent $htmlContent")
-                        //TODO
+                        logE("loitpp htmlContent $htmlContent, $isAppInForeground")
+                        if (isAppInForeground == true) {
+                            //TODO loitp iplm
+                            Toast.makeText(context, htmlContent, Toast.LENGTH_LONG).show()
+                        }
                     }
 
                     checkIAM(context)
