@@ -52,7 +52,25 @@ class IAM {
                     logD("isSuccessful $isSuccessful")
                     logD("code $code")
                     logD("response $response")
-                    logD("checkIAM data $data")
+
+                    data?.message?.let { jsonString ->
+                        logD("loitpp jsonString: $jsonString")
+                        var mapJsonContent: Map<String, Any> = HashMap()
+                        mapJsonContent = Gson().fromJson(jsonString, mapJsonContent.javaClass)
+
+                        val jsonContent = mapJsonContent["jsonContent"]
+                        logD("loitpp jsonContent: $jsonContent")
+                        logD("loitpp jsonContent: " + Gson().toJson(jsonContent))
+
+                        Gson().toJson(jsonContent)?.let { js ->
+                            var mapMessage: Map<String, Any> = HashMap()
+                            mapMessage = Gson().fromJson(js, mapMessage.javaClass)
+
+                            val message = mapMessage["message"]
+                            logD("loitpp message: $message")
+                        }
+                    }
+
                     checkIAM(context)
                 },
                 onFailure = { t ->
