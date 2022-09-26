@@ -3,8 +3,11 @@
 
     <style name="AppTheme.DialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">
         <item name="windowActionBar">false</item>
+        <item name="android:background">@color/transparent</item>
         <item name="windowNoTitle">true</item>
-<!--        <item name="windowFixedHeightMajor">400dp</item>-->
-<!--        <item name="windowFixedHeightMinor">400dp</item>-->
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 </resources>
