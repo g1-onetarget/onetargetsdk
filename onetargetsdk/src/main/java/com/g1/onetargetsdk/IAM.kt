@@ -88,6 +88,7 @@ class IAM {
                         if (isAppInForeground == true) {
                             context?.let { c ->
                                 val intent = Intent(c, ActivityIAM::class.java)
+                                intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 c.startActivity(intent)
                             }
