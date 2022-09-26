@@ -102,7 +102,7 @@ class ActivityIAM : AppCompatActivity() {
 
         wv?.let { v ->
 //            setBackgroundColor(Color.TRANSPARENT)//TODO revert
-            v.setBackgroundColor(Color.YELLOW)
+            v.setBackgroundColor(Color.TRANSPARENT)
             v.settings.javaScriptEnabled = true
             v.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
         }
