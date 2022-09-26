@@ -59,8 +59,12 @@ class ActivityIAM : AppCompatActivity() {
     private fun setupScreenSize() {
         val lp = WindowManager.LayoutParams()
         lp.copyFrom(this.window.attributes)
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT
+
+        val width = (resources.displayMetrics.widthPixels * 0.50).toInt()
+        val height = (resources.displayMetrics.heightPixels * 0.50).toInt()
+        lp.width = width
+        lp.height = height
+
         this.window.attributes = lp
     }
 
