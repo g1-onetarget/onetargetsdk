@@ -8,11 +8,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
-import com.g1.onetargetsdk.ui.PositionDialog
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /**
  * Created by Loitp on 13.09.2022
@@ -85,12 +85,7 @@ class IAM {
                         logE("loitpp htmlContent $htmlContent, $isAppInForeground")
                         if (isAppInForeground == true) {
                             context?.let { c ->
-                                PositionDialog().showImmersivePos(
-                                    context = c,
-                                    htmlContent = htmlContent,
-                                    sizeWidthPx = null,
-                                    sizeHeightPx = null,
-                                )
+
                             }
                         }
                     }
