@@ -89,7 +89,8 @@ class IAM {
                             context?.let { c ->
                                 val intent = Intent(c, ActivityIAM::class.java)
                                 intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
-                                intent.putExtra(ActivityIAM.IS_FULL_SCREEN, false)//TODO iplm
+                                intent.putExtra(ActivityIAM.SCREEN_WIDTH, 0.9)
+                                intent.putExtra(ActivityIAM.SCREEN_HEIGHT, 0.9)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 c.startActivity(intent)
                             }

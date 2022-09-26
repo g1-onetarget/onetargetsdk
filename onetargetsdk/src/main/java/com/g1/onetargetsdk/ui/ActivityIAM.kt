@@ -17,7 +17,8 @@ import com.g1.onetargetsdk.R
 class ActivityIAM : AppCompatActivity() {
     companion object {
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
-        const val IS_FULL_SCREEN = "IS_FULL_SCREEN"
+        const val SCREEN_WIDTH = "SCREEN_WIDTH"
+        const val SCREEN_HEIGHT = "SCREEN_HEIGHT"
     }
 
     private val logTag = "loitp${ActivityIAM::class.java.simpleName}"
@@ -26,13 +27,14 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private var htmlContent: String = ""
-    private var isFullScreen = true
+    private var screenWidth = 1.0 //from 0.0 -> 1.0
+    private var screenHeight = 1.0 //from 0.0 -> 1.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupData()
-        if (!isFullScreen) {
+        if (!isFullScreen()) {
             this.setFinishOnTouchOutside(true)//TODO iplm
             setTheme(R.style.AppTheme_DialogTheme)
         }
@@ -40,28 +42,36 @@ class ActivityIAM : AppCompatActivity() {
         setContentView(R.layout.activity_iam)
         setupViews()
 
-        if (!isFullScreen) {
+        if (!isFullScreen()) {
             setupScreenSize()
         }
+    }
+
+    private fun isFullScreen(): Boolean {
+        return screenWidth == 1.0 && screenHeight == 1.0
     }
 
     private fun setupData() {
         intent?.getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
             this.htmlContent = htmlContent
         }
-        intent?.getBooleanExtra(IS_FULL_SCREEN, true)?.let { isFullScreen ->
-            this.isFullScreen = isFullScreen
+        intent?.getDoubleExtra(SCREEN_WIDTH, 1.0)?.let { screenWidth ->
+            this.screenWidth = screenWidth
+        }
+        intent?.getDoubleExtra(SCREEN_HEIGHT, 1.0)?.let { screenHeight ->
+            this.screenHeight = screenHeight
         }
         logD(">>>onCreate: $htmlContent")
-        logD(">>>isFullScreen: $isFullScreen")
+        logD(">>>screenWidth: $screenWidth")
+        logD(">>>screenHeight: $screenHeight")
     }
 
     private fun setupScreenSize() {
         val lp = WindowManager.LayoutParams()
         lp.copyFrom(this.window.attributes)
 
-        val width = (resources.displayMetrics.widthPixels * 0.50).toInt()
-        val height = (resources.displayMetrics.heightPixels * 0.50).toInt()
+        val width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
+        val height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
         lp.width = width
         lp.height = height
 
