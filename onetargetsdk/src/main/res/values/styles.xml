@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.DialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">
+    <style name="AppTheme.DialogTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:background">@color/transparent</item>
         <item name="windowNoTitle">true</item>

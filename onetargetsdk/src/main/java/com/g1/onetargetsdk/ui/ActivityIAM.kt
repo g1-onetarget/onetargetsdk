@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
 
 
@@ -33,16 +33,15 @@ class ActivityIAM : AppCompatActivity() {
     private var screenWidth = 1.0 //from 0.0 -> 1.0
     private var screenHeight = 1.0 //from 0.0 -> 1.0
 
+    private var layoutRoot: LinearLayoutCompat? = null
+    private var layoutBody: LinearLayoutCompat? = null
     private var wv: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupData()
-        if (!isFullScreen()) {
-            this.setFinishOnTouchOutside(true)//TODO iplm
-            setTheme(R.style.AppTheme_DialogTheme)
-        }
+        setTheme(R.style.AppTheme_DialogTheme)
 
         setContentView(R.layout.activity_iam)
         setupViews()
@@ -72,20 +71,35 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun setupScreenSize() {
-        val lp = WindowManager.LayoutParams()
-        lp.copyFrom(this.window.attributes)
+//        val lp = WindowManager.LayoutParams()
+//        lp.copyFrom(this.window.attributes)
+//
+//        val width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
+//        val height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
+//        lp.width = width
+//        lp.height = height
+//
+//        this.window.attributes = lp
 
-        val width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
-        val height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
-        lp.width = width
-        lp.height = height
-
-        this.window.attributes = lp
+        layoutBody?.layoutParams?.apply {
+            width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
+            height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
+        layoutRoot = findViewById(R.id.layoutRoot)
+        layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
+
+        layoutRoot?.setOnClickListener {
+//            finish()
+        }
+        layoutBody?.setOnClickListener {
+//            finish()
+        }
+
         wv?.let { v ->
 //            setBackgroundColor(Color.TRANSPARENT)//TODO revert
             v.setBackgroundColor(Color.YELLOW)
