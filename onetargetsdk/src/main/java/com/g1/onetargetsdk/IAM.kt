@@ -84,11 +84,12 @@ class IAM {
                     logD("response $response")
 
                     getHtmlContent(data)?.let { htmlContent ->
-                        logE("loitpp htmlContent $htmlContent, $isAppInForeground")
+                        logE("htmlContent $htmlContent, $isAppInForeground")
                         if (isAppInForeground == true) {
                             context?.let { c ->
                                 val intent = Intent(c, ActivityIAM::class.java)
                                 intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
+                                intent.putExtra(ActivityIAM.IS_FULL_SCREEN, false)//TODO iplm
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 c.startActivity(intent)
                             }

@@ -2,8 +2,10 @@ package com.g1.onetargetsdk.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetargetsdk.R
+
 
 /**
  * Created by Loitp on 12.09.2022
@@ -15,6 +17,7 @@ import com.g1.onetargetsdk.R
 class ActivityIAM : AppCompatActivity() {
     companion object {
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
+        const val IS_FULL_SCREEN = "IS_FULL_SCREEN"
     }
 
     private val logTag = "loitp${ActivityIAM::class.java.simpleName}"
@@ -23,17 +26,46 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private var htmlContent: String = ""
+    private var isFullScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setupData()
+        if (!isFullScreen) {
+            this.setFinishOnTouchOutside(true)//TODO iplm
+            setTheme(R.style.AppTheme_DialogTheme)
+        }
+
+        setContentView(R.layout.activity_iam)
+        setupViews()
+
+        if (!isFullScreen) {
+            setupScreenSize()
+        }
+    }
+
+    private fun setupData() {
         intent?.getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
             this.htmlContent = htmlContent
         }
-//        logD(">>>onCreate: $htmlContent")
-        this.setFinishOnTouchOutside(true)
-        setTheme(R.style.AppTheme_DialogTheme)
-        setContentView(R.layout.activity_iam)
+        intent?.getBooleanExtra(IS_FULL_SCREEN, true)?.let { isFullScreen ->
+            this.isFullScreen = isFullScreen
+        }
+        logD(">>>onCreate: $htmlContent")
+        logD(">>>isFullScreen: $isFullScreen")
+    }
+
+    private fun setupScreenSize() {
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(this.window.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT
+        this.window.attributes = lp
+    }
+
+    private fun setupViews() {
+
     }
 
 }
