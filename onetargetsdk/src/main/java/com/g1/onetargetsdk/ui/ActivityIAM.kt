@@ -1,5 +1,6 @@
 package com.g1.onetargetsdk.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -83,7 +84,10 @@ class ActivityIAM : AppCompatActivity() {
 
     private fun setupViews() {
         wv = findViewById(R.id.wv)
-        wv?.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+        wv?.apply {
+            setBackgroundColor(Color.TRANSPARENT);
+            loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+        }
     }
 
 }
