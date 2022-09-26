@@ -1,5 +1,6 @@
 package com.g1.onetargetsdk.ui
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -82,10 +83,13 @@ class ActivityIAM : AppCompatActivity() {
         this.window.attributes = lp
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         wv = findViewById(R.id.wv)
         wv?.apply {
-            setBackgroundColor(Color.TRANSPARENT);
+//            setBackgroundColor(Color.TRANSPARENT)//TODO revert
+            setBackgroundColor(Color.YELLOW)
+            settings.javaScriptEnabled = true
             loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
         }
     }
