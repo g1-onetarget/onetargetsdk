@@ -11,23 +11,14 @@ import com.g1.onetargetsdk.R
  * +840766040293
  * freuss47@gmail.com
  */
-class Popup : AppCompatActivity() {
+class ActivityIAM : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.setFinishOnTouchOutside(false)
+
+        this.setFinishOnTouchOutside(true)
         setTheme(R.style.AppTheme_DialogTheme)
-        setContentView(R.layout.activity_popup)
-
-        setupViews()
-    }
-
-    private fun setupViews() {
-        setupActionBar()
-    }
-
-    private fun setupActionBar() {
-
+        setContentView(R.layout.activity_iam)
     }
 
 }
