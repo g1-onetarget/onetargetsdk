@@ -6,6 +6,12 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.OneTargetAndroid" />
+        android:theme="@style/Theme.OneTargetAndroid">
+        <activity
+            android:name=".ui.Popup"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:exported="true"/>
+    </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.g1.onetargetsdk
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
@@ -8,6 +9,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
+import com.g1.onetargetsdk.ui.Popup
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -85,7 +87,9 @@ class IAM {
                         logE("loitpp htmlContent $htmlContent, $isAppInForeground")
                         if (isAppInForeground == true) {
                             context?.let { c ->
-
+                                val intent = Intent(c, Popup::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                c.startActivity(intent)
                             }
                         }
                     }

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme.DialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowFixedHeightMajor">400dp</item>
+        <item name="windowFixedHeightMinor">400dp</item>
+    </style>
 </resources>
