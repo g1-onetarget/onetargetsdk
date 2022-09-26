@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatButton
@@ -15,6 +16,6 @@
     <WebView
         android:id="@+id/wv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="350dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

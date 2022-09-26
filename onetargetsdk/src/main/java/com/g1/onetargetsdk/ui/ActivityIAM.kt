@@ -86,11 +86,11 @@ class ActivityIAM : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         wv = findViewById(R.id.wv)
-        wv?.apply {
+        wv?.let { v ->
 //            setBackgroundColor(Color.TRANSPARENT)//TODO revert
-            setBackgroundColor(Color.YELLOW)
-            settings.javaScriptEnabled = true
-            loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+            v.setBackgroundColor(Color.YELLOW)
+            v.settings.javaScriptEnabled = true
+            v.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
         }
     }
 
