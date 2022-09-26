@@ -3,6 +3,7 @@ package com.g1.onetargetsdk.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetargetsdk.R
 
@@ -29,6 +30,8 @@ class ActivityIAM : AppCompatActivity() {
     private var htmlContent: String = ""
     private var screenWidth = 1.0 //from 0.0 -> 1.0
     private var screenHeight = 1.0 //from 0.0 -> 1.0
+
+    private var wv: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +82,8 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun setupViews() {
-
+        wv = findViewById(R.id.wv)
+        wv?.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
     }
 
 }
