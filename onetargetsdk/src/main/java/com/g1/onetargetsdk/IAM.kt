@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.model.IAMData
 import com.g1.onetargetsdk.model.IAMResponse
+import com.g1.onetargetsdk.ui.PositionDialog
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,18 +23,19 @@ import retrofit2.Response
  */
 class IAM {
     companion object {
+        private val logTag = "loitp${IAM::class.java.simpleName}"
         private var configuration: Configuration? = null
         private var isAppInForeground: Boolean? = null
 
         private fun logD(msg: String) {
             if (this.configuration?.isShowLog == true) {
-                Log.d(IAM::class.java.simpleName, msg)
+                Log.d(logTag, msg)
             }
         }
 
         private fun logE(msg: String) {
             if (this.configuration?.isShowLog == true) {
-                Log.e(IAM::class.java.simpleName, msg)
+                Log.e(logTag, msg)
             }
         }
 
@@ -51,17 +53,22 @@ class IAM {
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     when (event) {
                         Lifecycle.Event.ON_START -> {
-//                        logE(">>>onAppInForeground")
-                            isAppInForeground = true
+                            if (isAppInForeground == null) {
+//                                logE(">>>onAppInForeground")
+                                isAppInForeground = true
+                                checkIAM(context)
+                            }
                         }
                         Lifecycle.Event.ON_STOP -> {
-//                        logE(">>>onAppInBackground")
-                            isAppInForeground = false
+                            if (isAppInForeground == null) {
+//                                logE(">>>onAppInBackground")
+                                isAppInForeground = false
+                                checkIAM(context)
+                            }
                         }
                         else -> {}
                     }
                 })
-                checkIAM(context)
             }
             return true
         }
@@ -77,8 +84,14 @@ class IAM {
                     getHtmlContent(data)?.let { htmlContent ->
                         logE("loitpp htmlContent $htmlContent, $isAppInForeground")
                         if (isAppInForeground == true) {
-                            //TODO loitp iplm
-                            Toast.makeText(context, htmlContent, Toast.LENGTH_LONG).show()
+                            context?.let { c ->
+                                PositionDialog().showImmersivePos(
+                                    context = c,
+                                    htmlContent = htmlContent,
+                                    sizeWidthPx = null,
+                                    sizeHeightPx = null,
+                                )
+                            }
                         }
                     }
 
@@ -150,19 +163,18 @@ class IAM {
         ) {
 
             fun isValid(): Boolean {
-//                logD("checkIMA activity == null ${activity == null}")
-//                logD("checkIMA activity.isDestroyed ${activity?.isDestroyed}")
-//                logD("checkIMA activity.isFinishing ${activity?.isFinishing}")
-//                if (activity == null || activity.isDestroyed || activity.isFinishing) {
-//                    return false
-//                }
-
                 if (context?.applicationContext == null) {
+                    return false
+                }
+                if (isAppInForeground == null || isAppInForeground == false) {
                     return false
                 }
                 return true
             }
-            if (!isValid()) {
+
+            val isValid = isValid()
+//            logD(">>>>>>>checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
+            if (!isValid) {
                 return
             }
             val workSpaceId = this.configuration?.writeKey
