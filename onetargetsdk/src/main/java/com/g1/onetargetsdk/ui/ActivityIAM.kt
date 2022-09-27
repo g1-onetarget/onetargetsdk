@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
-import com.g1.onetargetsdk.db.DbUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData
 
@@ -31,6 +30,8 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
         const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
         const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
+
+        var isRunning = false
     }
 
     private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
@@ -52,7 +53,7 @@ class ActivityIAM : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        logD("onCreate")
-        DbUtil.putBoolean(this, DbUtil.KEY_POPUP_IAM_IS_SHOWING, true)
+        isRunning = true
         setupData()
         setTheme(R.style.AppTheme_DialogTheme)
 
@@ -67,7 +68,7 @@ class ActivityIAM : AppCompatActivity() {
 
     override fun onDestroy() {
 //        logD("onDestroy")
-        DbUtil.putBoolean(this, DbUtil.KEY_POPUP_IAM_IS_SHOWING, false)
+        isRunning = false
         super.onDestroy()
     }
 
@@ -98,10 +99,10 @@ class ActivityIAM : AppCompatActivity() {
         }
         logD("~~~~~~~~~~~~~~setupData")
         logD(">>>iamData: $iamData")
-        logD(">>>htmlContent: $htmlContent")
-        logD(">>>screenWidth: $screenWidth")
-        logD(">>>screenHeight: $screenHeight")
-        logD(">>>isEnableTouchOutside: $isEnableTouchOutside")
+//        logD(">>>htmlContent: $htmlContent")
+//        logD(">>>screenWidth: $screenWidth")
+//        logD(">>>screenHeight: $screenHeight")
+//        logD(">>>isEnableTouchOutside: $isEnableTouchOutside")
     }
 
     private fun setupScreenSize() {

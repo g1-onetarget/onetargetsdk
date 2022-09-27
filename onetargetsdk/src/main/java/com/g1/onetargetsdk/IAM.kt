@@ -7,14 +7,12 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.g1.onetargetsdk.db.DbUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 /**
  * Created by Loitp on 13.09.2022
@@ -102,13 +100,8 @@ class IAM {
                                 logD("dt.activeType ${dt.activeType}")
 
                                 context?.let { c ->
-                                    val popupAIMIsShowing =
-                                        DbUtil.getBoolean(
-                                            c,
-                                            DbUtil.KEY_POPUP_IAM_IS_SHOWING,
-                                            false
-                                        )
-                                    logD("popupAIMIsShowing $popupAIMIsShowing")
+                                    val popupAIMIsShowing = ActivityIAM.isRunning
+//                                    logD("popupAIMIsShowing $popupAIMIsShowing")
                                     if (popupAIMIsShowing) {
                                         logE("popupAIMIsShowing true -> return")
                                     } else {
