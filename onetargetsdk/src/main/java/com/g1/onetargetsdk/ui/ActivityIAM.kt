@@ -3,6 +3,8 @@ package com.g1.onetargetsdk.ui
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -59,6 +61,7 @@ class ActivityIAM : AppCompatActivity() {
         if (!isFullScreen()) {
             setupScreenSize()
         }
+        configAutoCloseDialog()
     }
 
     private fun isFullScreen(): Boolean {
@@ -154,6 +157,17 @@ class ActivityIAM : AppCompatActivity() {
 
     private fun onClickBody() {
         logD(">>>onClickBody")
+    }
+
+    private fun configAutoCloseDialog() {
+//        logD(">>>closingAfter: ${iamData?.closingAfter}")
+        iamData?.closingAfter?.let { closingAfter ->
+            if (closingAfter > 0) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    finish()
+                }, (closingAfter * 1000).toLong())
+            }
+        }
     }
 
 }

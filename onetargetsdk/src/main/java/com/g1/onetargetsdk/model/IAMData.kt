@@ -7,10 +7,10 @@ import java.io.Serializable
 data class IAMData(
     val actionClick: String? = null,
     val activeType: String? = null,
-    val activeValue: Double? = null,
-    val closingAfter: Double? = null,
-    val message: String? = null,
-    val name: String? = null,
+    val activeValue: Double? = null,//Giá trị thời gian (giây)/Phần trăm (%) cho (TIME, SCROLL_PERCENTAGE)
+    var closingAfter: Double? = null,//Tự tắt popup nếu giá trị > 0 (Tính theo giây), bằng 0 là user tự tắt.
+    val message: String? = null,//Nội dung HMTL cần hiển thị
+    val name: String? = null,//Tên Journey
 ) : Serializable
 
 //activeType: Có 3 option
