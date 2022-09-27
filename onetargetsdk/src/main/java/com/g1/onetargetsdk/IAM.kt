@@ -18,7 +18,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 /**
  * Created by Loitp on 13.09.2022
  * Galaxy One company,
@@ -62,7 +61,7 @@ class IAM {
                         when (event) {
                             Lifecycle.Event.ON_START -> {
                                 if (isAppInForeground == null) {
-//                                logE(">>>onAppInForeground")
+                                    logE(">>>onAppInForeground")
                                     LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
                                     isAppInForeground = true
                                     checkIAM(c)
@@ -70,7 +69,7 @@ class IAM {
                             }
                             Lifecycle.Event.ON_STOP -> {
                                 if (isAppInForeground == null) {
-//                                logE(">>>onAppInBackground")
+                                    logE(">>>onAppInBackground")
                                     LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
                                     isAppInForeground = false
                                     checkIAM(c)
@@ -134,17 +133,20 @@ class IAM {
                                 logE("popupAIMIsShowing true -> return")
                             } else {
                                 fun handleActiveTypeImmediately() {
+                                    if (isActivityIAMRunning) {
+                                        return
+                                    }
                                     val intent = Intent(c, ActivityIAM::class.java)
                                     intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
                                     intent.putExtra(
-                                        ActivityIAM.KEY_HTML_CONTENT,
-                                        htmlContent
+                                        ActivityIAM.KEY_HTML_CONTENT, htmlContent
                                     )
                                     intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
                                     intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+                                    intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
                                     intent.putExtra(
-                                        ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
-                                        false
+                                        ActivityIAM.KEY_IS_SHOW_LOG,
+                                        this.configuration?.isShowLog
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     c.startActivity(intent)
@@ -187,8 +189,7 @@ class IAM {
             data?.message?.let { jsonStringMessage ->
 //                        logD("jsonString: $jsonStringMessage")
                 var mapJsonContent: Map<String, Any> = HashMap()
-                mapJsonContent =
-                    gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
+                mapJsonContent = gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
 
                 val jsonContent = mapJsonContent["jsonContent"]
 //                        logD("jsonContent: $jsonContent")
@@ -196,16 +197,14 @@ class IAM {
 
                 gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
                     var mapMessage: Map<String, Any> = HashMap()
-                    mapMessage =
-                        gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
+                    mapMessage = gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
 
                     val message = mapMessage["message"]
 //                            logD("message: $message")
 
                     message?.toString()?.let { jsonString ->
                         var mapHtmlContent: Map<String, Any> = HashMap()
-                        mapHtmlContent =
-                            gson.fromJson(jsonString, mapHtmlContent.javaClass)
+                        mapHtmlContent = gson.fromJson(jsonString, mapHtmlContent.javaClass)
 
                         val htmlContent = mapHtmlContent["htmlContent"]
 //                        logD("htmlContent: $htmlContent")

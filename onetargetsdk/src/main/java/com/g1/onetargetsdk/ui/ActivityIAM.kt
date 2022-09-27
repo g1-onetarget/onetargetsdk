@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
@@ -32,11 +35,14 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
         const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
         const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
+        const val KEY_IS_SHOW_LOG = "KEY_IS_SHOW_LOG"
     }
 
     private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
     private fun logD(s: String) {
-        Log.d(logTag, s)
+        if (isShowLog) {
+            Log.d(logTag, s)
+        }
     }
 
     private var iamData: IAMData? = null
@@ -44,8 +50,11 @@ class ActivityIAM : AppCompatActivity() {
     private var screenWidth = 1.0 //from 0.0 -> 1.0
     private var screenHeight = 1.0 //from 0.0 -> 1.0
     private var isEnableTouchOutside = true
+    private var isShowLog = false
 
-    private var layoutRoot: LinearLayoutCompat? = null
+    private var layoutDebugView: LinearLayoutCompat? = null
+    private var tvDebug: AppCompatTextView? = null
+    private var layoutRoot: RelativeLayout? = null
     private var layoutBody: LinearLayoutCompat? = null
     private var wv: WebView? = null
     private var btClose: AppCompatImageButton? = null
@@ -64,6 +73,7 @@ class ActivityIAM : AppCompatActivity() {
             setupScreenSize()
         }
         configAutoCloseDialog()
+        setupDebugView()
     }
 
     override fun onDestroy() {
@@ -74,6 +84,15 @@ class ActivityIAM : AppCompatActivity() {
 
     private fun isFullScreen(): Boolean {
         return screenWidth == 1.0 && screenHeight == 1.0
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupDebugView() {
+        tvDebug?.text = "activeType: ${iamData?.activeType}" +
+                "\nactiveValue: ${iamData?.activeValue}" +
+                "\nclosingAfter: ${iamData?.closingAfter}" +
+                "\nname: ${iamData?.name}"
+
     }
 
     private fun setupData() {
@@ -96,6 +115,9 @@ class ActivityIAM : AppCompatActivity() {
             getBooleanExtra(KEY_ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
                 this@ActivityIAM.isEnableTouchOutside = isEnableTouchOutside
             }
+            getBooleanExtra(KEY_IS_SHOW_LOG, true).let { isShowLog ->
+                this@ActivityIAM.isShowLog = isShowLog
+            }
         }
         logD("~~~~~~~~~~~~~~setupData")
         logD(">>>iamData: $iamData")
@@ -114,10 +136,18 @@ class ActivityIAM : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
+        layoutDebugView = findViewById(R.id.layoutDebugView)
+        tvDebug = findViewById(R.id.tvDebug)
         layoutRoot = findViewById(R.id.layoutRoot)
         layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
         btClose = findViewById(R.id.btClose)
+
+        if (isShowLog) {
+            layoutDebugView?.visibility = View.VISIBLE
+        } else {
+            layoutDebugView?.visibility = View.GONE
+        }
 
         layoutRoot?.setOnClickListener {
             if (isEnableTouchOutside) {
@@ -165,6 +195,7 @@ class ActivityIAM : AppCompatActivity() {
 
     private fun onClickBody() {
         logD(">>>onClickBody")
+        //TODO iplm
     }
 
     private fun configAutoCloseDialog() {

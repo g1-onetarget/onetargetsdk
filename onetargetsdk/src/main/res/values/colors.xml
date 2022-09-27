@@ -9,4 +9,6 @@
     <color name="black30">#4D000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="red">#FFFF0000</color>
+    <color name="red30">#4DFF0000</color>
 </resources>
