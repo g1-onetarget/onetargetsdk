@@ -106,7 +106,7 @@ class ActivityIAM : AppCompatActivity() {
             }
         }
         btClose?.setOnClickListener {
-//            finish()
+            finish()
         }
 
         wv?.let { v ->
@@ -133,10 +133,14 @@ class ActivityIAM : AppCompatActivity() {
             v.addJavascriptInterface(object : Any() {
                 @JavascriptInterface
                 fun performClick(string: String?) {
-                    logD(">>>onClickBody")
+                    onClickBody()
                 }
             }, "onClickBody")
         }
+    }
+
+    private fun onClickBody() {
+        logD(">>>onClickBody")
     }
 
 }
