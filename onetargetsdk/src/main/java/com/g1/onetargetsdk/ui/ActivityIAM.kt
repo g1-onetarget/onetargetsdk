@@ -25,6 +25,7 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
         const val SCREEN_WIDTH = "SCREEN_WIDTH"
         const val SCREEN_HEIGHT = "SCREEN_HEIGHT"
+        const val ENABLE_TOUCH_OUTSIDE = "ENABLE_TOUCH_OUTSIDE"
     }
 
     private val logTag = "loitp${ActivityIAM::class.java.simpleName}"
@@ -35,6 +36,7 @@ class ActivityIAM : AppCompatActivity() {
     private var htmlContent: String = ""
     private var screenWidth = 1.0 //from 0.0 -> 1.0
     private var screenHeight = 1.0 //from 0.0 -> 1.0
+    private var isEnableTouchOutside = true
 
     private var layoutRoot: LinearLayoutCompat? = null
     private var layoutBody: LinearLayoutCompat? = null
@@ -60,14 +62,19 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun setupData() {
-        intent?.getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
-            this.htmlContent = htmlContent
-        }
-        intent?.getDoubleExtra(SCREEN_WIDTH, 1.0)?.let { screenWidth ->
-            this.screenWidth = screenWidth
-        }
-        intent?.getDoubleExtra(SCREEN_HEIGHT, 1.0)?.let { screenHeight ->
-            this.screenHeight = screenHeight
+        intent?.apply {
+            getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
+                this@ActivityIAM.htmlContent = htmlContent
+            }
+            getDoubleExtra(SCREEN_WIDTH, 1.0).let { screenWidth ->
+                this@ActivityIAM.screenWidth = screenWidth
+            }
+            getDoubleExtra(SCREEN_HEIGHT, 1.0).let { screenHeight ->
+                this@ActivityIAM.screenHeight = screenHeight
+            }
+            getBooleanExtra(ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
+                this@ActivityIAM.isEnableTouchOutside = isEnableTouchOutside
+            }
         }
         logD(">>>onCreate: $htmlContent")
         logD(">>>screenWidth: $screenWidth")
@@ -89,10 +96,14 @@ class ActivityIAM : AppCompatActivity() {
         btClose = findViewById(R.id.btClose)
 
         layoutRoot?.setOnClickListener {
-//            finish()
+            if (isEnableTouchOutside) {
+                finish()
+            }
         }
         layoutBody?.setOnClickListener {
-//            finish()
+            if (isEnableTouchOutside) {
+                finish()
+            }
         }
         btClose?.setOnClickListener {
 //            finish()

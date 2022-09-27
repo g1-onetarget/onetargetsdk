@@ -91,6 +91,7 @@ class IAM {
                                 intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
                                 intent.putExtra(ActivityIAM.SCREEN_WIDTH, 1.0)
                                 intent.putExtra(ActivityIAM.SCREEN_HEIGHT, 1.0)
+                                intent.putExtra(ActivityIAM.ENABLE_TOUCH_OUTSIDE, false)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 c.startActivity(intent)
                             }
