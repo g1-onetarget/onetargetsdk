@@ -7,12 +7,14 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.g1.onetargetsdk.db.DbUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /**
  * Created by Loitp on 13.09.2022
@@ -23,9 +25,10 @@ import retrofit2.Response
  */
 class IAM {
     companion object {
-        private val logTag = "loitp${IAM::class.java.simpleName}"
+        private val logTag = "loitpp${IAM::class.java.simpleName}"
         private var configuration: Configuration? = null
         private var isAppInForeground: Boolean? = null
+        private val listIAM = ArrayList<IAMData>()
 
         private fun logD(msg: String) {
             if (this.configuration?.isShowLog == true) {
@@ -82,33 +85,61 @@ class IAM {
                     logD("response $response")
 
                     data?.let { dt ->
+                        if (data.message.isNullOrEmpty()) {
+                            //do nothing
+                        } else {
+                            listIAM.add(dt)
+                        }
+                    }
+
+                    val firstIAMData = listIAM.firstOrNull()
+                    logD("listIAM.size ${listIAM.size}")
+                    logD("firstIAMData $firstIAMData")
+                    firstIAMData?.let { dt ->
                         getHtmlContent(dt)?.let { htmlContent ->
 //                            logE("htmlContent $htmlContent, $isAppInForeground")
                             if (isAppInForeground == true) {
-                                when (dt.activeType) {
-                                    IMMEDIATELY -> {
-                                        context?.let { c ->
-                                            val intent = Intent(c, ActivityIAM::class.java)
-                                            intent.putExtra(ActivityIAM.KEY_IAM_DATA, dt)
-                                            intent.putExtra(
-                                                ActivityIAM.KEY_HTML_CONTENT,
-                                                htmlContent
-                                            )
-                                            intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
-                                            intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
-                                            intent.putExtra(
-                                                ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
-                                                false
-                                            )
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            c.startActivity(intent)
+                                logD("dt.activeType ${dt.activeType}")
+
+                                context?.let { c ->
+                                    val popupAIMIsShowing =
+                                        DbUtil.getBoolean(
+                                            c,
+                                            DbUtil.KEY_POPUP_IAM_IS_SHOWING,
+                                            false
+                                        )
+                                    logD("popupAIMIsShowing $popupAIMIsShowing")
+                                    if (popupAIMIsShowing) {
+                                        logE("popupAIMIsShowing true -> return")
+                                    } else {
+                                        when (dt.activeType) {
+                                            IMMEDIATELY -> {
+                                                val intent = Intent(c, ActivityIAM::class.java)
+                                                intent.putExtra(ActivityIAM.KEY_IAM_DATA, dt)
+                                                intent.putExtra(
+                                                    ActivityIAM.KEY_HTML_CONTENT,
+                                                    htmlContent
+                                                )
+                                                intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
+                                                intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+                                                intent.putExtra(
+                                                    ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
+                                                    false
+                                                )
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                c.startActivity(intent)
+                                                listIAM.removeFirst()
+                                            }
+                                            TIME -> {
+                                                // TODO do sth
+                                            }
+                                            SCROLL_PERCENTAGE -> {
+                                                // do nothing, out of sdk's scope
+                                            }
+                                            else -> {
+                                                //do nothing}
+                                            }
                                         }
-                                    }
-                                    TIME -> {
-                                        // TODO do sth
-                                    }
-                                    SCROLL_PERCENTAGE -> {
-                                        // do nothing, out of sdk's scope
                                     }
                                 }
                             }
