@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
@@ -71,16 +73,6 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun setupScreenSize() {
-//        val lp = WindowManager.LayoutParams()
-//        lp.copyFrom(this.window.attributes)
-//
-//        val width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
-//        val height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
-//        lp.width = width
-//        lp.height = height
-//
-//        this.window.attributes = lp
-
         layoutBody?.layoutParams?.apply {
             width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
             height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
@@ -101,10 +93,32 @@ class ActivityIAM : AppCompatActivity() {
         }
 
         wv?.let { v ->
-//            setBackgroundColor(Color.TRANSPARENT)//TODO revert
             v.setBackgroundColor(Color.TRANSPARENT)
             v.settings.javaScriptEnabled = true
-            v.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+            v.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    logD("onPageFinished $url")
+                }
+            }
+
+//            val content = htmlContent
+
+            //phải gỡ hết các height của html FE thì mới run webview wrap_content được
+            var content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
+            //thêm event onClickBody
+            content = content.replace(
+                oldValue = "class=\"pmp-message-image\"",
+                newValue = "class=\"pmp-message-image\" onclick=\"onClickBody.performClick(this.value);\""
+            )
+
+            v.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null)
+
+            v.addJavascriptInterface(object : Any() {
+                @JavascriptInterface
+                fun performClick(string: String?) {
+                    logD(">>>onClickBody")
+                }
+            }, "onClickBody")
         }
     }
 
