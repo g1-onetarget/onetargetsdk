@@ -87,6 +87,9 @@ class IAM {
                 val result = intent.getBooleanExtra(LocalBroadcastUtil.KEY_DATA, false)
                 isActivityIAMRunning = result
                 logE("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
+                if (!isActivityIAMRunning) {
+                    handleIAMData(context)
+                }
             }
         }
 
@@ -105,55 +108,7 @@ class IAM {
                             listIAM.add(dt)
                         }
                     }
-
-                    val firstIAMData = listIAM.firstOrNull()
-                    logD("listIAM.size ${listIAM.size}")
-//                    logD("firstIAMData $firstIAMData")
-                    firstIAMData?.let { dt ->
-                        getHtmlContent(dt)?.let { htmlContent ->
-//                            logE("htmlContent $htmlContent, $isAppInForeground")
-                            if (isAppInForeground == true) {
-                                logD("dt.activeType ${dt.activeType}")
-
-                                context?.let { c ->
-                                    logD("isActivityIAMRunning $isActivityIAMRunning")
-                                    if (isActivityIAMRunning) {
-                                        logE("popupAIMIsShowing true -> return")
-                                    } else {
-                                        when (dt.activeType) {
-                                            IMMEDIATELY -> {
-                                                val intent = Intent(c, ActivityIAM::class.java)
-                                                intent.putExtra(ActivityIAM.KEY_IAM_DATA, dt)
-                                                intent.putExtra(
-                                                    ActivityIAM.KEY_HTML_CONTENT,
-                                                    htmlContent
-                                                )
-                                                intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
-                                                intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
-                                                intent.putExtra(
-                                                    ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
-                                                    false
-                                                )
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                c.startActivity(intent)
-                                                listIAM.removeFirst()
-                                            }
-                                            TIME -> {
-                                                // TODO do sth
-                                            }
-                                            SCROLL_PERCENTAGE -> {
-                                                // do nothing, out of sdk's scope
-                                            }
-                                            else -> {
-                                                //do nothing}
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
+                    handleIAMData(context)
                     checkIAM(context)
                 },
                 onFailure = { t ->
@@ -161,6 +116,57 @@ class IAM {
                     checkIAM(context)
                 },
             )
+        }
+
+        private fun handleIAMData(context: Context?) {
+            val firstIAMData = listIAM.firstOrNull()
+            logD("listIAM.size ${listIAM.size}")
+            firstIAMData?.let { iamData ->
+                getHtmlContent(iamData)?.let { htmlContent ->
+                    if (isAppInForeground == true) {
+                        logD("dt.activeType ${iamData.activeType}")
+
+                        context?.let { c ->
+                            logD("isActivityIAMRunning $isActivityIAMRunning")
+                            if (isActivityIAMRunning) {
+                                logE("popupAIMIsShowing true -> return")
+                            } else {
+                                fun handleActiveTypeImmediately() {
+                                    val intent = Intent(c, ActivityIAM::class.java)
+                                    intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
+                                    intent.putExtra(
+                                        ActivityIAM.KEY_HTML_CONTENT,
+                                        htmlContent
+                                    )
+                                    intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
+                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+                                    intent.putExtra(
+                                        ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
+                                        false
+                                    )
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    c.startActivity(intent)
+                                    listIAM.removeFirst()
+                                }
+                                when (iamData.activeType) {
+                                    IMMEDIATELY -> {
+                                        handleActiveTypeImmediately()
+                                    }
+                                    TIME -> {
+                                        // TODO do sth
+                                    }
+                                    SCROLL_PERCENTAGE -> {
+                                        // do nothing, out of sdk's scope
+                                    }
+                                    else -> {
+                                        //do nothing}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private fun getHtmlContent(data: IAMData?): String? {
