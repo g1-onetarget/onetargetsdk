@@ -7,8 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.g1.onetargetsdk.model.IAMData
-import com.g1.onetargetsdk.model.IAMResponse
+import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
 import retrofit2.Call
@@ -82,18 +81,36 @@ class IAM {
                     logD("code $code")
                     logD("response $response")
 
-                    getHtmlContent(data)?.let { htmlContent ->
-                        logE("htmlContent $htmlContent, $isAppInForeground")
-                        if (isAppInForeground == true) {
-                            context?.let { c ->
-                                val intent = Intent(c, ActivityIAM::class.java)
-                                intent.putExtra(ActivityIAM.KEY_IAM_DATA, data)
-                                intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
-                                intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
-                                intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
-                                intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                c.startActivity(intent)
+                    data?.let { dt ->
+                        getHtmlContent(dt)?.let { htmlContent ->
+//                            logE("htmlContent $htmlContent, $isAppInForeground")
+                            if (isAppInForeground == true) {
+                                when (dt.activeType) {
+                                    IMMEDIATELY -> {
+                                        context?.let { c ->
+                                            val intent = Intent(c, ActivityIAM::class.java)
+                                            intent.putExtra(ActivityIAM.KEY_IAM_DATA, dt)
+                                            intent.putExtra(
+                                                ActivityIAM.KEY_HTML_CONTENT,
+                                                htmlContent
+                                            )
+                                            intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
+                                            intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+                                            intent.putExtra(
+                                                ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE,
+                                                false
+                                            )
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            c.startActivity(intent)
+                                        }
+                                    }
+                                    TIME -> {
+                                        // TODO do sth
+                                    }
+                                    SCROLL_PERCENTAGE -> {
+                                        // do nothing, out of sdk's scope
+                                    }
+                                }
                             }
                         }
                     }
