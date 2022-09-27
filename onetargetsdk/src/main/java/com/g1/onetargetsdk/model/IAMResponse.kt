@@ -1,6 +1,7 @@
 package com.g1.onetargetsdk.model
 
 import androidx.annotation.Keep
+import java.io.Serializable
 
 /**
  * Created by Loitp on 13.09.2022
@@ -14,4 +15,4 @@ data class IAMResponse(
     val code: String? = null,
     val data: String? = null,
     val message: String? = null,
-)
+) : Serializable

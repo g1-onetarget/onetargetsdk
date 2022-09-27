@@ -15,7 +15,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 /**
  * Created by Loitp on 13.09.2022
  * Galaxy One company,
@@ -88,10 +87,11 @@ class IAM {
                         if (isAppInForeground == true) {
                             context?.let { c ->
                                 val intent = Intent(c, ActivityIAM::class.java)
+                                intent.putExtra(ActivityIAM.KEY_IAM_DATA, data)
                                 intent.putExtra(ActivityIAM.KEY_HTML_CONTENT, htmlContent)
-                                intent.putExtra(ActivityIAM.SCREEN_WIDTH, 1.0)
-                                intent.putExtra(ActivityIAM.SCREEN_HEIGHT, 1.0)
-                                intent.putExtra(ActivityIAM.ENABLE_TOUCH_OUTSIDE, false)
+                                intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
+                                intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+                                intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 c.startActivity(intent)
                             }

@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
+import com.g1.onetargetsdk.ext.getSerializable
+import com.g1.onetargetsdk.model.IAMData
 
 
 /**
@@ -22,10 +24,11 @@ import com.g1.onetargetsdk.R
  */
 class ActivityIAM : AppCompatActivity() {
     companion object {
+        const val KEY_IAM_DATA = "KEY_IAM_DATA"
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
-        const val SCREEN_WIDTH = "SCREEN_WIDTH"
-        const val SCREEN_HEIGHT = "SCREEN_HEIGHT"
-        const val ENABLE_TOUCH_OUTSIDE = "ENABLE_TOUCH_OUTSIDE"
+        const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
+        const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
+        const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
     }
 
     private val logTag = "loitp${ActivityIAM::class.java.simpleName}"
@@ -33,6 +36,7 @@ class ActivityIAM : AppCompatActivity() {
         Log.d(logTag, s)
     }
 
+    private var iamData: IAMData? = null
     private var htmlContent: String = ""
     private var screenWidth = 1.0 //from 0.0 -> 1.0
     private var screenHeight = 1.0 //from 0.0 -> 1.0
@@ -63,22 +67,31 @@ class ActivityIAM : AppCompatActivity() {
 
     private fun setupData() {
         intent?.apply {
+            getSerializable(
+                KEY_IAM_DATA,
+                IAMData::class.java,
+            ).let { iamData ->
+                this@ActivityIAM.iamData = iamData
+            }
             getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
                 this@ActivityIAM.htmlContent = htmlContent
             }
-            getDoubleExtra(SCREEN_WIDTH, 1.0).let { screenWidth ->
+            getDoubleExtra(KEY_SCREEN_WIDTH, 1.0).let { screenWidth ->
                 this@ActivityIAM.screenWidth = screenWidth
             }
-            getDoubleExtra(SCREEN_HEIGHT, 1.0).let { screenHeight ->
+            getDoubleExtra(KEY_SCREEN_HEIGHT, 1.0).let { screenHeight ->
                 this@ActivityIAM.screenHeight = screenHeight
             }
-            getBooleanExtra(ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
+            getBooleanExtra(KEY_ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
                 this@ActivityIAM.isEnableTouchOutside = isEnableTouchOutside
             }
         }
-        logD(">>>onCreate: $htmlContent")
+        logD("~~~~~~~~~~~~~~setupData")
+        logD(">>>iamData: $iamData")
+        logD(">>>htmlContent: $htmlContent")
         logD(">>>screenWidth: $screenWidth")
         logD(">>>screenHeight: $screenHeight")
+        logD(">>>isEnableTouchOutside: $isEnableTouchOutside")
     }
 
     private fun setupScreenSize() {
