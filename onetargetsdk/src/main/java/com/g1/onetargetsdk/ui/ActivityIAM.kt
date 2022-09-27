@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
 
@@ -38,6 +39,7 @@ class ActivityIAM : AppCompatActivity() {
     private var layoutRoot: LinearLayoutCompat? = null
     private var layoutBody: LinearLayoutCompat? = null
     private var wv: WebView? = null
+    private var btClose: AppCompatImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,11 +86,15 @@ class ActivityIAM : AppCompatActivity() {
         layoutRoot = findViewById(R.id.layoutRoot)
         layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
+        btClose = findViewById(R.id.btClose)
 
         layoutRoot?.setOnClickListener {
 //            finish()
         }
         layoutBody?.setOnClickListener {
+//            finish()
+        }
+        btClose?.setOnClickListener {
 //            finish()
         }
 
