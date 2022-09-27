@@ -3,6 +3,8 @@ package com.g1.onetargetsdk
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
@@ -146,14 +148,25 @@ class IAM {
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     c.startActivity(intent)
-                                    listIAM.removeFirst()
+                                    if (listIAM.isNotEmpty()) {
+                                        listIAM.removeFirst()
+                                    }
+                                }
+
+                                fun handleActiveTypeTime() {
+                                    iamData.activeValue?.let { activeValue ->
+                                        logE(">>>handleActiveTypeTime activeValue $activeValue")
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            handleActiveTypeImmediately()
+                                        }, (activeValue * 1000).toLong())
+                                    }
                                 }
                                 when (iamData.activeType) {
                                     IMMEDIATELY -> {
                                         handleActiveTypeImmediately()
                                     }
                                     TIME -> {
-                                        // TODO do sth
+                                        handleActiveTypeTime()
                                     }
                                     SCROLL_PERCENTAGE -> {
                                         // do nothing, out of sdk's scope

@@ -168,7 +168,7 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun configAutoCloseDialog() {
-//        logD(">>>closingAfter: ${iamData?.closingAfter}")
+        logD(">>>closingAfter: ${iamData?.closingAfter}")
         iamData?.closingAfter?.let { closingAfter ->
             if (closingAfter > 0) {
                 Handler(Looper.getMainLooper()).postDelayed({
