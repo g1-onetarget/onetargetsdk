@@ -1,5 +1,6 @@
 package com.g1.onetargetsdk
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -7,12 +8,14 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /**
  * Created by Loitp on 13.09.2022
@@ -27,6 +30,7 @@ class IAM {
         private var configuration: Configuration? = null
         private var isAppInForeground: Boolean? = null
         private val listIAM = ArrayList<IAMData>()
+        private var isActivityIAMRunning = false
 
         private fun logD(msg: String) {
             if (this.configuration?.isShowLog == true) {
@@ -52,26 +56,38 @@ class IAM {
             this.configuration = configuration
             if (configuration.isEnableIAM) {
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
-                    when (event) {
-                        Lifecycle.Event.ON_START -> {
-                            if (isAppInForeground == null) {
+                    context?.let { c ->
+                        when (event) {
+                            Lifecycle.Event.ON_START -> {
+                                if (isAppInForeground == null) {
 //                                logE(">>>onAppInForeground")
-                                isAppInForeground = true
-                                checkIAM(context)
+                                    LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
+                                    isAppInForeground = true
+                                    checkIAM(c)
+                                }
                             }
-                        }
-                        Lifecycle.Event.ON_STOP -> {
-                            if (isAppInForeground == null) {
+                            Lifecycle.Event.ON_STOP -> {
+                                if (isAppInForeground == null) {
 //                                logE(">>>onAppInBackground")
-                                isAppInForeground = false
-                                checkIAM(context)
+                                    LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
+                                    isAppInForeground = false
+                                    checkIAM(c)
+                                }
                             }
+                            else -> {}
                         }
-                        else -> {}
                     }
                 })
             }
             return true
+        }
+
+        private val mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val result = intent.getBooleanExtra(LocalBroadcastUtil.KEY_DATA, false)
+                isActivityIAMRunning = result
+                logE("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
+            }
         }
 
         private fun checkIAM(context: Context?) {
@@ -92,7 +108,7 @@ class IAM {
 
                     val firstIAMData = listIAM.firstOrNull()
                     logD("listIAM.size ${listIAM.size}")
-                    logD("firstIAMData $firstIAMData")
+//                    logD("firstIAMData $firstIAMData")
                     firstIAMData?.let { dt ->
                         getHtmlContent(dt)?.let { htmlContent ->
 //                            logE("htmlContent $htmlContent, $isAppInForeground")
@@ -100,9 +116,8 @@ class IAM {
                                 logD("dt.activeType ${dt.activeType}")
 
                                 context?.let { c ->
-                                    val popupAIMIsShowing = ActivityIAM.isRunning
-//                                    logD("popupAIMIsShowing $popupAIMIsShowing")
-                                    if (popupAIMIsShowing) {
+                                    logD("isActivityIAMRunning $isActivityIAMRunning")
+                                    if (isActivityIAMRunning) {
                                         logE("popupAIMIsShowing true -> return")
                                     } else {
                                         when (dt.activeType) {

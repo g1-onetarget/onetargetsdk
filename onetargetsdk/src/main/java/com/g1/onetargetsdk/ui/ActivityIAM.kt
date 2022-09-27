@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
+import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData
+
 
 /**
  * Created by Loitp on 12.09.2022
@@ -30,8 +32,6 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
         const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
         const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
-
-        var isRunning = false
     }
 
     private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
@@ -53,7 +53,7 @@ class ActivityIAM : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        logD("onCreate")
-        isRunning = true
+        LocalBroadcastUtil.sendMessage(context = this, isActivityIAMRunning = true)
         setupData()
         setTheme(R.style.AppTheme_DialogTheme)
 
@@ -68,7 +68,7 @@ class ActivityIAM : AppCompatActivity() {
 
     override fun onDestroy() {
 //        logD("onDestroy")
-        isRunning = false
+        LocalBroadcastUtil.sendMessage(context = this, isActivityIAMRunning = false)
         super.onDestroy()
     }
 
