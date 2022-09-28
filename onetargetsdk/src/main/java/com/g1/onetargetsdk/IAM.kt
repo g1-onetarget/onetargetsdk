@@ -141,8 +141,8 @@ class IAM {
                                     intent.putExtra(
                                         ActivityIAM.KEY_HTML_CONTENT, htmlContent
                                     )
-                                    intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
-                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
+//                                    intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
+//                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
                                     intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
                                     intent.putExtra(
                                         ActivityIAM.KEY_IS_SHOW_LOG,

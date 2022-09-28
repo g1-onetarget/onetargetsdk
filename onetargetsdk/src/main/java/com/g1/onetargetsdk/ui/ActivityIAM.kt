@@ -33,8 +33,8 @@ class ActivityIAM : AppCompatActivity() {
     companion object {
         const val KEY_IAM_DATA = "KEY_IAM_DATA"
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
-        const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
-        const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
+//        const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
+//        const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
         const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
         const val KEY_IS_SHOW_LOG = "KEY_IS_SHOW_LOG"
     }
@@ -70,9 +70,9 @@ class ActivityIAM : AppCompatActivity() {
         setContentView(R.layout.activity_iam)
         setupViews()
 
-        if (!isFullScreen()) {
-            setupScreenSize()
-        }
+//        if (!isFullScreen()) {
+//            setupScreenSize()
+//        }
         configAutoCloseDialog()
         setupDebugView()
     }
@@ -83,9 +83,9 @@ class ActivityIAM : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun isFullScreen(): Boolean {
-        return screenWidth == 1.0 && screenHeight == 1.0
-    }
+//    private fun isFullScreen(): Boolean {
+//        return screenWidth == 1.0 && screenHeight == 1.0
+//    }
 
     @SuppressLint("SetTextI18n")
     private fun setupDebugView() {
@@ -107,12 +107,12 @@ class ActivityIAM : AppCompatActivity() {
             getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
                 this@ActivityIAM.htmlContent = htmlContent
             }
-            getDoubleExtra(KEY_SCREEN_WIDTH, 1.0).let { screenWidth ->
-                this@ActivityIAM.screenWidth = screenWidth
-            }
-            getDoubleExtra(KEY_SCREEN_HEIGHT, 1.0).let { screenHeight ->
-                this@ActivityIAM.screenHeight = screenHeight
-            }
+//            getDoubleExtra(KEY_SCREEN_WIDTH, 1.0).let { screenWidth ->
+//                this@ActivityIAM.screenWidth = screenWidth
+//            }
+//            getDoubleExtra(KEY_SCREEN_HEIGHT, 1.0).let { screenHeight ->
+//                this@ActivityIAM.screenHeight = screenHeight
+//            }
             getBooleanExtra(KEY_ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
                 this@ActivityIAM.isEnableTouchOutside = isEnableTouchOutside
             }
@@ -128,12 +128,12 @@ class ActivityIAM : AppCompatActivity() {
 //        logD(">>>isEnableTouchOutside: $isEnableTouchOutside")
     }
 
-    private fun setupScreenSize() {
-        layoutBody?.layoutParams?.apply {
-            width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
-            height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
-        }
-    }
+//    private fun setupScreenSize() {
+//        layoutBody?.layoutParams?.apply {
+//            width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
+//            height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
+//        }
+//    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
@@ -167,6 +167,10 @@ class ActivityIAM : AppCompatActivity() {
         wv?.let { v ->
             v.setBackgroundColor(Color.TRANSPARENT)
             v.settings.javaScriptEnabled = true
+//            v.settings.loadWithOverviewMode = true
+//            v.settings.useWideViewPort = true
+//            v.setInitialScale(1)
+//            v.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     logD("onPageFinished $url")
@@ -177,7 +181,7 @@ class ActivityIAM : AppCompatActivity() {
                     request: WebResourceRequest?
                 ): Boolean {
                     logD(">>>>shouldOverrideUrlLoading ${view?.url}")
-                    return super.shouldOverrideUrlLoading(view, request)
+                    return true
                 }
             }
 
