@@ -219,7 +219,7 @@ class IAM {
 
 //            val htmlContent = parseManually()
             val htmlContent = data?.getJsonContent()?.htmlContent
-//            logE(">>>getHtmlContent $htmlContent")
+            logE(">>>getHtmlContent $htmlContent")
             return htmlContent
         }
 
