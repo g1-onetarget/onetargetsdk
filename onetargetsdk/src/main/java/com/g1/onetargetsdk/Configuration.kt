@@ -19,8 +19,8 @@ class Configuration(context: Context) {
         const val BASE_URL_TRACKING_PROD = "https://pixel.cdp.link/"
 
         const val BASE_URL_IAM_DEV = "https://api-dev.predict.marketing/"
-        const val BASE_URL_IAM_STAG = ""//TODO fill
-        const val BASE_URL_IAM_PROD = ""//TODO fill
+        const val BASE_URL_IAM_STAG = "https://api-stag.onetarget.vn/"
+        const val BASE_URL_IAM_PROD = "https://api.onetarget.vn/"
     }
 
     var writeKey: String? = null
