@@ -14,6 +14,7 @@ import com.g1.onetargetsdk.IAM
  * +840766040293
  * freuss47@gmail.com
  */
+
 class G1Application : Application() {
 
     override fun onCreate() {
@@ -36,9 +37,11 @@ class G1Application : Application() {
         }
         configuration.writeKey = C.getWorkSpaceId()
         configuration.isShowLog = true
+        configuration.isEnableIAM = true
         val resultSetupTracking = Analytics.setup(configuration)
-        val resultSetupIAM = IAM.setup(configuration)
+        val resultSetupIAM = IAM.setup(configuration, this)
         Log.d(G1Application::class.java.simpleName, "resultSetupTracking $resultSetupTracking")
         Log.d(G1Application::class.java.simpleName, "resultSetupIAM $resultSetupIAM")
     }
+
 }

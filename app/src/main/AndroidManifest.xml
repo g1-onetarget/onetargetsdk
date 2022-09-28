@@ -33,10 +33,6 @@
             android:name=".activity.TrackingActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true" />
-        <activity
-            android:name=".activity.IAMActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true" />
     </application>
 
 </manifest>
