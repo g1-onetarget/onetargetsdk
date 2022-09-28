@@ -1,13 +1,14 @@
 package com.g1.onetargetsdk.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -212,35 +213,48 @@ class ActivityIAM : AppCompatActivity() {
                     view: WebView?,
                     request: WebResourceRequest?
                 ): Boolean {
-                    logD(">>>>shouldOverrideUrlLoading ${view?.url}")
-                    return true
+                    logD(">>>>shouldOverrideUrlLoading ${request?.url}")
+                    request?.url?.let { u ->
+                        onClickBody(u)
+                        return true
+                    }
+                    return false
                 }
             }
 
 //            val content = htmlContent
 
             //phải gỡ hết các height của html FE thì mới run webview wrap_content được
-            var content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
+            val content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
+
             //thêm event onClickBody
-            content = content.replace(
-                oldValue = "class=\"pmp-message-image\"",
-                newValue = "class=\"pmp-message-image\" onclick=\"onClickBody.performClick(this.value);\""
-            )
+//            content = content.replace(
+//                oldValue = "class=\"pmp-message-image\"",
+//                newValue = "class=\"pmp-message-image\" onclick=\"onClickBody.performClick(this.value);\""
+//            )
 
             v.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null)
 
-            v.addJavascriptInterface(object : Any() {
-                @JavascriptInterface
-                fun performClick(string: String?) {
-                    onClickBody()
-                }
-            }, "onClickBody")
+//            v.addJavascriptInterface(object : Any() {
+//                @JavascriptInterface
+//                fun performClick(string: String?) {
+//                    onClickBody()
+//                }
+//            }, "onClickBody")
         }
     }
 
-    private fun onClickBody() {
-        logD(">>>onClickBody")
-        //TODO iplm
+    private fun onClickBody(uri: Uri) {
+//        logD(">>>onClickBody uri $uri")
+        iamData?.actionClick?.let { actionClick ->
+
+            val link = "$actionClick$uri"
+//            logD("onClickBody link $link")
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(link)
+            startActivity(i)
+            finishAfterTransition()
+        }
     }
 
     private fun configAutoCloseDialog() {
