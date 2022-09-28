@@ -59,9 +59,10 @@ class ActivityIAM : AppCompatActivity() {
     private var layoutDebugView: LinearLayoutCompat? = null
     private var tvDebug: AppCompatTextView? = null
     private var layoutRoot: RelativeLayout? = null
-    private var layoutBody: LinearLayoutCompat? = null
+    private var layoutBody: RelativeLayout? = null
     private var wv: WebView? = null
     private var btCloseOutside: AppCompatImageButton? = null
+    private var btCloseInside: AppCompatImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,6 +147,7 @@ class ActivityIAM : AppCompatActivity() {
         layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
         btCloseOutside = findViewById(R.id.btCloseOutside)
+        btCloseInside = findViewById(R.id.btCloseInside)
 
         if (isShowLog) {
             layoutDebugView?.visibility = View.VISIBLE
@@ -164,6 +166,9 @@ class ActivityIAM : AppCompatActivity() {
             }
         }
         btCloseOutside?.setOnClickListener {
+            finish()
+        }
+        btCloseInside?.setOnClickListener {
             finish()
         }
 
@@ -190,10 +195,12 @@ class ActivityIAM : AppCompatActivity() {
                 logD("addOnLayoutChangeListener w: $w, h: $h, screenHeight: $screenHeight, ratio: $ratio")
                 if (ratio >= 80) {
                     logD("ad full")
-                    btCloseOutside?.visibility = View.GONE
+                    setVisibilityButton(btCloseOutside, View.GONE)
+                    setVisibilityButton(btCloseInside, View.VISIBLE)
                 } else {
                     logD("ad center")
-                    btCloseOutside?.visibility = View.VISIBLE
+                    setVisibilityButton(btCloseOutside, View.VISIBLE)
+                    setVisibilityButton(btCloseInside, View.GONE)
                 }
             }
             v.webViewClient = object : WebViewClient() {
@@ -243,6 +250,14 @@ class ActivityIAM : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).postDelayed({
                     finish()
                 }, (closingAfter * 1000).toLong())
+            }
+        }
+    }
+
+    private fun setVisibilityButton(bt: AppCompatImageButton?, visibility: Int) {
+        bt?.apply {
+            post {
+                this.visibility = visibility
             }
         }
     }
