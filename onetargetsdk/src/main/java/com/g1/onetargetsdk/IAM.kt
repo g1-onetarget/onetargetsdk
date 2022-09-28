@@ -32,6 +32,7 @@ class IAM {
         private var isAppInForeground: Boolean? = null
         private val listIAM = ArrayList<IAMData>()
         private var isActivityIAMRunning = false
+        private var isWaitingIAMTime = false
 
         private fun logD(msg: String) {
             if (this.configuration?.isShowLog == true) {
@@ -106,6 +107,7 @@ class IAM {
                         if (data.message.isNullOrEmpty()) {
                             //do nothing
                         } else {
+                            logE(">>>response activeType ${dt.activeType}")
                             listIAM.add(dt)
                         }
                     }
@@ -133,7 +135,8 @@ class IAM {
                                 logE("popupAIMIsShowing true -> return")
                             } else {
                                 fun handleActiveTypeImmediately() {
-                                    if (isActivityIAMRunning) {
+                                    if (isActivityIAMRunning || isWaitingIAMTime) {
+                                        logE("handleActiveTypeImmediately isActivityIAMRunning || isWaitingIAMTime -> return")
                                         return
                                     }
                                     val intent = Intent(c, ActivityIAM::class.java)
@@ -145,8 +148,7 @@ class IAM {
 //                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
                                     intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
                                     intent.putExtra(
-                                        ActivityIAM.KEY_IS_SHOW_LOG,
-                                        this.configuration?.isShowLog
+                                        ActivityIAM.KEY_IS_SHOW_LOG, this.configuration?.isShowLog
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     c.startActivity(intent)
@@ -158,7 +160,9 @@ class IAM {
                                 fun handleActiveTypeTime() {
                                     iamData.activeValue?.let { activeValue ->
                                         logE(">>>handleActiveTypeTime activeValue $activeValue")
+                                        isWaitingIAMTime = true
                                         Handler(Looper.getMainLooper()).postDelayed({
+                                            isWaitingIAMTime = false
                                             handleActiveTypeImmediately()
                                         }, (activeValue * 1000).toLong())
                                     }
