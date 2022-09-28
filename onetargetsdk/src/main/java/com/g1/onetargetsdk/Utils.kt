@@ -2,6 +2,7 @@ package com.g1.onetargetsdk
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
@@ -50,4 +51,10 @@ object Utils {
         logD(logTag, "uuid $uuid")
         return uuid
     }
+
+    val screenWidth: Int
+        get() = Resources.getSystem().displayMetrics.widthPixels
+
+    val screenHeight: Int
+        get() = Resources.getSystem().displayMetrics.heightPixels
 }

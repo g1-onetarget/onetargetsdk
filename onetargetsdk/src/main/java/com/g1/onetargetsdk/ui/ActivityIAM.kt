@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
+import com.g1.onetargetsdk.Utils
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData
@@ -33,7 +34,8 @@ class ActivityIAM : AppCompatActivity() {
     companion object {
         const val KEY_IAM_DATA = "KEY_IAM_DATA"
         const val KEY_HTML_CONTENT = "KEY_HTML_CONTENT"
-//        const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
+
+        //        const val KEY_SCREEN_WIDTH = "KEY_SCREEN_WIDTH"
 //        const val KEY_SCREEN_HEIGHT = "KEY_SCREEN_HEIGHT"
         const val KEY_ENABLE_TOUCH_OUTSIDE = "KEY_ENABLE_TOUCH_OUTSIDE"
         const val KEY_IS_SHOW_LOG = "KEY_IS_SHOW_LOG"
@@ -48,8 +50,9 @@ class ActivityIAM : AppCompatActivity() {
 
     private var iamData: IAMData? = null
     private var htmlContent: String = ""
-    private var screenWidth = 1.0 //from 0.0 -> 1.0
-    private var screenHeight = 1.0 //from 0.0 -> 1.0
+
+    //    private var screenWidth = 1.0 //from 0.0 -> 1.0
+//    private var screenHeight = 1.0 //from 0.0 -> 1.0
     private var isEnableTouchOutside = true
     private var isShowLog = false
 
@@ -167,13 +170,30 @@ class ActivityIAM : AppCompatActivity() {
         wv?.let { v ->
             v.setBackgroundColor(Color.TRANSPARENT)
             v.settings.javaScriptEnabled = true
-//            v.settings.loadWithOverviewMode = true
-//            v.settings.useWideViewPort = true
+            v.settings.loadWithOverviewMode = true
+            v.settings.useWideViewPort = true
 //            v.setInitialScale(1)
 //            v.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
+
+//            v.settings.builtInZoomControls = true
+//            v.setInitialScale(1)
+//            v.setPadding(0, 0, 0, 0)
+
+            v.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                val w = v.width
+                val h = v.height
+                val screenHeight = Utils.screenHeight
+                val ratio = h * 100 / screenHeight
+                logD("addOnLayoutChangeListener w: $w, h: $h, screenHeight: $screenHeight, ratio: $ratio")
+                if (ratio >= 80) {
+                    logD("ad full")
+                } else {
+                    logD("ad center")
+                }
+            }
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    logD("onPageFinished $url")
+//                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
                 }
 
                 override fun shouldOverrideUrlLoading(
