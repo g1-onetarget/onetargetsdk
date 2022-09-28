@@ -8,6 +8,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
@@ -169,6 +170,14 @@ class ActivityIAM : AppCompatActivity() {
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     logD("onPageFinished $url")
+                }
+
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    logD(">>>>shouldOverrideUrlLoading ${view?.url}")
+                    return super.shouldOverrideUrlLoading(view, request)
                 }
             }
 

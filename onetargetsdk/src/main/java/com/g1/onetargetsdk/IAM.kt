@@ -185,34 +185,42 @@ class IAM {
         }
 
         private fun getHtmlContent(data: IAMData?): String? {
-            val gson = Gson()
-            data?.message?.let { jsonStringMessage ->
-//                        logD("jsonString: $jsonStringMessage")
-                var mapJsonContent: Map<String, Any> = HashMap()
-                mapJsonContent = gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
 
-                val jsonContent = mapJsonContent["jsonContent"]
+            fun parseManually(): String? {
+                val gson = Gson()
+                data?.message?.let { jsonStringMessage ->
+//                        logD("jsonString: $jsonStringMessage")
+                    var mapJsonContent: Map<String, Any> = HashMap()
+                    mapJsonContent = gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
+
+                    val jsonContent = mapJsonContent["jsonContent"]
 //                        logD("jsonContent: $jsonContent")
 //                        logD("jsonContent: " + gson.toJson(jsonContent))
 
-                gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
-                    var mapMessage: Map<String, Any> = HashMap()
-                    mapMessage = gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
+                    gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
+                        var mapMessage: Map<String, Any> = HashMap()
+                        mapMessage = gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
 
-                    val message = mapMessage["message"]
+                        val message = mapMessage["message"]
 //                            logD("message: $message")
 
-                    message?.toString()?.let { jsonString ->
-                        var mapHtmlContent: Map<String, Any> = HashMap()
-                        mapHtmlContent = gson.fromJson(jsonString, mapHtmlContent.javaClass)
+                        message?.toString()?.let { jsonString ->
+                            var mapHtmlContent: Map<String, Any> = HashMap()
+                            mapHtmlContent = gson.fromJson(jsonString, mapHtmlContent.javaClass)
 
-                        val htmlContent = mapHtmlContent["htmlContent"]
+                            val htmlContent = mapHtmlContent["htmlContent"]
 //                        logD("htmlContent: $htmlContent")
-                        return htmlContent?.toString()
+                            return htmlContent?.toString()
+                        }
                     }
                 }
+                return null
             }
-            return null
+
+//            val htmlContent = parseManually()
+            val htmlContent = data?.getJsonContent()?.htmlContent
+//            logE(">>>getHtmlContent $htmlContent")
+            return htmlContent
         }
 
         @JvmStatic
