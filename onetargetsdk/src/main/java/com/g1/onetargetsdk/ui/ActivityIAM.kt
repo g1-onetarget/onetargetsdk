@@ -61,7 +61,7 @@ class ActivityIAM : AppCompatActivity() {
     private var layoutRoot: RelativeLayout? = null
     private var layoutBody: LinearLayoutCompat? = null
     private var wv: WebView? = null
-    private var btClose: AppCompatImageButton? = null
+    private var btCloseOutside: AppCompatImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,7 +145,7 @@ class ActivityIAM : AppCompatActivity() {
         layoutRoot = findViewById(R.id.layoutRoot)
         layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
-        btClose = findViewById(R.id.btClose)
+        btCloseOutside = findViewById(R.id.btCloseOutside)
 
         if (isShowLog) {
             layoutDebugView?.visibility = View.VISIBLE
@@ -163,7 +163,7 @@ class ActivityIAM : AppCompatActivity() {
                 finish()
             }
         }
-        btClose?.setOnClickListener {
+        btCloseOutside?.setOnClickListener {
             finish()
         }
 
@@ -182,13 +182,18 @@ class ActivityIAM : AppCompatActivity() {
             v.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 val w = v.width
                 val h = v.height
+                if (h <= 0) {
+                    return@addOnLayoutChangeListener
+                }
                 val screenHeight = Utils.screenHeight
                 val ratio = h * 100 / screenHeight
                 logD("addOnLayoutChangeListener w: $w, h: $h, screenHeight: $screenHeight, ratio: $ratio")
                 if (ratio >= 80) {
                     logD("ad full")
+                    btCloseOutside?.visibility = View.GONE
                 } else {
                     logD("ad center")
+                    btCloseOutside?.visibility = View.VISIBLE
                 }
             }
             v.webViewClient = object : WebViewClient() {

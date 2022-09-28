@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btClose"
+            android:id="@+id/btCloseOutside"
             android:layout_width="@dimen/w_45"
             android:layout_height="@dimen/w_45"
             android:layout_above="@+id/wv"
@@ -25,7 +25,9 @@
             android:background="@color/transparent"
             android:padding="@dimen/w_10"
             android:scaleType="centerInside"
-            android:src="@drawable/baseline_cancel_white_48" />
+            android:src="@drawable/baseline_cancel_white_48"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <WebView
             android:id="@+id/wv"
