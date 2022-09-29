@@ -1,5 +1,7 @@
 package com.g1.onetargetsdk.core
 
+import android.app.Activity
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -29,6 +31,7 @@ import retrofit2.Response
  * freuss47@gmail.com
  */
 class IAM {
+
     companion object {
         private val logTag = "g1mobile${IAM::class.java.simpleName}"
         private var configuration: Configuration? = null
@@ -58,31 +61,38 @@ class IAM {
                 logE("base url cannot be null or empty")
                 return false
             }
+
             Companion.configuration = configuration
             if (configuration.isEnableIAM) {
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
                         when (event) {
                             Lifecycle.Event.ON_START -> {
-                                if (isAppInForeground == null) {
-                                    logE(">>>onAppInForeground")
+//                                logD(">>>Lifecycle.Event.ON_START")
+                                if (isAppInForeground != true) {
+                                    logD(">>>onAppInForeground")
                                     LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
                                     isAppInForeground = true
-                                    checkIAM(c)
+                                    checkIAM(context = c)
                                 }
                             }
                             Lifecycle.Event.ON_STOP -> {
-                                if (isAppInForeground == null) {
-                                    logE(">>>onAppInBackground")
+//                                logD(">>>Lifecycle.Event.ON_STOP")
+                                if (isAppInForeground != false) {
+                                    logD(">>>onAppInBackground")
                                     LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
                                     isAppInForeground = false
-                                    checkIAM(c)
+                                    checkIAM(context = c)
                                 }
                             }
                             else -> {}
                         }
                     }
                 })
+
+                if (context is Application) {
+                    context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
+                }
             }
             return true
         }
@@ -91,7 +101,7 @@ class IAM {
             override fun onReceive(context: Context, intent: Intent) {
                 val result = intent.getBooleanExtra(LocalBroadcastUtil.KEY_DATA, false)
                 isActivityIAMRunning = result
-                logE("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
+//                logD("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
                 if (!isActivityIAMRunning) {
                     handleIAMData(context)
                 }
@@ -99,6 +109,10 @@ class IAM {
         }
 
         private fun checkIAM(context: Context?) {
+            if (getCurrentActivity() == null) {
+                logE(">>>currentActivity == null => return")
+                return
+            }
             checkIAM(
                 context,
                 onResponse = { isSuccessful, code, response, data ->
@@ -110,28 +124,29 @@ class IAM {
                         if (data.message.isNullOrEmpty()) {
                             //do nothing
                         } else {
-                            logE(">>>response activeType ${dt.activeType}")
+//                            logE(">>>response activeType ${dt.activeType}")
                             listIAM.add(dt)
                         }
                     }
                     handleIAMData(context)
-                    checkIAM(context)
+                    checkIAM(context = context)
                 },
                 onFailure = { t ->
                     t.printStackTrace()
-                    checkIAM(context)
+                    checkIAM(context = context)
                 },
             )
         }
 
-        private fun handleIAMData(context: Context?) {
+        private fun handleIAMData(
+            context: Context?,
+        ) {
             val firstIAMData = listIAM.firstOrNull()
-            logD("listIAM.size ${listIAM.size}")
+            logD("handleIAMData listIAM.size ${listIAM.size}")
             firstIAMData?.let { iamData ->
                 getHtmlContent(iamData)?.let { htmlContent ->
                     if (isAppInForeground == true) {
-                        logD("dt.activeType ${iamData.activeType}")
-
+                        logD("handleIAMData dt.activeType ${iamData.activeType}")
                         context?.let { c ->
                             logD("isActivityIAMRunning $isActivityIAMRunning")
                             if (isActivityIAMRunning) {
@@ -140,6 +155,10 @@ class IAM {
                                 fun handleActiveTypeImmediately() {
                                     if (isActivityIAMRunning || isWaitingIAMTime) {
                                         logE("handleActiveTypeImmediately isActivityIAMRunning || isWaitingIAMTime -> return")
+                                        return
+                                    }
+                                    if (getCurrentActivity() == null) {
+                                        logE(">>>handleIAMData currentActivity == null => return")
                                         return
                                     }
                                     val intent = Intent(c, ActivityIAM::class.java)
@@ -154,7 +173,7 @@ class IAM {
                                         ActivityIAM.KEY_IS_SHOW_LOG, configuration?.isShowLog
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    c.startActivity(intent)
+                                    getCurrentActivity()?.startActivity(intent)
                                     if (listIAM.isNotEmpty()) {
                                         listIAM.removeFirst()
                                     }
@@ -170,6 +189,7 @@ class IAM {
                                         }, (activeValue * 1000).toLong())
                                     }
                                 }
+
                                 when (iamData.activeType) {
                                     IMMEDIATELY -> {
                                         handleActiveTypeImmediately()
@@ -192,39 +212,6 @@ class IAM {
         }
 
         private fun getHtmlContent(data: IAMData?): String? {
-
-            fun parseManually(): String? {
-                val gson = Gson()
-                data?.message?.let { jsonStringMessage ->
-//                        logD("jsonString: $jsonStringMessage")
-                    var mapJsonContent: Map<String, Any> = HashMap()
-                    mapJsonContent = gson.fromJson(jsonStringMessage, mapJsonContent.javaClass)
-
-                    val jsonContent = mapJsonContent["jsonContent"]
-//                        logD("jsonContent: $jsonContent")
-//                        logD("jsonContent: " + gson.toJson(jsonContent))
-
-                    gson.toJson(jsonContent)?.let { jsonStringJsonContent ->
-                        var mapMessage: Map<String, Any> = HashMap()
-                        mapMessage = gson.fromJson(jsonStringJsonContent, mapMessage.javaClass)
-
-                        val message = mapMessage["message"]
-//                            logD("message: $message")
-
-                        message?.toString()?.let { jsonString ->
-                            var mapHtmlContent: Map<String, Any> = HashMap()
-                            mapHtmlContent = gson.fromJson(jsonString, mapHtmlContent.javaClass)
-
-                            val htmlContent = mapHtmlContent["htmlContent"]
-//                        logD("htmlContent: $htmlContent")
-                            return htmlContent?.toString()
-                        }
-                    }
-                }
-                return null
-            }
-
-//            val htmlContent = parseManually()
             val htmlContent = data?.getJsonContent()?.htmlContent
             logE(">>>getHtmlContent $htmlContent")
             return htmlContent
@@ -255,7 +242,7 @@ class IAM {
         ) {
 
             fun isValid(): Boolean {
-                if (context?.applicationContext == null) {
+                if (context == null) {
                     return false
                 }
                 if (isAppInForeground == null || isAppInForeground == false) {
@@ -276,7 +263,11 @@ class IAM {
             }
 //            logD(">>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
             if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
-                Toast.makeText(context, "checkIAM", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "checkIAM ${getCurrentActivity()?.javaClass?.simpleName}, isAppInForeground: $isAppInForeground",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             service()?.checkIAM(
                 workspaceId = workSpaceId,
@@ -303,6 +294,12 @@ class IAM {
                     }
                 }
             })
+        }
+
+        private fun getCurrentActivity(): Activity? {
+            val currentActivity = configuration?.activityLifecycleCallbacks?.currentActivity
+            logE("~~~getCurrentActivity simpleName: ${currentActivity?.javaClass?.simpleName}, isAppInForeground $isAppInForeground")
+            return currentActivity
         }
     }
 }
