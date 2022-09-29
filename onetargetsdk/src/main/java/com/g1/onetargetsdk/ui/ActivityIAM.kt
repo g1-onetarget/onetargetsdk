@@ -147,12 +147,14 @@ class ActivityIAM : AppCompatActivity() {
         }
 
         wv?.let { v ->
-            if (isShowLog) {
-                v.setBackgroundColor(Utils.getColor(this, R.color.red30))
-            } else {
-                v.setBackgroundColor(Color.TRANSPARENT)
-            }
+//            if (isShowLog) {
+//                v.setBackgroundColor(Utils.getColor(this, R.color.red30))
+//            } else {
+//                v.setBackgroundColor(Color.TRANSPARENT)
+//            }
 
+            v.setBackgroundColor(Color.YELLOW)//TODO revert
+            v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
             v.settings.javaScriptEnabled = true
             v.settings.loadWithOverviewMode = true
             v.settings.useWideViewPort = true

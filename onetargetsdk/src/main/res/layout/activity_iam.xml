@@ -4,13 +4,14 @@
     android:id="@+id/layoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black30">
+    android:background="@color/red">
+
+<!--    TODO revert red-->
 
     <RelativeLayout
         android:id="@+id/layoutBody"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparent">
+        android:layout_height="match_parent">
 
         <WebView
             android:id="@+id/wv"
