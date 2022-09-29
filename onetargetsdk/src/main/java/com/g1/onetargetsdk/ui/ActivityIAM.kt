@@ -153,7 +153,7 @@ class ActivityIAM : AppCompatActivity() {
 //                v.setBackgroundColor(Color.TRANSPARENT)
 //            }
 
-            v.setBackgroundColor(Color.YELLOW)//TODO revert
+            v.setBackgroundColor(Color.TRANSPARENT)
             v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
             v.settings.javaScriptEnabled = true
             v.settings.loadWithOverviewMode = true
