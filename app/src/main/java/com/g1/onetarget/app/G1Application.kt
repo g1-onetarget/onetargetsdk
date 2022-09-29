@@ -36,7 +36,7 @@ class G1Application : Application() {
             configuration.setEnvironmentProd()
         }
         configuration.writeKey = C.getWorkSpaceId()
-        configuration.isShowLog = true
+        configuration.isShowLog = false
         configuration.isEnableIAM = true
         val resultSetupTracking = Analytics.setup(configuration)
         val resultSetupIAM = IAM.setup(configuration, this)
