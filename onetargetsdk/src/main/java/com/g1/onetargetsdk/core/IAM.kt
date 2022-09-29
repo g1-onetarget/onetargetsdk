@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.BuildConfig
+import com.g1.onetargetsdk.common.G1ActivityLifecycleCallbacks
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.services.OneTargetService
@@ -64,34 +65,57 @@ class IAM {
 
             Companion.configuration = configuration
             if (configuration.isEnableIAM) {
+
+                fun handleOnStart(c: Context, onFirstActivityInit: Boolean) {
+                    if (isAppInForeground != true || onFirstActivityInit) {
+                        logD(">>>onAppInForeground")
+                        LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
+                        isAppInForeground = true
+                        checkIAM(context = c)
+                    }
+                }
+
+                fun handleOnStop(c: Context) {
+                    if (isAppInForeground != false) {
+                        logD(">>>onAppInBackground")
+                        LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
+                        isAppInForeground = false
+                        checkIAM(context = c)
+                    }
+                }
+
+                val activityLifecycleCallbacks =
+                    G1ActivityLifecycleCallbacks { onFirstActivityInit ->
+                        logE(">>>onFirstActivityInit ${onFirstActivityInit.javaClass.simpleName}")
+                        context?.let { c ->
+                            handleOnStart(c, true)
+                        }
+                    }
+                configuration.activityLifecycleCallbacks = activityLifecycleCallbacks
                 if (context is Application) {
-                    logE(">>>setup context is Application")
+                    logE(">>>register setup context is Application")
                     context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
                 } else {
-                    logE(">>>setup context !is Application")
+                    logE(">>>register setup context !is Application")
                     val application = context?.applicationContext as Application?
-                    application?.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
+                    if (application == null) {
+                        logE(">>>register application==null")
+                    } else {
+                        logE(">>>register application!=null")
+                        application.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
+                        logE(">>>register getCurrentActivity ${getCurrentActivity()}")
+                    }
                 }
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
                         when (event) {
                             Lifecycle.Event.ON_START -> {
 //                                logD(">>>Lifecycle.Event.ON_START")
-                                if (isAppInForeground != true) {
-                                    logD(">>>onAppInForeground")
-                                    LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
-                                    isAppInForeground = true
-                                    checkIAM(context = c)
-                                }
+                                handleOnStart(c, false)
                             }
                             Lifecycle.Event.ON_STOP -> {
 //                                logD(">>>Lifecycle.Event.ON_STOP")
-                                if (isAppInForeground != false) {
-                                    logD(">>>onAppInBackground")
-                                    LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
-                                    isAppInForeground = false
-                                    checkIAM(context = c)
-                                }
+                                handleOnStop(c)
                             }
                             else -> {}
                         }

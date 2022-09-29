@@ -20,11 +20,32 @@ class MainActivity : AppCompatActivity() {
     private var btSampleTracking: AppCompatButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+//        setupSDK()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setupViews()
     }
+
+//    private fun setupSDK() {
+//        C.setEnv(C.DEV)
+//
+//        val configuration = Configuration(this)
+//        if (C.isEnvDev()) {
+//            configuration.setEnvironmentDev()
+//        } else if (C.isEnvStag()) {
+//            configuration.setEnvironmentStag()
+//        } else if (C.isEnvProd()) {
+//            configuration.setEnvironmentProd()
+//        }
+//        configuration.writeKey = C.getWorkSpaceId()
+//        configuration.isShowLog = true
+//        configuration.isEnableIAM = true
+//        val resultSetupTracking = Analytics.setup(configuration)
+//        val resultSetupIAM = IAM.setup(configuration, this)
+//        Log.d(G1Application::class.java.simpleName, "resultSetupTracking $resultSetupTracking")
+//        Log.d(G1Application::class.java.simpleName, "resultSetupIAM $resultSetupIAM")
+//    }
 
     private fun setupViews() {
         setupActionBar()

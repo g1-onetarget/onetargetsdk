@@ -12,7 +12,8 @@ import android.util.Log
  * +840766040293
  * freuss47@gmail.com
  */
-class G1ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
+class G1ActivityLifecycleCallbacks(var onFirstActivityInit: ((Activity) -> Unit)? = null) :
+    Application.ActivityLifecycleCallbacks {
 
     var currentActivity: Activity? = null
 
@@ -33,6 +34,7 @@ class G1ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         currentActivity = activity
         logD("onActivityCreated ${activity::class.java.simpleName}")
+        onFirstActivityInit?.invoke(activity)
     }
 
     override fun onActivityStarted(activity: Activity) {

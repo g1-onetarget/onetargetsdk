@@ -35,7 +35,6 @@ class Configuration(context: Context) {
 
     init {
         deviceId = Utils.getDeviceId(context)
-        activityLifecycleCallbacks = G1ActivityLifecycleCallbacks()
     }
 
     fun setEnvironmentDev() {
