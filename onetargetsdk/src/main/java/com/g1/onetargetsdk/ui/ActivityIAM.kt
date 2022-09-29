@@ -182,10 +182,8 @@ class ActivityIAM : AppCompatActivity() {
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
 //                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
-
-                    //TODO
-                    v.setBackgroundColor(Color.TRANSPARENT)
-                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+//                    v.setBackgroundColor(Color.TRANSPARENT)
+//                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
                 }
 
                 override fun shouldOverrideUrlLoading(

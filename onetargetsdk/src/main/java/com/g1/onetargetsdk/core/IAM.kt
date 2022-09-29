@@ -64,6 +64,10 @@ class IAM {
 
             Companion.configuration = configuration
             if (configuration.isEnableIAM) {
+                if (context is Application) {
+                    logE(">>>setup context is Application")
+                    context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
+                }
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
                         when (event) {
@@ -89,10 +93,6 @@ class IAM {
                         }
                     }
                 })
-
-                if (context is Application) {
-                    context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
-                }
             }
             return true
         }
