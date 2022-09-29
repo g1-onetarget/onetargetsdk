@@ -17,7 +17,7 @@ class G1ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     var currentActivity: Activity? = null
 
     private fun logD(msg: String) {
-        Log.d(G1ActivityLifecycleCallbacks::class.java.simpleName, msg)
+        Log.d(G1ActivityLifecycleCallbacks::class.java.simpleName, "g1mobile$msg")
     }
 
     override fun onActivityPaused(activity: Activity) {

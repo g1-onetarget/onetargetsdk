@@ -31,10 +31,11 @@ class Configuration(context: Context) {
     var isShowLog = false
     var isEnableIAM = true
     var deviceId: String? = null
-    val activityLifecycleCallbacks = G1ActivityLifecycleCallbacks()
+    var activityLifecycleCallbacks: G1ActivityLifecycleCallbacks? = null
 
     init {
         deviceId = Utils.getDeviceId(context)
+        activityLifecycleCallbacks = G1ActivityLifecycleCallbacks()
     }
 
     fun setEnvironmentDev() {
@@ -59,4 +60,5 @@ class Configuration(context: Context) {
     fun getBaseUrlIAM(): String {
         return baseUrlIAM
     }
+
 }

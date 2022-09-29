@@ -67,6 +67,10 @@ class IAM {
                 if (context is Application) {
                     logE(">>>setup context is Application")
                     context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
+                } else {
+                    logE(">>>setup context !is Application")
+                    val application = context?.applicationContext as Application?
+                    application?.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
                 }
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
