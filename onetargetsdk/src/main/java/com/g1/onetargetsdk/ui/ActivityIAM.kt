@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -23,7 +22,6 @@ import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData
 
-
 /**
  * Created by Loitp on 12.09.2022
  * Galaxy One company,
@@ -31,6 +29,7 @@ import com.g1.onetargetsdk.model.IAMData
  * +840766040293
  * freuss47@gmail.com
  */
+
 class ActivityIAM : AppCompatActivity() {
     companion object {
         const val KEY_IAM_DATA = "KEY_IAM_DATA"
@@ -45,15 +44,13 @@ class ActivityIAM : AppCompatActivity() {
     private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
     private fun logD(s: String) {
         if (isShowLog) {
-            Log.d(logTag, s)
+            Utils.logD(logTag, s)
         }
     }
 
     private var iamData: IAMData? = null
     private var htmlContent: String = ""
 
-    //    private var screenWidth = 1.0 //from 0.0 -> 1.0
-//    private var screenHeight = 1.0 //from 0.0 -> 1.0
     private var isEnableTouchOutside = true
     private var isShowLog = false
 
@@ -67,37 +64,26 @@ class ActivityIAM : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        logD("onCreate")
+
         LocalBroadcastUtil.sendMessage(context = this, isActivityIAMRunning = true)
         setupData()
         setTheme(R.style.AppTheme_DialogTheme)
 
         setContentView(R.layout.activity_iam)
         setupViews()
-
-//        if (!isFullScreen()) {
-//            setupScreenSize()
-//        }
         configAutoCloseDialog()
         setupDebugView()
     }
 
     override fun onDestroy() {
-//        logD("onDestroy")
         LocalBroadcastUtil.sendMessage(context = this, isActivityIAMRunning = false)
         super.onDestroy()
     }
 
-//    private fun isFullScreen(): Boolean {
-//        return screenWidth == 1.0 && screenHeight == 1.0
-//    }
-
     @SuppressLint("SetTextI18n")
     private fun setupDebugView() {
-        tvDebug?.text = "activeType: ${iamData?.activeType}" +
-                "\nactiveValue: ${iamData?.activeValue}" +
-                "\nclosingAfter: ${iamData?.closingAfter}" +
-                "\nname: ${iamData?.name}"
+        tvDebug?.text =
+            "activeType: ${iamData?.activeType}" + "\nactiveValue: ${iamData?.activeValue}" + "\nclosingAfter: ${iamData?.closingAfter}" + "\nname: ${iamData?.name}"
 
     }
 
@@ -112,12 +98,6 @@ class ActivityIAM : AppCompatActivity() {
             getStringExtra(KEY_HTML_CONTENT)?.let { htmlContent ->
                 this@ActivityIAM.htmlContent = htmlContent
             }
-//            getDoubleExtra(KEY_SCREEN_WIDTH, 1.0).let { screenWidth ->
-//                this@ActivityIAM.screenWidth = screenWidth
-//            }
-//            getDoubleExtra(KEY_SCREEN_HEIGHT, 1.0).let { screenHeight ->
-//                this@ActivityIAM.screenHeight = screenHeight
-//            }
             getBooleanExtra(KEY_ENABLE_TOUCH_OUTSIDE, true).let { isEnableTouchOutside ->
                 this@ActivityIAM.isEnableTouchOutside = isEnableTouchOutside
             }
@@ -132,13 +112,6 @@ class ActivityIAM : AppCompatActivity() {
 //        logD(">>>screenHeight: $screenHeight")
 //        logD(">>>isEnableTouchOutside: $isEnableTouchOutside")
     }
-
-//    private fun setupScreenSize() {
-//        layoutBody?.layoutParams?.apply {
-//            width = (resources.displayMetrics.widthPixels * screenWidth).toInt()
-//            height = (resources.displayMetrics.heightPixels * screenHeight).toInt()
-//        }
-//    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
@@ -174,58 +147,61 @@ class ActivityIAM : AppCompatActivity() {
         }
 
         wv?.let { v ->
-            v.setBackgroundColor(Color.TRANSPARENT)
+            if (isShowLog) {
+                v.setBackgroundColor(Utils.getColor(this, R.color.red30))
+            } else {
+                v.setBackgroundColor(Color.TRANSPARENT)
+            }
+
             v.settings.javaScriptEnabled = true
             v.settings.loadWithOverviewMode = true
             v.settings.useWideViewPort = true
-//            v.setInitialScale(1)
-//            v.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
 
-//            v.settings.builtInZoomControls = true
-//            v.setInitialScale(1)
-//            v.setPadding(0, 0, 0, 0)
-
-            v.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                val w = v.width
-                val h = v.height
-                if (h <= 0) {
-                    return@addOnLayoutChangeListener
-                }
-                val screenHeight = Utils.screenHeight
-                val ratio = h * 100 / screenHeight
-                logD("addOnLayoutChangeListener w: $w, h: $h, screenHeight: $screenHeight, ratio: $ratio")
-                if (ratio >= 80) {
-                    logD("ad full")
-                    setVisibilityButton(btCloseOutside, View.GONE)
-                    setVisibilityButton(btCloseInside, View.VISIBLE)
-                } else {
-                    logD("ad center")
-                    setVisibilityButton(btCloseOutside, View.VISIBLE)
-                    setVisibilityButton(btCloseInside, View.GONE)
-                }
-            }
+            //listener get height of web view
+//            v.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+//                val w = v.width
+//                val h = v.height
+//                if (h <= 0) {
+//                    return@addOnLayoutChangeListener
+//                }
+//                val screenHeight = Utils.screenHeight
+//                val ratio = h * 100 / screenHeight
+//                logD("addOnLayoutChangeListener w: $w, h: $h, screenHeight: $screenHeight, ratio: $ratio")
+//                if (ratio >= 80) {
+//                    logD("ad full")
+//                    setVisibilityButton(btCloseOutside, View.GONE)
+//                    setVisibilityButton(btCloseInside, View.VISIBLE)
+//                } else {
+//                    logD("ad center")
+//                    setVisibilityButton(btCloseOutside, View.VISIBLE)
+//                    setVisibilityButton(btCloseInside, View.GONE)
+//                }
+//            }
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
 //                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
                 }
 
                 override fun shouldOverrideUrlLoading(
-                    view: WebView?,
-                    request: WebResourceRequest?
+                    view: WebView?, request: WebResourceRequest?
                 ): Boolean {
                     logD(">>>>shouldOverrideUrlLoading ${request?.url}")
                     request?.url?.let { u ->
-                        onClickBody(u)
+                        if (Utils.isExistWebView(u)) {
+                            onClickClose()
+                        } else {
+                            onClickBody(u)
+                        }
                         return true
                     }
                     return false
                 }
             }
 
-//            val content = htmlContent
+            val content = htmlContent
 
             //phải gỡ hết các height của html FE thì mới run webview wrap_content được
-            val content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
+//            val content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
 
             //thêm event onClickBody
 //            content = content.replace(
@@ -244,12 +220,13 @@ class ActivityIAM : AppCompatActivity() {
         }
     }
 
-    private fun onClickBody(uri: Uri) {
-//        logD(">>>onClickBody uri $uri")
-        iamData?.actionClick?.let { actionClick ->
+    private fun onClickClose() {
+        finish()
+    }
 
+    private fun onClickBody(uri: Uri) {
+        iamData?.actionClick?.let { actionClick ->
             val link = "$actionClick$uri"
-//            logD("onClickBody link $link")
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(link)
             startActivity(i)
@@ -264,14 +241,6 @@ class ActivityIAM : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).postDelayed({
                     finish()
                 }, (closingAfter * 1000).toLong())
-            }
-        }
-    }
-
-    private fun setVisibilityButton(bt: AppCompatImageButton?, visibility: Int) {
-        bt?.apply {
-            post {
-                this.visibility = visibility
             }
         }
     }
