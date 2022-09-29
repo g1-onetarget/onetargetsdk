@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.appcompat.widget.AppCompatImageButton
 import java.util.*
 
 /**
@@ -57,4 +58,12 @@ object Utils {
 
     val screenHeight: Int
         get() = Resources.getSystem().displayMetrics.heightPixels
+
+    fun setVisibilityButton(bt: AppCompatImageButton?, visibility: Int) {
+        bt?.apply {
+            post {
+                this.visibility = visibility
+            }
+        }
+    }
 }
