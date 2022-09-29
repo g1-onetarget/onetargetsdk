@@ -27,7 +27,7 @@ import retrofit2.Response
  */
 class IAM {
     companion object {
-        private val logTag = "loitpp${IAM::class.java.simpleName}"
+        private val logTag = "g1mobile${IAM::class.java.simpleName}"
         private var configuration: Configuration? = null
         private var isAppInForeground: Boolean? = null
         private val listIAM = ArrayList<IAMData>()

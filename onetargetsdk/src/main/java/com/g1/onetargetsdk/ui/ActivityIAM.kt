@@ -41,7 +41,7 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_IS_SHOW_LOG = "KEY_IS_SHOW_LOG"
     }
 
-    private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
+    private val logTag = "g1mobile${ActivityIAM::class.java.simpleName}"
     private fun logD(s: String) {
         if (isShowLog) {
             Utils.logD(logTag, s)
