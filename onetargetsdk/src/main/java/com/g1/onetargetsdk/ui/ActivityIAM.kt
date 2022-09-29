@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -18,6 +17,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
+import com.g1.onetargetsdk.Utils
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData
@@ -44,7 +44,7 @@ class ActivityIAM : AppCompatActivity() {
     private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
     private fun logD(s: String) {
         if (isShowLog) {
-            Log.d(logTag, s)
+            Utils.logD(logTag, s)
         }
     }
 
@@ -82,10 +82,8 @@ class ActivityIAM : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setupDebugView() {
-        tvDebug?.text = "activeType: ${iamData?.activeType}" +
-                "\nactiveValue: ${iamData?.activeValue}" +
-                "\nclosingAfter: ${iamData?.closingAfter}" +
-                "\nname: ${iamData?.name}"
+        tvDebug?.text =
+            "activeType: ${iamData?.activeType}" + "\nactiveValue: ${iamData?.activeValue}" + "\nclosingAfter: ${iamData?.closingAfter}" + "\nname: ${iamData?.name}"
 
     }
 
@@ -149,7 +147,12 @@ class ActivityIAM : AppCompatActivity() {
         }
 
         wv?.let { v ->
-            v.setBackgroundColor(Color.TRANSPARENT)
+            if (isShowLog) {
+                v.setBackgroundColor(Utils.getColor(this, R.color.red30))
+            } else {
+                v.setBackgroundColor(Color.TRANSPARENT)
+            }
+
             v.settings.javaScriptEnabled = true
             v.settings.loadWithOverviewMode = true
             v.settings.useWideViewPort = true
@@ -180,22 +183,25 @@ class ActivityIAM : AppCompatActivity() {
                 }
 
                 override fun shouldOverrideUrlLoading(
-                    view: WebView?,
-                    request: WebResourceRequest?
+                    view: WebView?, request: WebResourceRequest?
                 ): Boolean {
                     logD(">>>>shouldOverrideUrlLoading ${request?.url}")
                     request?.url?.let { u ->
-                        onClickBody(u)
+                        if (Utils.isExistWebView(u)) {
+                            onClickClose()
+                        } else {
+                            onClickBody(u)
+                        }
                         return true
                     }
                     return false
                 }
             }
 
-//            val content = htmlContent
+            val content = htmlContent
 
             //phải gỡ hết các height của html FE thì mới run webview wrap_content được
-            val content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
+//            val content = htmlContent.replace(oldValue = "height:", newValue = "height_:")
 
             //thêm event onClickBody
 //            content = content.replace(
@@ -212,6 +218,10 @@ class ActivityIAM : AppCompatActivity() {
 //                }
 //            }, "onClickBody")
         }
+    }
+
+    private fun onClickClose() {
+        finish()
     }
 
     private fun onClickBody(uri: Uri) {

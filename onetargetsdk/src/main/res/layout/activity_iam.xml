@@ -10,14 +10,12 @@
         android:id="@+id/layoutBody"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:background="@color/transparent">
 
         <WebView
             android:id="@+id/wv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
             android:scrollbars="none" />
 
         <androidx.appcompat.widget.AppCompatImageButton

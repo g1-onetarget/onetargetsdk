@@ -3,10 +3,15 @@ package com.g1.onetargetsdk
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.content.ContextCompat
 import java.util.*
 
 /**
@@ -65,5 +70,17 @@ object Utils {
                 this.visibility = visibility
             }
         }
+    }
+
+    fun isExistWebView(uri: Uri): Boolean {
+        return uri.toString() == "onetarget://exit"
+    }
+
+    fun getDrawable(context: Context, @DrawableRes drawableRes: Int): Drawable? {
+        return ContextCompat.getDrawable(context, drawableRes)
+    }
+
+    fun getColor(context: Context, @ColorRes colorRes: Int): Int {
+        return ContextCompat.getColor(context, colorRes)
     }
 }
