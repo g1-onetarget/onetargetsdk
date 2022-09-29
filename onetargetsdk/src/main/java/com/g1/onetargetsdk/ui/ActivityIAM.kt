@@ -41,7 +41,7 @@ class ActivityIAM : AppCompatActivity() {
         const val KEY_IS_SHOW_LOG = "KEY_IS_SHOW_LOG"
     }
 
-    private val logTag = "loitpp${ActivityIAM::class.java.simpleName}"
+    private val logTag = "g1mobile${ActivityIAM::class.java.simpleName}"
     private fun logD(s: String) {
         if (isShowLog) {
             Utils.logD(logTag, s)
@@ -153,7 +153,7 @@ class ActivityIAM : AppCompatActivity() {
 //                v.setBackgroundColor(Color.TRANSPARENT)
 //            }
 
-            v.setBackgroundColor(Color.YELLOW)//TODO revert
+            v.setBackgroundColor(Color.TRANSPARENT)
             v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
             v.settings.javaScriptEnabled = true
             v.settings.loadWithOverviewMode = true
@@ -182,6 +182,10 @@ class ActivityIAM : AppCompatActivity() {
             v.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
 //                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
+
+                    //TODO
+                    v.setBackgroundColor(Color.TRANSPARENT)
+                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
                 }
 
                 override fun shouldOverrideUrlLoading(

@@ -4,9 +4,7 @@
     android:id="@+id/layoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/red">
-
-<!--    TODO revert red-->
+    android:background="@color/black30">
 
     <RelativeLayout
         android:id="@+id/layoutBody"

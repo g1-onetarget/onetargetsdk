@@ -39,8 +39,7 @@ object Utils {
             return null
         }
         val androidId = Settings.Secure.getString(
-            context.contentResolver,
-            Settings.Secure.ANDROID_ID
+            context.contentResolver, Settings.Secure.ANDROID_ID
         )
         logD(logTag, "androidId $androidId")
         if (androidId.isNotEmpty()) {
