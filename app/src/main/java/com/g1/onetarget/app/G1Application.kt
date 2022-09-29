@@ -3,9 +3,9 @@ package com.g1.onetarget.app
 import android.app.Application
 import android.util.Log
 import com.g1.onetarget.common.C
-import com.g1.onetargetsdk.Analytics
-import com.g1.onetargetsdk.Configuration
-import com.g1.onetargetsdk.IAM
+import com.g1.onetargetsdk.core.Analytics
+import com.g1.onetargetsdk.core.Configuration
+import com.g1.onetargetsdk.core.IAM
 
 /**
  * Created by Loitp on 12.09.2022

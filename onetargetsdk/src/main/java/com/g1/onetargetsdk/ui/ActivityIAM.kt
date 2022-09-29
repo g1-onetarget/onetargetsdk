@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.g1.onetargetsdk.R
-import com.g1.onetargetsdk.Utils
+import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.ext.getSerializable
 import com.g1.onetargetsdk.model.IAMData

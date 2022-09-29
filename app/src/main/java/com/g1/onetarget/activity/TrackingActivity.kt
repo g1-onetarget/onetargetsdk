@@ -9,10 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
-import com.g1.onetarget.BuildConfig
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
-import com.g1.onetargetsdk.Analytics
+import com.g1.onetargetsdk.core.Analytics
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

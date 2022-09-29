@@ -1,4 +1,4 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.core
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,8 +10,11 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.g1.onetargetsdk.BuildConfig
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.model.*
+import com.g1.onetargetsdk.services.OneTargetService
+import com.g1.onetargetsdk.services.RetrofitClient
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
 import retrofit2.Call
@@ -35,13 +38,13 @@ class IAM {
         private var isWaitingIAMTime = false
 
         private fun logD(msg: String) {
-            if (this.configuration?.isShowLog == true) {
+            if (configuration?.isShowLog == true) {
                 Log.d(logTag, msg)
             }
         }
 
         private fun logE(msg: String) {
-            if (this.configuration?.isShowLog == true) {
+            if (configuration?.isShowLog == true) {
                 Log.e(logTag, msg)
             }
         }
@@ -55,7 +58,7 @@ class IAM {
                 logE("base url cannot be null or empty")
                 return false
             }
-            this.configuration = configuration
+            Companion.configuration = configuration
             if (configuration.isEnableIAM) {
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
@@ -148,7 +151,7 @@ class IAM {
 //                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
                                     intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
                                     intent.putExtra(
-                                        ActivityIAM.KEY_IS_SHOW_LOG, this.configuration?.isShowLog
+                                        ActivityIAM.KEY_IS_SHOW_LOG, configuration?.isShowLog
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     c.startActivity(intent)
@@ -229,16 +232,16 @@ class IAM {
 
         @JvmStatic
         private fun service(): OneTargetService? {
-            if (this.configuration == null) {
+            if (configuration == null) {
                 logE("configuration not found")
                 return null
             }
-            val baseUrl = this.configuration?.getBaseUrlIAM()
+            val baseUrl = configuration?.getBaseUrlIAM()
             if (baseUrl.isNullOrEmpty()) {
                 logE("base url cannot be null or empty")
                 return null
             }
-            val isShowLog = this.configuration?.isShowLog
+            val isShowLog = configuration?.isShowLog
             return RetrofitClient.getClientIAM(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
@@ -266,13 +269,13 @@ class IAM {
             if (!isValid) {
                 return
             }
-            val workSpaceId = this.configuration?.writeKey
-            val identityId = this.configuration?.deviceId
+            val workSpaceId = configuration?.writeKey
+            val identityId = configuration?.deviceId
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
 //            logD(">>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
-            if (this.configuration?.isShowLog == true && BuildConfig.DEBUG) {
+            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
                 Toast.makeText(context, "checkIAM", Toast.LENGTH_LONG).show()
             }
             service()?.checkIAM(

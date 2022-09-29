@@ -1,4 +1,4 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.services
 
 import com.g1.onetargetsdk.model.IAMResponse
 import retrofit2.Call

@@ -1,4 +1,4 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.common
 
 import android.annotation.SuppressLint
 import android.content.Context

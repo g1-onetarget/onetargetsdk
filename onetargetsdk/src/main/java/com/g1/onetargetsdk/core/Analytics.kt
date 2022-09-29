@@ -1,7 +1,9 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.core
 
-import com.g1.onetargetsdk.Utils.logE
+import com.g1.onetargetsdk.common.Utils.logE
 import com.g1.onetargetsdk.model.MonitorEvent
+import com.g1.onetargetsdk.services.OneTargetService
+import com.g1.onetargetsdk.services.RetrofitClient
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,22 +30,22 @@ class Analytics {
                 logE(logTag, "base url cannot be null or empty")
                 return false
             }
-            this.configuration = configuration
+            Companion.configuration = configuration
             return true
         }
 
         @JvmStatic
         private fun service(): OneTargetService? {
-            if (this.configuration == null) {
+            if (configuration == null) {
                 logE(logTag, "configuration not found")
                 return null
             }
-            val baseUrl = this.configuration?.getBaseUrlTracking()
+            val baseUrl = configuration?.getBaseUrlTracking()
             if (baseUrl.isNullOrEmpty()) {
                 logE(logTag, "base url cannot be null or empty")
                 return null
             }
-            val isShowLog = this.configuration?.isShowLog
+            val isShowLog = configuration?.isShowLog
             return RetrofitClient.getClientTracking(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
@@ -116,7 +118,7 @@ class Analytics {
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
             val tmpWorkspaceId = if (workSpaceId.isNullOrEmpty()) {
-                this.configuration?.writeKey
+                configuration?.writeKey
             } else {
                 workSpaceId
             }

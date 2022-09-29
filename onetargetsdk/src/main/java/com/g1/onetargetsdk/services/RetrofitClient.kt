@@ -1,4 +1,4 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.services
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

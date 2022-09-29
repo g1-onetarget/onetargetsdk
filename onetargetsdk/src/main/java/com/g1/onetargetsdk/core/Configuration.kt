@@ -1,6 +1,7 @@
-package com.g1.onetargetsdk
+package com.g1.onetargetsdk.core
 
 import android.content.Context
+import com.g1.onetargetsdk.common.Utils
 
 /**
  * Created by Loitp on 12.09.2022
