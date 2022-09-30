@@ -26,11 +26,11 @@ import com.g1.onetargetsdk.model.IAMData
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupSDK()
+//        setupSDK()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-//        goToHome()
+        goToHome()
     }
 
     private fun setupSDK() {

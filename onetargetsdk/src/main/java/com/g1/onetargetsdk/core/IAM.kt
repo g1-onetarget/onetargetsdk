@@ -469,6 +469,10 @@ class IAM {
             }
 
             dialog.window?.let {
+                it.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                it.statusBarColor = activity.window.statusBarColor
+                it.navigationBarColor = activity.window.navigationBarColor
+
                 if (configuration?.isShowLog == true) {
                     it.setBackgroundDrawable(
                         ColorDrawable(
