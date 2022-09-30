@@ -1,16 +1,26 @@
 package com.g1.onetargetsdk.core
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.BuildConfig
+import com.g1.onetargetsdk.R
+import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.services.OneTargetService
@@ -297,6 +307,58 @@ class IAM {
             if (listIAM.isNotEmpty()) {
                 listIAM.removeFirst()
             }
+        }
+
+        fun showIAMDialog(
+            activity: Activity,
+            htmlContent: String,
+            iamData: IAMData
+        ) {
+            val alertDialogProgress = genDialogIAM(activity = activity)
+            show(alertDialogProgress)
+            if (listIAM.isNotEmpty()) {
+                listIAM.removeFirst()
+            }
+        }
+
+        private fun show(dialog: Dialog?) {
+            if (dialog != null && !dialog.isShowing) {
+                dialog.show()
+            }
+        }
+
+        private fun hide(dialog: Dialog?) {
+            if (dialog != null && dialog.isShowing) {
+                dialog.cancel()
+            }
+        }
+
+        @SuppressLint("InflateParams")
+        private fun genDialogIAM(
+            activity: Activity
+        ): Dialog {
+            val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.dialog_iam)
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.setCancelable(false)
+
+            val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
+
+            dialog.window?.let {
+                it.setBackgroundDrawable(ColorDrawable(Utils.getColor(activity, R.color.red30)))
+
+                val wlp = it.attributes
+                wlp.gravity = Gravity.CENTER
+                wlp.flags = wlp.flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
+
+                it.attributes = wlp
+                it.setLayout(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
+                )
+            }
+            return dialog
         }
     }
 }
