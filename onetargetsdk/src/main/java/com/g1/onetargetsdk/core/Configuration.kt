@@ -2,6 +2,7 @@ package com.g1.onetargetsdk.core
 
 import android.content.Context
 import com.g1.onetargetsdk.common.Utils
+import com.g1.onetargetsdk.model.IAMData
 
 /**
  * Created by Loitp on 12.09.2022
@@ -30,6 +31,9 @@ class Configuration(context: Context) {
     var isShowLog = false
     var isEnableIAM = true
     var deviceId: String? = null
+    var onShowIAM: ((
+        htmlContent: String, iamData: IAMData,
+    ) -> Unit)? = null
 
     init {
         deviceId = Utils.getDeviceId(context)

@@ -150,58 +150,41 @@ class IAM {
                 getHtmlContent(iamData)?.let { htmlContent ->
                     if (isAppInForeground == true) {
                         logD("handleIAMData dt.activeType ${iamData.activeType}")
-                        context?.let { c ->
-                            logD("isActivityIAMRunning $isActivityIAMRunning")
-                            if (isActivityIAMRunning) {
-                                logE("popupAIMIsShowing true -> return")
-                            } else {
-                                fun handleActiveTypeImmediately() {
-                                    if (isActivityIAMRunning || isWaitingIAMTime) {
-                                        logE("handleActiveTypeImmediately isActivityIAMRunning || isWaitingIAMTime -> return")
-                                        return
-                                    }
-                                    val intent = Intent(c, ActivityIAM::class.java)
-                                    intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
-                                    intent.putExtra(
-                                        ActivityIAM.KEY_HTML_CONTENT, htmlContent
-                                    )
-//                                    intent.putExtra(ActivityIAM.KEY_SCREEN_WIDTH, 1.0)
-//                                    intent.putExtra(ActivityIAM.KEY_SCREEN_HEIGHT, 1.0)
-                                    intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
-                                    intent.putExtra(
-                                        ActivityIAM.KEY_IS_SHOW_LOG, configuration?.isShowLog
-                                    )
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    c.startActivity(intent)
-                                    if (listIAM.isNotEmpty()) {
-                                        listIAM.removeFirst()
-                                    }
+                        logD("isActivityIAMRunning $isActivityIAMRunning")
+                        if (isActivityIAMRunning) {
+                            logE("popupAIMIsShowing true -> return")
+                        } else {
+                            fun handleActiveTypeImmediately() {
+                                if (isActivityIAMRunning || isWaitingIAMTime) {
+                                    logE("handleActiveTypeImmediately isActivityIAMRunning || isWaitingIAMTime -> return")
+                                    return
                                 }
+                                configuration?.onShowIAM?.invoke(htmlContent, iamData)
+                            }
 
-                                fun handleActiveTypeTime() {
-                                    iamData.activeValue?.let { activeValue ->
-                                        logE(">>>handleActiveTypeTime activeValue $activeValue")
-                                        isWaitingIAMTime = true
-                                        Handler(Looper.getMainLooper()).postDelayed({
-                                            isWaitingIAMTime = false
-                                            handleActiveTypeImmediately()
-                                        }, (activeValue * 1000).toLong())
-                                    }
-                                }
-
-                                when (iamData.activeType) {
-                                    IMMEDIATELY -> {
+                            fun handleActiveTypeTime() {
+                                iamData.activeValue?.let { activeValue ->
+                                    logE(">>>handleActiveTypeTime activeValue $activeValue")
+                                    isWaitingIAMTime = true
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        isWaitingIAMTime = false
                                         handleActiveTypeImmediately()
-                                    }
-                                    TIME -> {
-                                        handleActiveTypeTime()
-                                    }
-                                    SCROLL_PERCENTAGE -> {
-                                        // do nothing, out of sdk's scope
-                                    }
-                                    else -> {
-                                        //do nothing}
-                                    }
+                                    }, (activeValue * 1000).toLong())
+                                }
+                            }
+
+                            when (iamData.activeType) {
+                                IMMEDIATELY -> {
+                                    handleActiveTypeImmediately()
+                                }
+                                TIME -> {
+                                    handleActiveTypeTime()
+                                }
+                                SCROLL_PERCENTAGE -> {
+                                    // do nothing, out of sdk's scope
+                                }
+                                else -> {
+                                    //do nothing}
                                 }
                             }
                         }
@@ -293,6 +276,27 @@ class IAM {
                     }
                 }
             })
+        }
+
+        fun showIAMActivity(
+            context: Context,
+            htmlContent: String,
+            iamData: IAMData
+        ) {
+            val intent = Intent(context, ActivityIAM::class.java)
+            intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
+            intent.putExtra(
+                ActivityIAM.KEY_HTML_CONTENT, htmlContent
+            )
+            intent.putExtra(ActivityIAM.KEY_ENABLE_TOUCH_OUTSIDE, false)
+            intent.putExtra(
+                ActivityIAM.KEY_IS_SHOW_LOG, configuration?.isShowLog
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+            if (listIAM.isNotEmpty()) {
+                listIAM.removeFirst()
+            }
         }
     }
 }
