@@ -19,9 +19,7 @@ import android.view.WindowManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.Lifecycle
@@ -125,7 +123,7 @@ class IAM {
                 isActivityIAMRunning = result
 //                logD("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
                 if (!isActivityIAMRunning) {
-                    handleIAMData(context)
+                    handleIAMData()
                 }
             }
         }
@@ -150,7 +148,7 @@ class IAM {
                             listIAM.add(dt)
                         }
                     }
-                    handleIAMData(context)
+                    handleIAMData()
                     checkIAM(context = context)
                 },
                 onFailure = { t ->
@@ -161,7 +159,6 @@ class IAM {
         }
 
         private fun handleIAMData(
-            context: Context?,
         ) {
             val firstIAMData = listIAM.firstOrNull()
             logD("handleIAMData listIAM.size ${listIAM.size}")
@@ -363,16 +360,15 @@ class IAM {
 
             val layoutDebugView = dialog.findViewById<LinearLayoutCompat>(R.id.layoutDebugView)
             val tvDebug = dialog.findViewById<AppCompatTextView>(R.id.tvDebug)
-            val layoutRoot = dialog.findViewById<RelativeLayout>(R.id.layoutRoot)
-            val layoutBody = dialog.findViewById<RelativeLayout>(R.id.layoutBody)
+//            val layoutRoot = dialog.findViewById<RelativeLayout>(R.id.layoutRoot)
+//            val layoutBody = dialog.findViewById<RelativeLayout>(R.id.layoutBody)
             val wv = dialog.findViewById<WebView>(R.id.wv)
-            val btCloseOutside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseOutside)
-            val btCloseInside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseInside)
+//            val btCloseOutside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseOutside)
+//            val btCloseInside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseInside)
 
             fun setupDebugView() {
                 tvDebug?.text =
                     "activeType: ${iamData.activeType}" + "\nactiveValue: ${iamData.activeValue}" + "\nclosingAfter: ${iamData.closingAfter}" + "\nname: ${iamData.name}"
-
             }
 
             fun onClickClose() {
@@ -414,7 +410,12 @@ class IAM {
 //                }
 
                 wv?.let { v ->
-                    v.setBackgroundColor(Color.TRANSPARENT)
+                    if (configuration?.isShowLog == true) {
+                        v.setBackgroundColor(Color.YELLOW)
+                    } else {
+                        v.setBackgroundColor(Color.TRANSPARENT)
+                    }
+
                     v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
                     v.settings.javaScriptEnabled = true
                     v.settings.loadWithOverviewMode = true
@@ -468,7 +469,25 @@ class IAM {
             }
 
             dialog.window?.let {
-                it.setBackgroundDrawable(ColorDrawable(Utils.getColor(activity, R.color.red30)))
+                if (configuration?.isShowLog == true) {
+                    it.setBackgroundDrawable(
+                        ColorDrawable(
+                            Utils.getColor(
+                                activity,
+                                R.color.red62
+                            )
+                        )
+                    )
+                } else {
+                    it.setBackgroundDrawable(
+                        ColorDrawable(
+                            Utils.getColor(
+                                activity,
+                                R.color.transparent
+                            )
+                        )
+                    )
+                }
 
                 val wlp = it.attributes
                 wlp.gravity = Gravity.CENTER
