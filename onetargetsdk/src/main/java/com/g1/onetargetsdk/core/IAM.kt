@@ -1,7 +1,5 @@
 package com.g1.onetargetsdk.core
 
-import android.app.Activity
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,7 +11,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.g1.onetargetsdk.BuildConfig
-import com.g1.onetargetsdk.common.G1ActivityLifecycleCallbacks
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
 import com.g1.onetargetsdk.model.*
 import com.g1.onetargetsdk.services.OneTargetService
@@ -84,28 +81,6 @@ class IAM {
                     }
                 }
 
-                val activityLifecycleCallbacks =
-                    G1ActivityLifecycleCallbacks { onFirstActivityInit ->
-                        logE(">>>onFirstActivityInit ${onFirstActivityInit.javaClass.simpleName}")
-                        context?.let { c ->
-                            handleOnStart(c, true)
-                        }
-                    }
-                configuration.activityLifecycleCallbacks = activityLifecycleCallbacks
-                if (context is Application) {
-                    logE(">>>register setup context is Application")
-                    context.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
-                } else {
-                    logE(">>>register setup context !is Application")
-                    val application = context?.applicationContext as Application?
-                    if (application == null) {
-                        logE(">>>register application==null")
-                    } else {
-                        logE(">>>register application!=null")
-                        application.registerActivityLifecycleCallbacks(configuration.activityLifecycleCallbacks)
-                        logE(">>>register getCurrentActivity ${getCurrentActivity()}")
-                    }
-                }
                 ProcessLifecycleOwner.get().lifecycle.addObserver(LifecycleEventObserver { _, event ->
                     context?.let { c ->
                         when (event) {
@@ -137,8 +112,8 @@ class IAM {
         }
 
         private fun checkIAM(context: Context?) {
-            if (getCurrentActivity() == null) {
-                logE(">>>currentActivity == null => return")
+            if (context == null) {
+                logE(">>>checkIAM context == null => return")
                 return
             }
             checkIAM(
@@ -185,10 +160,6 @@ class IAM {
                                         logE("handleActiveTypeImmediately isActivityIAMRunning || isWaitingIAMTime -> return")
                                         return
                                     }
-                                    if (getCurrentActivity() == null) {
-                                        logE(">>>handleIAMData currentActivity == null => return")
-                                        return
-                                    }
                                     val intent = Intent(c, ActivityIAM::class.java)
                                     intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
                                     intent.putExtra(
@@ -201,7 +172,7 @@ class IAM {
                                         ActivityIAM.KEY_IS_SHOW_LOG, configuration?.isShowLog
                                     )
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    getCurrentActivity()?.startActivity(intent)
+                                    c.startActivity(intent)
                                     if (listIAM.isNotEmpty()) {
                                         listIAM.removeFirst()
                                     }
@@ -293,7 +264,7 @@ class IAM {
             if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
                 Toast.makeText(
                     context,
-                    "checkIAM ${getCurrentActivity()?.javaClass?.simpleName}, isAppInForeground: $isAppInForeground",
+                    "checkIAM isAppInForeground: $isAppInForeground",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -322,12 +293,6 @@ class IAM {
                     }
                 }
             })
-        }
-
-        private fun getCurrentActivity(): Activity? {
-            val currentActivity = configuration?.activityLifecycleCallbacks?.currentActivity
-            logE("~~~getCurrentActivity simpleName: ${currentActivity?.javaClass?.simpleName}, isAppInForeground $isAppInForeground")
-            return currentActivity
         }
     }
 }

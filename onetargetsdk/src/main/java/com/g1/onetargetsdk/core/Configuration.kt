@@ -1,7 +1,6 @@
 package com.g1.onetargetsdk.core
 
 import android.content.Context
-import com.g1.onetargetsdk.common.G1ActivityLifecycleCallbacks
 import com.g1.onetargetsdk.common.Utils
 
 /**
@@ -31,7 +30,6 @@ class Configuration(context: Context) {
     var isShowLog = false
     var isEnableIAM = true
     var deviceId: String? = null
-    var activityLifecycleCallbacks: G1ActivityLifecycleCallbacks? = null
 
     init {
         deviceId = Utils.getDeviceId(context)

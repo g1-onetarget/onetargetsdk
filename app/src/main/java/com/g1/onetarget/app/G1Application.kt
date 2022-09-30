@@ -20,7 +20,7 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        setupSDK()
+//        setupSDK()
     }
 
     private fun setupSDK() {
