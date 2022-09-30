@@ -33,6 +33,10 @@ Sau đó,  sync lại project.
         configuration.writeKey = "enter your workspace id"
         configuration.isShowLog = false
         configuration.isEnableIAM = true
+        configuration.onShowIAM = { htmlContent, iamData ->
+            IAM.showIAMActivity(this, htmlContent, iamData)
+            //or IAM.showIAMDialog(this, htmlContent, iamData)
+        }
         val resultSetupTracking = Analytics.setup(configuration)
         val resultSetupIAM = IAM.setup(configuration, this)
     }
