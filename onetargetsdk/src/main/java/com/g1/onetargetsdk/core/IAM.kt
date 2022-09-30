@@ -6,15 +6,24 @@ import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.ProgressBar
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -309,13 +318,19 @@ class IAM {
             }
         }
 
+        private var dialogIAM: Dialog? = null
+
         fun showIAMDialog(
             activity: Activity,
             htmlContent: String,
             iamData: IAMData
         ) {
-            val alertDialogProgress = genDialogIAM(activity = activity)
-            show(alertDialogProgress)
+            dialogIAM = genDialogIAM(
+                activity = activity,
+                htmlContent = htmlContent,
+                iamData = iamData
+            )
+            show(dialogIAM)
             if (listIAM.isNotEmpty()) {
                 listIAM.removeFirst()
             }
@@ -333,17 +348,124 @@ class IAM {
             }
         }
 
-        @SuppressLint("InflateParams")
+        @SuppressLint("InflateParams, SetTextI18n, SetJavaScriptEnabled")
         private fun genDialogIAM(
-            activity: Activity
+            activity: Activity,
+            htmlContent: String,
+            iamData: IAMData,
         ): Dialog {
+
             val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.dialog_iam)
+            dialog.setContentView(R.layout.activity_iam)
             dialog.setCanceledOnTouchOutside(false)
             dialog.setCancelable(false)
 
-            val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
+            val layoutDebugView = dialog.findViewById<LinearLayoutCompat>(R.id.layoutDebugView)
+            val tvDebug = dialog.findViewById<AppCompatTextView>(R.id.tvDebug)
+            val layoutRoot = dialog.findViewById<RelativeLayout>(R.id.layoutRoot)
+            val layoutBody = dialog.findViewById<RelativeLayout>(R.id.layoutBody)
+            val wv = dialog.findViewById<WebView>(R.id.wv)
+            val btCloseOutside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseOutside)
+            val btCloseInside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseInside)
+
+            fun setupDebugView() {
+                tvDebug?.text =
+                    "activeType: ${iamData.activeType}" + "\nactiveValue: ${iamData.activeValue}" + "\nclosingAfter: ${iamData.closingAfter}" + "\nname: ${iamData.name}"
+
+            }
+
+            fun onClickClose() {
+                dialog.dismiss()
+            }
+
+            fun onClickBody(uri: Uri) {
+                iamData.actionClick?.let { actionClick ->
+                    val link = "$actionClick$uri"
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse(link)
+                    activity.startActivity(i)
+                    activity.finishAfterTransition()
+                }
+            }
+
+            fun setupViews() {
+                if (configuration?.isShowLog == true) {
+                    layoutDebugView?.visibility = View.VISIBLE
+                } else {
+                    layoutDebugView?.visibility = View.GONE
+                }
+
+//                layoutRoot?.setOnClickListener {
+//                    if (isEnableTouchOutside) {
+//                        finish()
+//                    }
+//                }
+//                layoutBody?.setOnClickListener {
+//                    if (isEnableTouchOutside) {
+//                        finish()
+//                    }
+//                }
+//                btCloseOutside?.setOnClickListener {
+//                    finish()
+//                }
+//                btCloseInside?.setOnClickListener {
+//                    finish()
+//                }
+
+                wv?.let { v ->
+                    v.setBackgroundColor(Color.TRANSPARENT)
+                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+                    v.settings.javaScriptEnabled = true
+                    v.settings.loadWithOverviewMode = true
+                    v.settings.useWideViewPort = true
+
+                    v.webViewClient = object : WebViewClient() {
+                        override fun onPageFinished(view: WebView, url: String) {
+//                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
+//                    v.setBackgroundColor(Color.TRANSPARENT)
+//                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+                        }
+
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView?, request: WebResourceRequest?
+                        ): Boolean {
+                            logD(">>>>shouldOverrideUrlLoading ${request?.url}")
+                            request?.url?.let { u ->
+                                if (Utils.isExistWebView(u)) {
+                                    onClickClose()
+                                } else {
+                                    onClickBody(u)
+                                }
+                                return true
+                            }
+                            return false
+                        }
+                    }
+
+                    v.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+                }
+            }
+
+            fun configAutoCloseDialog() {
+                logD(">>>closingAfter: ${iamData.closingAfter}")
+                iamData.closingAfter?.let { closingAfter ->
+                    if (closingAfter > 0) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            dialog.dismiss()
+                        }, (closingAfter * 1000).toLong())
+                    }
+                }
+            }
+
+            LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = true)
+            setupViews()
+            configAutoCloseDialog()
+            setupDebugView()
+
+            dialog.setOnDismissListener {
+                LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = false)
+            }
 
             dialog.window?.let {
                 it.setBackgroundDrawable(ColorDrawable(Utils.getColor(activity, R.color.red30)))
