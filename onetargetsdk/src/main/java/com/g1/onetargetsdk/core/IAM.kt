@@ -54,16 +54,23 @@ class IAM {
         private val listIAM = ArrayList<IAMData>()
         private var isActivityIAMRunning = false
         private var isWaitingIAMTime = false
+        private var dialogIAM: Dialog? = null
 
         private fun logD(msg: String) {
-            if (configuration?.isShowLog == true) {
+            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
                 Log.d(logTag, msg)
             }
         }
 
         private fun logE(msg: String) {
-            if (configuration?.isShowLog == true) {
+            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
                 Log.e(logTag, msg)
+            }
+        }
+
+        private fun onMsg(msg: String) {
+            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
+                configuration?.onMsg?.invoke(msg)
             }
         }
 
@@ -78,6 +85,7 @@ class IAM {
             }
 
             Companion.configuration = configuration
+            onMsg("setup configuration deviceId: ${configuration.deviceId}")
             if (configuration.isEnableIAM) {
 
                 fun handleOnStart(c: Context, onFirstActivityInit: Boolean) {
@@ -121,7 +129,7 @@ class IAM {
             override fun onReceive(context: Context, intent: Intent) {
                 val result = intent.getBooleanExtra(LocalBroadcastUtil.KEY_DATA, false)
                 isActivityIAMRunning = result
-//                logD("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
+//                onMsg("BroadcastReceiver isActivityIAMRunning $isActivityIAMRunning")
                 if (!isActivityIAMRunning) {
                     handleIAMData()
                 }
@@ -144,7 +152,7 @@ class IAM {
                         if (data.message.isNullOrEmpty()) {
                             //do nothing
                         } else {
-//                            logE(">>>response activeType ${dt.activeType}")
+                            onMsg(">>>response activeType ${dt.activeType}")
                             listIAM.add(dt)
                         }
                     }
@@ -161,7 +169,7 @@ class IAM {
         private fun handleIAMData(
         ) {
             val firstIAMData = listIAM.firstOrNull()
-            logD("handleIAMData listIAM.size ${listIAM.size}")
+            onMsg("handleIAMData listIAM.size ${listIAM.size}")
             firstIAMData?.let { iamData ->
                 getHtmlContent(iamData)?.let { htmlContent ->
                     if (isAppInForeground == true) {
@@ -250,7 +258,8 @@ class IAM {
             }
 
             val isValid = isValid()
-//            logD(">>>>>>>checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
+            onMsg(">>>checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
+            onMsg("queue size: ${listIAM.size}")
             if (!isValid) {
                 return
             }
@@ -259,12 +268,10 @@ class IAM {
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
-//            logD(">>>>>>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
+//            onMsg(">>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
             if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
                 Toast.makeText(
-                    context,
-                    "checkIAM isAppInForeground: $isAppInForeground",
-                    Toast.LENGTH_LONG
+                    context, "checkIAM isAppInForeground: $isAppInForeground", Toast.LENGTH_LONG
                 ).show()
             }
             service()?.checkIAM(
@@ -274,11 +281,20 @@ class IAM {
                 override fun onResponse(
                     call: Call<IAMResponse>, response: Response<IAMResponse>
                 ) {
+                    onMsg("<<<checkIAM response ${response.body()}")
+//                    onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         val jsonString = response.body()?.data
                         var iamData: IAMData? = null
                         jsonString?.let { s ->
                             iamData = Gson().fromJson(s, IAMData::class.java)
+                        }
+                        if (iamData?.message.isNullOrEmpty()) {
+                            //do nothing
+                        } else {
+                            onMsg(
+                                "activeType: ${iamData?.activeType}" + "\nactiveValue: ${iamData?.activeValue}" + "\nclosingAfter: ${iamData?.closingAfter}" + "\nname: ${iamData?.name}" + "\nqueue size: ${listIAM.size}"
+                            )
                         }
                         onResponse?.invoke(
                             response.isSuccessful, response.code(), response.body(), iamData
@@ -287,6 +303,8 @@ class IAM {
                 }
 
                 override fun onFailure(call: Call<IAMResponse>, t: Throwable) {
+                    onMsg("<<<checkIAM onFailure $t")
+                    onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         onFailure?.invoke(t)
                     }
@@ -295,9 +313,7 @@ class IAM {
         }
 
         fun showIAMActivity(
-            context: Context,
-            htmlContent: String,
-            iamData: IAMData
+            context: Context, htmlContent: String, iamData: IAMData
         ) {
             val intent = Intent(context, ActivityIAM::class.java)
             intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
@@ -315,17 +331,11 @@ class IAM {
             }
         }
 
-        private var dialogIAM: Dialog? = null
-
         fun showIAMDialog(
-            activity: Activity,
-            htmlContent: String,
-            iamData: IAMData
+            activity: Activity, htmlContent: String, iamData: IAMData
         ) {
             dialogIAM = genDialogIAM(
-                activity = activity,
-                htmlContent = htmlContent,
-                iamData = iamData
+                activity = activity, htmlContent = htmlContent, iamData = iamData
             )
             show(dialogIAM)
             if (listIAM.isNotEmpty()) {
@@ -367,11 +377,8 @@ class IAM {
 //            val btCloseInside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseInside)
 
             fun setupDebugView() {
-                tvDebug?.text = "activeType: ${iamData.activeType}" +
-                        "\nactiveValue: ${iamData.activeValue}" +
-                        "\nclosingAfter: ${iamData.closingAfter}" +
-                        "\nname: ${iamData.name}" +
-                        "\nqueue size: ${listIAM.size}"
+                tvDebug?.text =
+                    "activeType: ${iamData.activeType}" + "\nactiveValue: ${iamData.activeValue}" + "\nclosingAfter: ${iamData.closingAfter}" + "\nname: ${iamData.name}" + "\nqueue size: ${listIAM.size}"
             }
 
             fun onClickClose() {
@@ -480,8 +487,7 @@ class IAM {
                     it.setBackgroundDrawable(
                         ColorDrawable(
                             Utils.getColor(
-                                activity,
-                                R.color.red62
+                                activity, R.color.red62
                             )
                         )
                     )
@@ -489,8 +495,7 @@ class IAM {
                     it.setBackgroundDrawable(
                         ColorDrawable(
                             Utils.getColor(
-                                activity,
-                                R.color.transparent
+                                activity, R.color.transparent
                             )
                         )
                     )
@@ -502,8 +507,7 @@ class IAM {
 
                 it.attributes = wlp
                 it.setLayout(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT
+                    WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT
                 )
             }
             return dialog

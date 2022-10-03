@@ -21,8 +21,7 @@ class G1Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        //TODO revert
-//        setupSDK()
+        setupSDK()
     }
 
     private fun setupSDK() {

@@ -34,6 +34,9 @@ class Configuration(context: Context) {
     var onShowIAM: ((
         htmlContent: String, iamData: IAMData,
     ) -> Unit)? = null
+    var onMsg: ((
+        msg: String,
+    ) -> Unit)? = null
 
     init {
         deviceId = Utils.getDeviceId(context)
