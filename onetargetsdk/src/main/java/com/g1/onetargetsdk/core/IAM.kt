@@ -25,7 +25,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.g1.onetargetsdk.BuildConfig
 import com.g1.onetargetsdk.R
 import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.db.LocalBroadcastUtil
@@ -57,20 +56,22 @@ class IAM {
         private var dialogIAM: Dialog? = null
 
         private fun logD(msg: String) {
-            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
+            if (configuration?.isShowLog == true) {
                 Log.d(logTag, msg)
             }
         }
 
         private fun logE(msg: String) {
-            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
+            if (configuration?.isShowLog == true) {
                 Log.e(logTag, msg)
             }
         }
 
         private fun onMsg(msg: String) {
-            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
-                configuration?.onMsg?.invoke(msg)
+            configuration?.let { cf ->
+                if (cf.isShowLog) {
+                    cf.onMsg?.invoke(msg)
+                }
             }
         }
 
@@ -269,7 +270,7 @@ class IAM {
                 return
             }
 //            onMsg(">>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
-            if (configuration?.isShowLog == true && BuildConfig.DEBUG) {
+            if (configuration?.isShowLog == true) {
                 Toast.makeText(
                     context, "checkIAM isAppInForeground: $isAppInForeground", Toast.LENGTH_LONG
                 ).show()

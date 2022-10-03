@@ -58,12 +58,11 @@ class SplashActivity : AppCompatActivity() {
 
     private fun goToHome() {
         Handler(Looper.getMainLooper()).postDelayed(
-            {
+            /* r = */ {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 this.finishAfterTransition()
-            },
-            1000
+            }, /* delayMillis = */ 1000
         )
     }
 
