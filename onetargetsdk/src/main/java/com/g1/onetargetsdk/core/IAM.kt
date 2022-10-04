@@ -69,9 +69,7 @@ class IAM {
 
         private fun onMsg(msg: String) {
             configuration?.let { cf ->
-                if (cf.isShowLog) {
-                    cf.onMsg?.invoke(msg)
-                }
+                cf.onMsg?.invoke(msg)
             }
         }
 
