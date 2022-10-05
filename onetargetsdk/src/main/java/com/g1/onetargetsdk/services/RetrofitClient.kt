@@ -20,7 +20,14 @@ object RetrofitClient {
     private var retrofitTracking: Retrofit? = null
     private var retrofitIAM: Retrofit? = null
 
-    private fun getClient(retrofit: Retrofit?, baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
+    private fun getClient(
+        retrofit: Retrofit?,
+        baseUrl: String,
+        isShowLogAPI: Boolean?,
+        onMsg: ((
+            msg: String,
+        ) -> Unit)? = null,
+    ): Retrofit {
         var tmpRetrofit = retrofit
         if (tmpRetrofit == null) {
             val interceptor = HttpLoggingInterceptor()
@@ -34,6 +41,7 @@ object RetrofitClient {
                 builder.addInterceptor(CurlInterceptor(object : Logger {
                     override fun log(message: String) {
                         Log.e("CurlInterceptor", message)
+                        onMsg?.invoke(message)
                     }
                 }))
             }
@@ -48,11 +56,32 @@ object RetrofitClient {
         return tmpRetrofit!!
     }
 
-    fun getClientTracking(baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
-        return getClient(retrofitTracking, baseUrl, isShowLogAPI)
+    fun getClientTracking(
+        baseUrl: String,
+        isShowLogAPI: Boolean?,
+        onMsg: ((
+            msg: String,
+        ) -> Unit)? = null,
+    ): Retrofit {
+        return getClient(
+            retrofit = retrofitTracking,
+            baseUrl = baseUrl,
+            isShowLogAPI = isShowLogAPI,
+            onMsg = onMsg
+        )
     }
 
-    fun getClientIAM(baseUrl: String, isShowLogAPI: Boolean?): Retrofit {
-        return getClient(retrofitIAM, baseUrl, isShowLogAPI)
+    fun getClientIAM(
+        baseUrl: String, isShowLogAPI: Boolean?,
+        onMsg: ((
+            msg: String,
+        ) -> Unit)? = null,
+    ): Retrofit {
+        return getClient(
+            retrofit = retrofitIAM,
+            baseUrl = baseUrl,
+            isShowLogAPI = isShowLogAPI,
+            onMsg = onMsg
+        )
     }
 }

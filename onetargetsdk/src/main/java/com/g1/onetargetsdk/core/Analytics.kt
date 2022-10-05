@@ -35,6 +35,12 @@ class Analytics {
             return true
         }
 
+        private fun onMsg(msg: String) {
+            configuration?.let { cf ->
+                cf.onMsg?.invoke(msg)
+            }
+        }
+
         @JvmStatic
         private fun service(): OneTargetService? {
             if (configuration == null) {
@@ -50,6 +56,9 @@ class Analytics {
             return RetrofitClient.getClientTracking(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
+                onMsg = { curl ->
+                    onMsg(curl)
+                }
             )
                 .create(OneTargetService::class.java)
         }

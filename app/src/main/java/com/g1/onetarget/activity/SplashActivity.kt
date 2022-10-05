@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetarget.R
 import com.g1.onetarget.app.G1Application
 import com.g1.onetarget.common.C
+import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.core.Analytics
 import com.g1.onetargetsdk.core.Configuration
 import com.g1.onetargetsdk.core.IAM
@@ -49,6 +50,9 @@ class SplashActivity : AppCompatActivity() {
         configuration.isEnableIAM = true
         configuration.onShowIAM = { htmlContent: String, iamData: IAMData ->
             IAM.showIAMDialog(activity = this, htmlContent = htmlContent, iamData = iamData)
+        }
+        configuration.onMsg = {
+            Utils.logD(SplashActivity::class.java.simpleName, "configuration.onMsg $it")
         }
         val resultSetupTracking = Analytics.setup(configuration)
         val resultSetupIAM = IAM.setup(configuration, this)

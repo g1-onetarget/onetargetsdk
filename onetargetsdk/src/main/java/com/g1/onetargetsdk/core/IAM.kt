@@ -237,6 +237,9 @@ class IAM {
             return RetrofitClient.getClientIAM(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
+                onMsg = { curl ->
+                    onMsg(curl)
+                }
             ).create(OneTargetService::class.java)
         }
 

@@ -1,8 +1,8 @@
 package com.g1.onetarget.app
 
 import android.app.Application
-import android.util.Log
 import com.g1.onetarget.common.C
+import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.core.Analytics
 import com.g1.onetargetsdk.core.Configuration
 import com.g1.onetargetsdk.core.IAM
@@ -43,6 +43,9 @@ class G1Application : Application() {
         configuration.onShowIAM = { htmlContent: String, iamData: IAMData ->
             IAM.showIAMActivity(context = this, htmlContent = htmlContent, iamData = iamData)
         }
+        configuration.onMsg = {
+            logD("configuration.onMsg $it")
+        }
         val resultSetupTracking = Analytics.setup(configuration)
         val resultSetupIAM = IAM.setup(configuration, this)
         logD("resultSetupTracking $resultSetupTracking")
@@ -50,6 +53,6 @@ class G1Application : Application() {
     }
 
     private fun logD(msg: String) {
-        Log.d(G1Application::class.java.simpleName, "g1mobile: $msg")
+        Utils.logD(G1Application::class.java.simpleName, "g1mobile: $msg")
     }
 }
