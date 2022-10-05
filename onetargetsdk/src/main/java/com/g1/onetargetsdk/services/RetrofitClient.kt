@@ -1,5 +1,8 @@
 package com.g1.onetargetsdk.services
 
+import android.util.Log
+import com.moczul.ok2curl.CurlInterceptor
+import com.moczul.ok2curl.logger.Logger
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,6 +31,11 @@ object RetrofitClient {
                 .readTimeout(30, TimeUnit.SECONDS)
             if (isShowLogAPI == true) {
                 builder.addInterceptor(interceptor)
+                builder.addInterceptor(CurlInterceptor(object : Logger {
+                    override fun log(message: String) {
+                        Log.e("CurlInterceptor", message)
+                    }
+                }))
             }
             val client = builder.build()
 
