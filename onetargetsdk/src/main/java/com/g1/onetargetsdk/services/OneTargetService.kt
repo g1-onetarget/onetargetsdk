@@ -1,10 +1,9 @@
 package com.g1.onetargetsdk.services
 
 import com.g1.onetargetsdk.model.IAMResponse
+import com.g1.onetargetsdk.model.request.RequestTrack
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * Created by Loitp on 12.09.2022
@@ -16,7 +15,7 @@ import retrofit2.http.Query
 interface OneTargetService {
 
     @GET("/")
-    fun track(
+    fun trackGet(
         @Query("workspace_id") workspaceId: String?,
         @Query("identity_id") identityId: String?,
         @Query("profile") profile: String?,
@@ -25,6 +24,10 @@ interface OneTargetService {
         @Query("eventData") eventData: String?,
     ): Call<Void>
 
+    @POST("/")
+    fun trackPost(
+        @Body body: RequestTrack
+    ): Call<Void>
 
     @GET("/push/push/pull/{workspace_id}/{identity_id}/")
     fun checkIAM(
