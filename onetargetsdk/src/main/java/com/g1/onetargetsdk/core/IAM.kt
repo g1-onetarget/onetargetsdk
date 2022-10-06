@@ -61,6 +61,9 @@ class IAM {
         private var isWaitingIAMTime = false
         private var dialogIAM: Dialog? = null
 
+        private const val TIME_OUT = 30L
+        private const val TIME_INTERVAL = 5L
+
         private fun logD(msg: String) {
             if (configuration?.isShowLog == true) {
                 Log.d(logTag, msg)
@@ -84,7 +87,7 @@ class IAM {
         }
 
         private val observable: Observable<out Long>
-            get() = Observable.interval(0, 5, TimeUnit.SECONDS)
+            get() = Observable.interval(0, TIME_INTERVAL, TimeUnit.SECONDS)
 
         private fun getObserver(context: Context?): DisposableObserver<Long?> {
             return object : DisposableObserver<Long?>() {
@@ -125,7 +128,6 @@ class IAM {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeWith(getObserver(c))
                     )
-//                    checkIAM(context = c)
                 }
 
                 fun handleOnStart(c: Context, onFirstActivityInit: Boolean) {
@@ -276,6 +278,7 @@ class IAM {
             val isShowLog = configuration?.isShowLog
             return RetrofitClient.getClientIAM(baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
+                timeout = TIME_OUT,
                 onMsg = { curl ->
                     onMsg(curl)
                 }).create(OneTargetService::class.java)

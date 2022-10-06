@@ -24,6 +24,7 @@ object RetrofitClient {
         retrofit: Retrofit?,
         baseUrl: String,
         isShowLogAPI: Boolean?,
+        timeout: Long,
         onMsg: ((
             msg: String,
         ) -> Unit)? = null,
@@ -34,8 +35,8 @@ object RetrofitClient {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
             val builder = OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(timeout, TimeUnit.SECONDS)
+                .readTimeout(timeout, TimeUnit.SECONDS)
             if (isShowLogAPI == true) {
                 builder.addInterceptor(interceptor)
                 builder.addInterceptor(CurlInterceptor(object : Logger {
@@ -67,12 +68,14 @@ object RetrofitClient {
             retrofit = retrofitTracking,
             baseUrl = baseUrl,
             isShowLogAPI = isShowLogAPI,
+            timeout = 30,
             onMsg = onMsg
         )
     }
 
     fun getClientIAM(
         baseUrl: String, isShowLogAPI: Boolean?,
+        timeout: Long,
         onMsg: ((
             msg: String,
         ) -> Unit)? = null,
@@ -81,6 +84,7 @@ object RetrofitClient {
             retrofit = retrofitIAM,
             baseUrl = baseUrl,
             isShowLogAPI = isShowLogAPI,
+            timeout = timeout,
             onMsg = onMsg
         )
     }
