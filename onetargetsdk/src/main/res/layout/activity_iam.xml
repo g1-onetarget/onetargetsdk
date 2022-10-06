@@ -4,13 +4,13 @@
     android:id="@+id/layoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/black30">
+    android:background="@color/black_dim_bkg">
 
     <RelativeLayout
         android:id="@+id/layoutBody"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <WebView
             android:id="@+id/wv"
@@ -19,6 +19,13 @@
             android:scrollbars="none"
             android:visibility="gone"
             tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btCloseOutside"
