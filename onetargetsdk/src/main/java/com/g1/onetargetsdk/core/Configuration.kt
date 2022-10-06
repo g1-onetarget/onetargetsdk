@@ -23,6 +23,8 @@ class Configuration(context: Context) {
         const val BASE_URL_IAM_DEV = "https://api-dev.predict.marketing/"
         const val BASE_URL_IAM_STAG = "https://api-stag.onetarget.vn/"
         const val BASE_URL_IAM_PROD = "https://api.onetarget.vn/"
+
+        const val DEFAULT_MAX_NUMBER_API_POLLING = 5
     }
 
     var writeKey: String? = null
@@ -31,6 +33,7 @@ class Configuration(context: Context) {
     var isShowLog = false
     var isEnableIAM = true
     var deviceId: String? = null
+    var maxNumberApiPolling = DEFAULT_MAX_NUMBER_API_POLLING
     var onShowIAM: ((
         htmlContent: String, iamData: IAMData,
     ) -> Unit)? = null
