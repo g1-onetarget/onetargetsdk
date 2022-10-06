@@ -146,7 +146,7 @@ class IAM {
                     logD("isSuccessful $isSuccessful")
                     logD("code $code")
                     logD("response $response")
-
+                    checkIAM(context = context)
                     data?.let { dt ->
                         if (data.message.isNullOrEmpty()) {
                             //do nothing
@@ -156,11 +156,10 @@ class IAM {
                         }
                     }
                     handleIAMData()
-                    checkIAM(context = context)
                 },
                 onFailure = { t ->
-                    t.printStackTrace()
                     checkIAM(context = context)
+                    t.printStackTrace()
                 },
             )
         }
@@ -234,13 +233,11 @@ class IAM {
                 return null
             }
             val isShowLog = configuration?.isShowLog
-            return RetrofitClient.getClientIAM(
-                baseUrl = baseUrl,
+            return RetrofitClient.getClientIAM(baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
                 onMsg = { curl ->
                     onMsg(curl)
-                }
-            ).create(OneTargetService::class.java)
+                }).create(OneTargetService::class.java)
         }
 
         private fun checkIAM(
@@ -422,12 +419,13 @@ class IAM {
 //                }
 
                 wv?.let { v ->
-                    if (configuration?.isShowLog == true) {
-                        v.setBackgroundColor(Color.YELLOW)
-                    } else {
-                        v.setBackgroundColor(Color.TRANSPARENT)
-                    }
+//                    if (configuration?.isShowLog == true) {
+//                        v.setBackgroundColor(Color.YELLOW)
+//                    } else {
+//                        v.setBackgroundColor(Color.TRANSPARENT)
+//                    }
 
+                    v.setBackgroundColor(Color.TRANSPARENT)
                     v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
                     v.settings.javaScriptEnabled = true
                     v.settings.loadWithOverviewMode = true
@@ -435,9 +433,7 @@ class IAM {
 
                     v.webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView, url: String) {
-//                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
-//                    v.setBackgroundColor(Color.TRANSPARENT)
-//                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+                            v.visibility = View.VISIBLE
                         }
 
                         override fun shouldOverrideUrlLoading(

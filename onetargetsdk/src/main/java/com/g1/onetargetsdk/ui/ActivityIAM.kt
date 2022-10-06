@@ -185,6 +185,7 @@ class ActivityIAM : AppCompatActivity() {
 //                    logD("onPageFinished $url, ${view.height}, ${view.contentHeight}")
 //                    v.setBackgroundColor(Color.TRANSPARENT)
 //                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+                    v.visibility = View.VISIBLE
                 }
 
                 override fun shouldOverrideUrlLoading(
