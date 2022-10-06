@@ -57,6 +57,6 @@ android {
 
 dependencies {
     api project(':onetargetsdk')
-//    api 'com.github.g1mobile:onetargetsdk:1.2.0'
+//    api 'com.github.g1mobile:onetargetsdk:1.2.1'
     api 'com.google.android.material:material:1.6.1'
 }
