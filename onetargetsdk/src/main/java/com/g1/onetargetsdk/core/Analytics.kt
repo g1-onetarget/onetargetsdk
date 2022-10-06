@@ -56,6 +56,7 @@ class Analytics {
             return RetrofitClient.getClientTracking(
                 baseUrl = baseUrl,
                 isShowLogAPI = isShowLog,
+                timeout = 30,
                 onMsg = { curl ->
                     onMsg(curl)
                 }

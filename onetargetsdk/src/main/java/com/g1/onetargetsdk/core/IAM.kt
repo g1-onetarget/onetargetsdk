@@ -63,7 +63,9 @@ class IAM {
         private var dialogIAM: Dialog? = null
 
         private const val TIME_OUT = 30L
-        private const val TIME_INTERVAL = 3L
+        private const val TIME_INTERVAL = 1L
+        private var maxNumberApi = 5
+        private var countApi = 0
 
         private fun logD(msg: String) {
             if (configuration?.isShowLog == true) {
@@ -122,7 +124,7 @@ class IAM {
             if (configuration.isEnableIAM) {
 
                 fun doLongPolling(c: Context) {
-                    clear()
+//                    clear()
                     compositeDisposable.add(
                         observable
                             .subscribeOn(Schedulers.io()) // Be notified on the main thread
@@ -299,15 +301,20 @@ class IAM {
                 if (isAppInForeground == null || isAppInForeground == false) {
                     return false
                 }
+                if (countApi >= maxNumberApi) {
+                    return false
+                }
                 return true
             }
 
             val isValid = isValid()
-            onMsg(">>>loitpp checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
+            onMsg(">>>loitpp checkIAM isValid $isValid, isAppInForeground $isAppInForeground, countApi $countApi")
             onMsg("queue size: ${listIAM.size}")
             if (!isValid) {
+                onMsg("<<<loitpp isValid false => return")
                 return
             }
+            countApi++
             val workSpaceId = configuration?.writeKey
             val identityId = configuration?.deviceId
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
@@ -326,7 +333,8 @@ class IAM {
                 override fun onResponse(
                     call: Call<IAMResponse>, response: Response<IAMResponse>
                 ) {
-                    onMsg("<<<loitpp checkIAM response ${response.body()}")
+                    countApi--
+                    onMsg("<<<loitpp checkIAM countApi $countApi, onResponse ${response.body()}")
 //                    onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         val jsonString = response.body()?.data
@@ -348,7 +356,8 @@ class IAM {
                 }
 
                 override fun onFailure(call: Call<IAMResponse>, t: Throwable) {
-                    onMsg("<<<loitpp checkIAM onFailure $t")
+                    countApi--
+                    onMsg("<<<loitpp checkIAM countApi $countApi, onFailure $t")
                     onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         onFailure?.invoke(t)
