@@ -47,4 +47,10 @@
     <dimen name="w_250">250dp</dimen>
     <dimen name="w_300">300dp</dimen>
     <dimen name="w_350">350dp</dimen>
+
+    <integer-array name="progress_colors">
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+    </integer-array>
 </resources>

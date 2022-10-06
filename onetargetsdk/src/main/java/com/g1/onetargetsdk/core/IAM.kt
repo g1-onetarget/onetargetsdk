@@ -418,7 +418,7 @@ class IAM {
             iamData: IAMData,
         ): Dialog {
 
-            LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = true)
+            isActivityIAMRunning = true
             val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.activity_iam)
@@ -532,7 +532,8 @@ class IAM {
             setupDebugView()
 
             dialog.setOnDismissListener {
-                LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = false)
+                isActivityIAMRunning = false
+                handleIAMData()
             }
 
             dialog.window?.let {
@@ -540,23 +541,30 @@ class IAM {
                 it.statusBarColor = activity.window.statusBarColor
                 it.navigationBarColor = activity.window.navigationBarColor
 
-                if (configuration?.isShowLog == true) {
-                    it.setBackgroundDrawable(
-                        ColorDrawable(
-                            Utils.getColor(
-                                activity, R.color.red62
-                            )
+//                if (configuration?.isShowLog == true) {
+//                    it.setBackgroundDrawable(
+//                        ColorDrawable(
+//                            Utils.getColor(
+//                                activity, R.color.red62
+//                            )
+//                        )
+//                    )
+//                } else {
+//                    it.setBackgroundDrawable(
+//                        ColorDrawable(
+//                            Utils.getColor(
+//                                activity, R.color.transparent
+//                            )
+//                        )
+//                    )
+//                }
+                it.setBackgroundDrawable(
+                    ColorDrawable(
+                        Utils.getColor(
+                            activity, R.color.transparent
                         )
                     )
-                } else {
-                    it.setBackgroundDrawable(
-                        ColorDrawable(
-                            Utils.getColor(
-                                activity, R.color.transparent
-                            )
-                        )
-                    )
-                }
+                )
 
                 val wlp = it.attributes
                 wlp.gravity = Gravity.CENTER
