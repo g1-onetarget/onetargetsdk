@@ -19,7 +19,6 @@ import android.view.WindowManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.Lifecycle
@@ -33,9 +32,15 @@ import com.g1.onetargetsdk.services.OneTargetService
 import com.g1.onetargetsdk.services.RetrofitClient
 import com.g1.onetargetsdk.ui.ActivityIAM
 import com.google.gson.Gson
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Loitp on 13.09.2022
@@ -48,6 +53,7 @@ class IAM {
 
     companion object {
         private val logTag = "g1mobile${IAM::class.java.simpleName}"
+        private var compositeDisposable = CompositeDisposable()
         private var configuration: Configuration? = null
         private var isAppInForeground: Boolean? = null
         private val listIAM = ArrayList<IAMData>()
@@ -73,6 +79,30 @@ class IAM {
             }
         }
 
+        fun clear() {
+            compositeDisposable.clear()
+        }
+
+        private val observable: Observable<out Long>
+            get() = Observable.interval(0, 5, TimeUnit.SECONDS)
+
+        private fun getObserver(context: Context?): DisposableObserver<Long?> {
+            return object : DisposableObserver<Long?>() {
+                override fun onNext(value: Long) {
+                    logD("\nloitpp DisposableObserver onNext : value : $value")
+                    checkIAM(context = context)
+                }
+
+                override fun onError(e: Throwable) {
+                    logD("\nloitpp DisposableObserver onError : ${e.message}")
+                }
+
+                override fun onComplete() {
+                    logD("\nloitpp DisposableObserver onComplete")
+                }
+            }
+        }
+
         fun setup(configuration: Configuration, context: Context?): Boolean {
             if (configuration.writeKey.isNullOrEmpty()) {
                 logE("writeKey cannot be null or empty")
@@ -87,12 +117,23 @@ class IAM {
             onMsg("setup configuration deviceId: ${configuration.deviceId}")
             if (configuration.isEnableIAM) {
 
+                fun doLongPolling(c: Context) {
+                    clear()
+                    compositeDisposable.add(
+                        observable
+                            .subscribeOn(Schedulers.io()) // Be notified on the main thread
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeWith(getObserver(c))
+                    )
+//                    checkIAM(context = c)
+                }
+
                 fun handleOnStart(c: Context, onFirstActivityInit: Boolean) {
                     if (isAppInForeground != true || onFirstActivityInit) {
                         logD(">>>onAppInForeground")
                         LocalBroadcastUtil.registerReceiver(c, mMessageReceiver)
                         isAppInForeground = true
-                        checkIAM(context = c)
+                        doLongPolling(c)
                     }
                 }
 
@@ -101,7 +142,7 @@ class IAM {
                         logD(">>>onAppInBackground")
                         LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
                         isAppInForeground = false
-                        checkIAM(context = c)
+                        doLongPolling(c)
                     }
                 }
 
@@ -146,7 +187,7 @@ class IAM {
                     logD("isSuccessful $isSuccessful")
                     logD("code $code")
                     logD("response $response")
-                    checkIAM(context = context)
+//                    checkIAM(context = context)
                     data?.let { dt ->
                         if (data.message.isNullOrEmpty()) {
                             //do nothing
@@ -158,7 +199,7 @@ class IAM {
                     handleIAMData()
                 },
                 onFailure = { t ->
-                    checkIAM(context = context)
+//                    checkIAM(context = context)
                     t.printStackTrace()
                 },
             )
@@ -257,7 +298,7 @@ class IAM {
             }
 
             val isValid = isValid()
-            onMsg(">>>checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
+            onMsg(">>>loitpp checkIAM isValid $isValid, isAppInForeground $isAppInForeground")
             onMsg("queue size: ${listIAM.size}")
             if (!isValid) {
                 return
@@ -268,11 +309,11 @@ class IAM {
                 return
             }
 //            onMsg(">>>checkIAM workSpaceId $workSpaceId, identityId $identityId")
-            if (configuration?.isShowLog == true) {
-                Toast.makeText(
-                    context, "checkIAM isAppInForeground: $isAppInForeground", Toast.LENGTH_LONG
-                ).show()
-            }
+//            if (configuration?.isShowLog == true) {
+//                Toast.makeText(
+//                    context, "checkIAM isAppInForeground: $isAppInForeground", Toast.LENGTH_SHORT
+//                ).show()
+//            }
             service()?.checkIAM(
                 workspaceId = workSpaceId,
                 identityId = identityId,
@@ -280,7 +321,7 @@ class IAM {
                 override fun onResponse(
                     call: Call<IAMResponse>, response: Response<IAMResponse>
                 ) {
-                    onMsg("<<<checkIAM response ${response.body()}")
+                    onMsg("<<<loitpp checkIAM response ${response.body()}")
 //                    onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         val jsonString = response.body()?.data
@@ -302,7 +343,7 @@ class IAM {
                 }
 
                 override fun onFailure(call: Call<IAMResponse>, t: Throwable) {
-                    onMsg("<<<checkIAM onFailure $t")
+                    onMsg("<<<loitpp checkIAM onFailure $t")
                     onMsg("queue size: ${listIAM.size}")
                     if (isValid()) {
                         onFailure?.invoke(t)
