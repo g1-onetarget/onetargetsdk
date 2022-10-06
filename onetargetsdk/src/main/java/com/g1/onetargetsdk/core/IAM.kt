@@ -144,6 +144,7 @@ class IAM {
                         logD(">>>onAppInBackground")
                         LocalBroadcastUtil.unregisterReceiver(c, mMessageReceiver)
                         isAppInForeground = false
+//                        clear()
                         doLongPolling(c)
                     }
                 }
