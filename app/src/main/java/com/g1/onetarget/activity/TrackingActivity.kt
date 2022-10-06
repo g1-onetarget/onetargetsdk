@@ -306,7 +306,7 @@ class TrackingActivity : AppCompatActivity() {
         val eventName = "purchase"
         val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
-            "platform" to "Android",
+            "platform" to "APP",
             "ecommerce.currency" to "VND",
             "ecommerce.transaction_id" to "33AJV3",
             "ecommerce.value" to "2899800",

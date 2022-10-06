@@ -93,16 +93,16 @@ class IAM {
         private fun getObserver(context: Context?): DisposableObserver<Long?> {
             return object : DisposableObserver<Long?>() {
                 override fun onNext(value: Long) {
-                    logD("\nloitpp DisposableObserver onNext : value : $value")
+                    logD("\nDisposableObserver onNext : value : $value")
                     checkIAM(context = context)
                 }
 
                 override fun onError(e: Throwable) {
-                    logD("\nloitpp DisposableObserver onError : ${e.message}")
+                    logD("\nDisposableObserver onError : ${e.message}")
                 }
 
                 override fun onComplete() {
-                    logD("\nloitpp DisposableObserver onComplete")
+                    logD("\nDisposableObserver onComplete")
                 }
             }
         }
@@ -360,6 +360,7 @@ class IAM {
         fun showIAMActivity(
             context: Context, htmlContent: String, iamData: IAMData
         ) {
+            isActivityIAMRunning = true
             val intent = Intent(context, ActivityIAM::class.java)
             intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
             intent.putExtra(
@@ -407,6 +408,7 @@ class IAM {
             iamData: IAMData,
         ): Dialog {
 
+            LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = true)
             val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.activity_iam)
@@ -515,7 +517,6 @@ class IAM {
                 }
             }
 
-            LocalBroadcastUtil.sendMessage(context = activity, isActivityIAMRunning = true)
             setupViews()
             configAutoCloseDialog()
             setupDebugView()
