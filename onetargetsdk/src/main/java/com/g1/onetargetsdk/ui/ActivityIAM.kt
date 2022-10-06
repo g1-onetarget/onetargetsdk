@@ -11,7 +11,6 @@ import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -60,7 +59,6 @@ class ActivityIAM : AppCompatActivity() {
     private var layoutRoot: RelativeLayout? = null
     private var layoutBody: RelativeLayout? = null
     private var wv: WebView? = null
-    private var pb: ProgressBar? = null
     private var btCloseOutside: AppCompatImageButton? = null
     private var btCloseInside: AppCompatImageButton? = null
 
@@ -123,7 +121,6 @@ class ActivityIAM : AppCompatActivity() {
         layoutRoot = findViewById(R.id.layoutRoot)
         layoutBody = findViewById(R.id.layoutBody)
         wv = findViewById(R.id.wv)
-        pb = findViewById<ProgressBar>(R.id.pb)
         btCloseOutside = findViewById(R.id.btCloseOutside)
         btCloseInside = findViewById(R.id.btCloseInside)
 
@@ -189,7 +186,6 @@ class ActivityIAM : AppCompatActivity() {
 //                    v.setBackgroundColor(Color.TRANSPARENT)
 //                    v.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
                     v.visibility = View.VISIBLE
-                    pb?.visibility = View.GONE
                 }
 
                 override fun shouldOverrideUrlLoading(

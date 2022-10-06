@@ -19,7 +19,6 @@ import android.view.WindowManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.Lifecycle
@@ -430,7 +429,6 @@ class IAM {
 //            val layoutRoot = dialog.findViewById<RelativeLayout>(R.id.layoutRoot)
 //            val layoutBody = dialog.findViewById<RelativeLayout>(R.id.layoutBody)
             val wv = dialog.findViewById<WebView>(R.id.wv)
-            val pb = dialog.findViewById<ProgressBar>(R.id.pb)
 //            val btCloseOutside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseOutside)
 //            val btCloseInside = dialog.findViewById<AppCompatImageButton>(R.id.btCloseInside)
 
@@ -493,7 +491,6 @@ class IAM {
                     v.webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView, url: String) {
                             v.visibility = View.VISIBLE
-                            pb.visibility = View.GONE
                         }
 
                         override fun shouldOverrideUrlLoading(
