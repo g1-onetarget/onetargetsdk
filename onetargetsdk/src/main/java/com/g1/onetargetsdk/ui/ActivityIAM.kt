@@ -194,9 +194,9 @@ class ActivityIAM : AppCompatActivity() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?, request: WebResourceRequest?
                 ): Boolean {
-                    logD(">>>>shouldOverrideUrlLoading ${request?.url}")
+//                    logD(">>>>shouldOverrideUrlLoading ${request?.url}")
                     request?.url?.let { u ->
-                        if (Utils.isExistWebView(u)) {
+                        if (Utils.isExitWebView(u)) {
                             onClickClose()
                         } else {
                             onClickBody(u)
@@ -234,8 +234,11 @@ class ActivityIAM : AppCompatActivity() {
     }
 
     private fun onClickBody(uri: Uri) {
+//        logD(">>>onClickBody uri $uri")
+//        logD(">>>actionClick uri ${iamData?.actionClick}")
         iamData?.actionClick?.let { actionClick ->
             val link = "$actionClick$uri"
+//            logD(">>>onClickBody link $link")
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(link)
             startActivity(i)

@@ -71,7 +71,7 @@ object Utils {
         }
     }
 
-    fun isExistWebView(uri: Uri): Boolean {
+    fun isExitWebView(uri: Uri): Boolean {
         return uri.toString() == "onetarget://exit"
     }
 

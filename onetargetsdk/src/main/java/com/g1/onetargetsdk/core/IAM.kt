@@ -501,7 +501,7 @@ class IAM {
                         ): Boolean {
                             logD(">>>>shouldOverrideUrlLoading ${request?.url}")
                             request?.url?.let { u ->
-                                if (Utils.isExistWebView(u)) {
+                                if (Utils.isExitWebView(u)) {
                                     onClickClose()
                                 } else {
                                     onClickBody(u)
