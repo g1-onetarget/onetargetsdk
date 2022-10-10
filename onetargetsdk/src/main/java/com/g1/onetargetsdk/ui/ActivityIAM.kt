@@ -85,7 +85,9 @@ class ActivityIAM : AppCompatActivity() {
         tvDebug?.text = "activeType: ${iamData?.activeType}" +
                 "\nactiveValue: ${iamData?.activeValue}" +
                 "\nclosingAfter: ${iamData?.closingAfter}" +
-                "\nname: ${iamData?.name}"
+                "\nname: ${iamData?.name}" +
+                "\nactionOpen: ${iamData?.actionOpen}" +
+                "\nactionClick: ${iamData?.actionClick}"
     }
 
     private fun setupData() {

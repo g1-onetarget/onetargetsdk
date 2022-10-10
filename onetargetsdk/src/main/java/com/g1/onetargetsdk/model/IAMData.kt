@@ -6,6 +6,7 @@ import java.io.Serializable
 
 @Keep
 data class IAMData(
+    val actionOpen: String? = null,
     val actionClick: String? = null,
     val activeType: String? = null,
     val activeValue: Double? = null,//Giá trị thời gian (giây)/Phần trăm (%) cho (TIME, SCROLL_PERCENTAGE)
