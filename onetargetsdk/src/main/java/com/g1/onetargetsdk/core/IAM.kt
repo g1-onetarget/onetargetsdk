@@ -40,6 +40,7 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.URL
 import java.util.concurrent.TimeUnit
 
 /**
@@ -578,7 +579,13 @@ class IAM {
         }
 
         private fun trackActionOpen(iamData: IAMData) {
-            logE(">>>loitpp trackActionOpen ${iamData.actionOpen}")
+//            logE(">>>loitpp trackActionOpen ${iamData.actionOpen}")
+            iamData.actionOpen?.let { actionOpen ->
+                Thread {
+                    URL(actionOpen).openStream()
+                    logE(">>>trackActionOpen openStream actionOpen $actionOpen")
+                }.start()
+            }
         }
     }
 }
