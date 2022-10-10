@@ -450,7 +450,7 @@ class IAM {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(link)
                     activity.startActivity(i)
-                    activity.finishAfterTransition()
+                    dialog.dismiss()
                 }
             }
 
