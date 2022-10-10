@@ -10,8 +10,8 @@ android {
         applicationId "com.g1.onetarget"
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 20221010
+        versionName "2022.10.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        multiDexEnabled true
