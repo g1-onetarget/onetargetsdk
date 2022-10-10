@@ -370,6 +370,7 @@ class IAM {
             context: Context, htmlContent: String, iamData: IAMData
         ) {
             isActivityIAMRunning = true
+            trackActionOpen(iamData)
             val intent = Intent(context, ActivityIAM::class.java)
             intent.putExtra(ActivityIAM.KEY_IAM_DATA, iamData)
             intent.putExtra(
@@ -392,6 +393,7 @@ class IAM {
             dialogIAM = genDialogIAM(
                 activity = activity, htmlContent = htmlContent, iamData = iamData
             )
+            trackActionOpen(iamData)
             show(dialogIAM)
             if (listIAM.isNotEmpty()) {
                 listIAM.removeFirst()
@@ -573,6 +575,10 @@ class IAM {
                 )
             }
             return dialog
+        }
+
+        private fun trackActionOpen(iamData: IAMData) {
+            logE(">>>loitpp trackActionOpen ${iamData.actionOpen}")
         }
     }
 }

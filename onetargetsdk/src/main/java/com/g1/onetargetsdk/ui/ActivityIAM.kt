@@ -82,6 +82,7 @@ class ActivityIAM : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setupDebugView() {
+//        logD(">>>setupDebugView actionOpen: ${iamData?.actionOpen}")
         tvDebug?.text = "activeType: ${iamData?.activeType}" +
                 "\nactiveValue: ${iamData?.activeValue}" +
                 "\nclosingAfter: ${iamData?.closingAfter}" +
