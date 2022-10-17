@@ -11,10 +11,9 @@ allprojects {
 }
 ```
 **Step 2.**  Thêm dependency SDK ở file gradle (level app)
-get version x.y.z via this link: https://jitpack.io/#g1mobile/onetargetsdk
 ```css
 dependencies {
-    api 'com.github.g1mobile:onetargetsdk:x.y.z'
+    api 'com.github.g1-onetarget:onetargetsdk:1.2.7'
 }
 ```
 
