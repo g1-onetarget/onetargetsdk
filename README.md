@@ -1,4 +1,3 @@
-
 # OneTarget Android
 
 **Import SDK**
