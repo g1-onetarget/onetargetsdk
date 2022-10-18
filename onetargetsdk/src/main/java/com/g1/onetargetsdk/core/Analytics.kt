@@ -23,10 +23,10 @@ class Analytics {
         private var configuration: Configuration? = null
 
         fun setup(configuration: Configuration): Boolean {
-//            if (configuration.writeKey.isNullOrEmpty()) {
-//                logE("writeKey cannot be null or empty")
-//                return false
-//            }
+            if (configuration.writeKey.isNullOrEmpty()) {
+                logE(logTag, "writeKey cannot be null or empty")
+                return false
+            }
             if (configuration.getBaseUrlTracking().isEmpty()) {
                 logE(logTag, "base url cannot be null or empty")
                 return false
@@ -45,6 +45,10 @@ class Analytics {
         private fun service(): OneTargetService? {
             if (configuration == null) {
                 logE(logTag, "configuration not found")
+                return null
+            }
+            if (configuration?.writeKey.isNullOrEmpty()) {
+                logE(logTag, "writeKey cannot be null or empty")
                 return null
             }
             val baseUrl = configuration?.getBaseUrlTracking()
@@ -105,7 +109,6 @@ class Analytics {
             val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
             onPreExecute?.invoke(monitorEvent)
             callApiTrackPost(
-                monitorEvent.workspaceId,
                 jsonIdentityId,
                 jsonProfile,
                 monitorEvent.eventName,
@@ -118,7 +121,6 @@ class Analytics {
 
         @JvmStatic
         fun trackEvent(
-            workSpaceId: String?,
             identityId: HashMap<String, Any>?,
             profile: List<HashMap<String, Any>>?,
             eventName: String?,
@@ -128,10 +130,9 @@ class Analytics {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
-            val tmpWorkspaceId = if (workSpaceId.isNullOrEmpty()) {
-                configuration?.writeKey
-            } else {
-                workSpaceId
+            val workspaceId = configuration?.writeKey
+            if (workspaceId.isNullOrEmpty()) {
+                return
             }
             val tmpEventDate = eventDate ?: System.currentTimeMillis()
             val monitorEvent = MonitorEvent()
@@ -156,7 +157,7 @@ class Analytics {
                 itemFirst["one_target_user_id"] = deviceId
             }
 
-            monitorEvent.workspaceId = tmpWorkspaceId
+            monitorEvent.workspaceId = workspaceId
             monitorEvent.identityId = tmpIdentityId
             monitorEvent.profile = tmpProfile
             monitorEvent.eventName = eventName
@@ -169,7 +170,6 @@ class Analytics {
             val jsonEventData = Gson().toJson(eventData)
 
             callApiTrackPost(
-                tmpWorkspaceId,
                 jsonIdentityId,
                 jsonProfile,
                 eventName,
@@ -182,7 +182,6 @@ class Analytics {
 
         @Deprecated("It would be better if tracking by POST")
         private fun callApiTrackGet(
-            workSpaceId: String?,
             jsonIdentityId: String?,
             jsonProfile: String?,
             eventName: String?,
@@ -191,6 +190,10 @@ class Analytics {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
+            val workSpaceId = configuration?.writeKey
+            if (workSpaceId.isNullOrEmpty()) {
+                return
+            }
             service()?.trackGet(
                 workspaceId = workSpaceId,
                 identityId = jsonIdentityId,
@@ -213,7 +216,6 @@ class Analytics {
         }
 
         private fun callApiTrackPost(
-            workSpaceId: String?,
             jsonIdentityId: String?,
             jsonProfile: String?,
             eventName: String?,
@@ -222,6 +224,10 @@ class Analytics {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
+            val workSpaceId = configuration?.writeKey
+            if (workSpaceId.isNullOrEmpty()) {
+                return
+            }
             val requestTrack = RequestTrack()
             requestTrack.workspace_id = workSpaceId
             requestTrack.identity_id = jsonIdentityId

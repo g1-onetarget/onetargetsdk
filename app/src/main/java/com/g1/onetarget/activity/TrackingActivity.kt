@@ -86,7 +86,6 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventByParams() {
-        val workSpaceId = C.getWorkSpaceId()
         val identityId = hashMapOf<String, Any>(
             "phone" to "0766040293",
             "email" to "loitp@galaxy.one",
@@ -105,7 +104,6 @@ class TrackingActivity : AppCompatActivity() {
             "pagePath" to "/home"
         )
         Analytics.trackEvent(
-            workSpaceId = workSpaceId,
             identityId = identityId,
             profile = profile,
             eventName = eventName,
@@ -185,7 +183,6 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventAddToCart() {
-        val workSpaceId = C.getWorkSpaceId()
         val identityId = hashMapOf<String, Any>()
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "add_to_cart"
@@ -217,7 +214,6 @@ class TrackingActivity : AppCompatActivity() {
             "ecommerce.trip_route" to "SGN-HN",
         )
         Analytics.trackEvent(
-            workSpaceId = workSpaceId,
             identityId = identityId,
             profile = profile,
             eventName = eventName,
@@ -242,7 +238,6 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventInputPassengerInfo() {
-        val workSpaceId = C.getWorkSpaceId()
         val identityId = hashMapOf<String, Any>()
         val profile = ArrayList<HashMap<String, Any>>()
         profile.add(
@@ -275,7 +270,6 @@ class TrackingActivity : AppCompatActivity() {
             "profile.0.phone" to "0969696969",
         )
         Analytics.trackEvent(
-            workSpaceId = workSpaceId,
             identityId = identityId,
             profile = profile,
             eventName = eventName,
@@ -300,7 +294,6 @@ class TrackingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun trackEventPurchase() {
-        val workSpaceId = C.getWorkSpaceId()
         val identityId = hashMapOf<String, Any>()
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "purchase"
@@ -348,7 +341,6 @@ class TrackingActivity : AppCompatActivity() {
             "ecommerce.items.2.price" to "2000800",
         )
         Analytics.trackEvent(
-            workSpaceId = workSpaceId,
             identityId = identityId,
             profile = profile,
             eventName = eventName,
