@@ -98,7 +98,6 @@ class TrackingActivity : AppCompatActivity() {
             )
         )
         val eventName = "event_name"
-        val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
             "pageTitle" to "Passenger Information",
             "pagePath" to "/home"
@@ -107,7 +106,6 @@ class TrackingActivity : AppCompatActivity() {
             identityId = identityId,
             profile = profile,
             eventName = eventName,
-            eventDate = eventDate,
             eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
@@ -155,7 +153,6 @@ class TrackingActivity : AppCompatActivity() {
         )
         monitorEvent.profile = profile
         monitorEvent.eventName = "track_now_event"
-        monitorEvent.eventDate = System.currentTimeMillis()
         monitorEvent.eventData = hashMapOf(
             "name" to "Loitp",
             "bod" to "01/01/2000",
@@ -186,7 +183,6 @@ class TrackingActivity : AppCompatActivity() {
         val identityId = hashMapOf<String, Any>()
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "add_to_cart"
-        val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
             "platform" to "APP",
             "ecommerce.currency" to "VND",
@@ -217,7 +213,6 @@ class TrackingActivity : AppCompatActivity() {
             identityId = identityId,
             profile = profile,
             eventName = eventName,
-            eventDate = eventDate,
             eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
@@ -255,7 +250,6 @@ class TrackingActivity : AppCompatActivity() {
             )
         )
         val eventName = "input_passenger_info"
-        val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
             "ecommerce.trip_type" to "roundTrip",
             "ecommerce.trip_route" to "SGN-HN",
@@ -273,7 +267,6 @@ class TrackingActivity : AppCompatActivity() {
             identityId = identityId,
             profile = profile,
             eventName = eventName,
-            eventDate = eventDate,
             eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)
@@ -297,7 +290,6 @@ class TrackingActivity : AppCompatActivity() {
         val identityId = hashMapOf<String, Any>()
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "purchase"
-        val eventDate = System.currentTimeMillis()
         val eventData = hashMapOf<String, Any>(
             "platform" to "APP",
             "ecommerce.currency" to "VND",
@@ -344,7 +336,6 @@ class TrackingActivity : AppCompatActivity() {
             identityId = identityId,
             profile = profile,
             eventName = eventName,
-            eventDate = eventDate,
             eventData = eventData,
             onPreExecute = { input ->
                 printBeautyJson(input, tvInput)

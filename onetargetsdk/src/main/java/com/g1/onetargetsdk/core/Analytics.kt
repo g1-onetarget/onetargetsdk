@@ -102,17 +102,17 @@ class Analytics {
             } else {
                 monitorEvent.profile?.firstOrNull()?.put("one_target_user_id", deviceId)
             }
+            monitorEvent.eventDate = System.currentTimeMillis()
 
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
             val jsonEventData = Gson().toJson(monitorEvent.eventData)
-            val tmpEventDate = monitorEvent.eventDate ?: System.currentTimeMillis()
             onPreExecute?.invoke(monitorEvent)
             callApiTrackPost(
                 jsonIdentityId,
                 jsonProfile,
                 monitorEvent.eventName,
-                tmpEventDate,
+                monitorEvent.eventDate,
                 jsonEventData,
                 onResponse,
                 onFailure,
@@ -124,7 +124,6 @@ class Analytics {
             identityId: HashMap<String, Any>?,
             profile: List<HashMap<String, Any>>?,
             eventName: String?,
-            eventDate: Long?,
             eventData: HashMap<String, Any>?,
             onPreExecute: ((MonitorEvent) -> Unit)? = null,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
@@ -134,7 +133,6 @@ class Analytics {
             if (workspaceId.isNullOrEmpty()) {
                 return
             }
-            val tmpEventDate = eventDate ?: System.currentTimeMillis()
             val monitorEvent = MonitorEvent()
 
             val deviceId = configuration?.deviceId ?: ""
@@ -161,7 +159,7 @@ class Analytics {
             monitorEvent.identityId = tmpIdentityId
             monitorEvent.profile = tmpProfile
             monitorEvent.eventName = eventName
-            monitorEvent.eventDate = tmpEventDate
+            monitorEvent.eventDate = System.currentTimeMillis()
             monitorEvent.eventData = eventData
             onPreExecute?.invoke(monitorEvent)
 
@@ -173,7 +171,7 @@ class Analytics {
                 jsonIdentityId,
                 jsonProfile,
                 eventName,
-                tmpEventDate,
+                monitorEvent.eventDate,
                 jsonEventData,
                 onResponse,
                 onFailure,
@@ -185,7 +183,7 @@ class Analytics {
             jsonIdentityId: String?,
             jsonProfile: String?,
             eventName: String?,
-            eventDate: Long,
+            eventDate: Long?,
             jsonEventData: String?,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
@@ -219,7 +217,7 @@ class Analytics {
             jsonIdentityId: String?,
             jsonProfile: String?,
             eventName: String?,
-            eventDate: Long,
+            eventDate: Long?,
             jsonEventData: String?,
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
