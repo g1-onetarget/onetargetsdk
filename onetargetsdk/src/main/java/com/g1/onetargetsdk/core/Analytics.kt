@@ -84,14 +84,6 @@ class Analytics {
             }
             monitorEvent.identityId = tmpIdentityId
 
-//            val tmpProfile = hashMapOf<String, Any>(
-//                "one_target_user_id" to deviceId
-//            )
-//            monitorEvent.profile?.let { map ->
-//                tmpProfile.putAll(map)
-//            }
-//            monitorEvent.profile = tmpProfile
-
             if (monitorEvent.profile.isNullOrEmpty()) {
                 val tmpProfile = ArrayList<HashMap<String, Any>>()
                 val itemFirst = hashMapOf<String, Any>(
@@ -103,6 +95,13 @@ class Analytics {
                 monitorEvent.profile?.firstOrNull()?.put("one_target_user_id", deviceId)
             }
             monitorEvent.eventDate = System.currentTimeMillis()
+            val tmpEventData = hashMapOf<String, Any>(
+                "platform" to "Android"
+            )
+            monitorEvent.eventData?.let { map ->
+                tmpEventData.putAll(map)
+            }
+            monitorEvent.eventData = tmpEventData
 
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
@@ -142,7 +141,6 @@ class Analytics {
             identityId?.let { map ->
                 tmpIdentityId.putAll(map)
             }
-
             val tmpProfile = ArrayList<HashMap<String, Any>>()
             if (profile.isNullOrEmpty()) {
                 val itemFirst = hashMapOf<String, Any>(
@@ -155,17 +153,24 @@ class Analytics {
                 itemFirst["one_target_user_id"] = deviceId
             }
 
+            val tmpEventData = hashMapOf<String, Any>(
+                "platform" to "Android"
+            )
+            eventData?.let { map ->
+                tmpEventData.putAll(map)
+            }
+
             monitorEvent.workspaceId = workspaceId
             monitorEvent.identityId = tmpIdentityId
             monitorEvent.profile = tmpProfile
             monitorEvent.eventName = eventName
             monitorEvent.eventDate = System.currentTimeMillis()
-            monitorEvent.eventData = eventData
+            monitorEvent.eventData = tmpEventData
             onPreExecute?.invoke(monitorEvent)
 
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
-            val jsonEventData = Gson().toJson(eventData)
+            val jsonEventData = Gson().toJson(monitorEvent.eventData)
 
             callApiTrackPost(
                 jsonIdentityId,
@@ -178,40 +183,40 @@ class Analytics {
             )
         }
 
-        @Deprecated("It would be better if tracking by POST")
-        private fun callApiTrackGet(
-            jsonIdentityId: String?,
-            jsonProfile: String?,
-            eventName: String?,
-            eventDate: Long?,
-            jsonEventData: String?,
-            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
-            onFailure: ((Throwable) -> Unit)? = null,
-        ) {
-            val workSpaceId = configuration?.writeKey
-            if (workSpaceId.isNullOrEmpty()) {
-                return
-            }
-            service()?.trackGet(
-                workspaceId = workSpaceId,
-                identityId = jsonIdentityId,
-                profile = jsonProfile,
-                eventName = eventName,
-                eventDate = eventDate.toString(),
-                eventData = jsonEventData,
-            )?.enqueue(object : Callback<Void> {
-                override fun onResponse(
-                    call: Call<Void>,
-                    response: Response<Void>
-                ) {
-                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
-                }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    onFailure?.invoke(t)
-                }
-            })
-        }
+//        @Deprecated("It would be better if tracking by POST")
+//        private fun callApiTrackGet(
+//            jsonIdentityId: String?,
+//            jsonProfile: String?,
+//            eventName: String?,
+//            eventDate: Long?,
+//            jsonEventData: String?,
+//            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
+//            onFailure: ((Throwable) -> Unit)? = null,
+//        ) {
+//            val workSpaceId = configuration?.writeKey
+//            if (workSpaceId.isNullOrEmpty()) {
+//                return
+//            }
+//            service()?.trackGet(
+//                workspaceId = workSpaceId,
+//                identityId = jsonIdentityId,
+//                profile = jsonProfile,
+//                eventName = eventName,
+//                eventDate = eventDate.toString(),
+//                eventData = jsonEventData,
+//            )?.enqueue(object : Callback<Void> {
+//                override fun onResponse(
+//                    call: Call<Void>,
+//                    response: Response<Void>
+//                ) {
+//                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+//                }
+//
+//                override fun onFailure(call: Call<Void>, t: Throwable) {
+//                    onFailure?.invoke(t)
+//                }
+//            })
+//        }
 
         private fun callApiTrackPost(
             jsonIdentityId: String?,

@@ -184,7 +184,6 @@ class TrackingActivity : AppCompatActivity() {
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "add_to_cart"
         val eventData = hashMapOf<String, Any>(
-            "platform" to "APP",
             "ecommerce.currency" to "VND",
             "ecommerce.trip_from" to "HAN",
             "ecommerce.trip_to" to "SGN",
@@ -291,7 +290,6 @@ class TrackingActivity : AppCompatActivity() {
         val profile = ArrayList<HashMap<String, Any>>()
         val eventName = "purchase"
         val eventData = hashMapOf<String, Any>(
-            "platform" to "APP",
             "ecommerce.currency" to "VND",
             "ecommerce.transaction_id" to "33AJV3",
             "ecommerce.value" to "2899800",
