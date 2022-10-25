@@ -37,7 +37,7 @@ class Analytics {
             val resultSetupIAM = IAM.setup(configuration = configuration, context = context)
             Utils.logD(logTag, "resultSetupIAM $resultSetupIAM")
 
-            configuration.onetargetAppPushID?.let { id ->
+            configuration.oneTargetAppPushID?.let { id ->
                 OS.setup(context = context, appId = id)
             }
 

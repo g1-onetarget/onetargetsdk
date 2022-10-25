@@ -34,7 +34,7 @@ class Configuration(context: Context) {
     var isEnableIAM = true
     var deviceId: String? = null
     var maxNumberApiPolling = DEFAULT_MAX_NUMBER_API_POLLING
-    var onetargetAppPushID: String? = null
+    var oneTargetAppPushID: String? = null
 
     var onShowIAM: ((
         htmlContent: String, iamData: IAMData,
