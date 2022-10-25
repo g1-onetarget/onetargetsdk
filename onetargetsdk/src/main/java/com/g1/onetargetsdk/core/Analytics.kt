@@ -36,6 +36,11 @@ class Analytics {
 
             val resultSetupIAM = IAM.setup(configuration = configuration, context = context)
             Utils.logD(logTag, "resultSetupIAM $resultSetupIAM")
+
+            configuration.oneSignalAppID?.let { id ->
+                OS.setup(context = context, appId = id)
+            }
+
             return resultSetupIAM
         }
 
