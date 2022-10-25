@@ -54,10 +54,8 @@ class SplashActivity : AppCompatActivity() {
         configuration.onMsg = {
             Utils.logD(SplashActivity::class.java.simpleName, "configuration.onMsg $it")
         }
-        val resultSetupTracking = Analytics.setup(configuration)
-        val resultSetupIAM = IAM.setup(configuration, this)
-        Log.d(G1Application::class.java.simpleName, "resultSetupTracking $resultSetupTracking")
-        Log.d(G1Application::class.java.simpleName, "resultSetupIAM $resultSetupIAM")
+        val resultSetup = Analytics.setup(configuration, this)
+        Log.d(G1Application::class.java.simpleName, "resultSetup $resultSetup")
     }
 
     private fun goToHome() {

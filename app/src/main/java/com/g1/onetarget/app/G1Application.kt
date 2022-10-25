@@ -46,10 +46,8 @@ class G1Application : Application() {
         configuration.onMsg = {
             logD("configuration.onMsg $it")
         }
-        val resultSetupTracking = Analytics.setup(configuration)
-        val resultSetupIAM = IAM.setup(configuration, this)
-        logD("resultSetupTracking $resultSetupTracking")
-        logD("resultSetupIAM $resultSetupIAM")
+        val resultSetup = Analytics.setup(configuration = configuration, context = this)
+        logD("resultSetup $resultSetup")
     }
 
     private fun logD(msg: String) {

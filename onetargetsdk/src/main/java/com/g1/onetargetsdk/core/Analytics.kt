@@ -1,6 +1,7 @@
 package com.g1.onetargetsdk.core
 
-import com.g1.onetargetsdk.common.Utils.logE
+import android.content.Context
+import com.g1.onetargetsdk.common.Utils
 import com.g1.onetargetsdk.model.MonitorEvent
 import com.g1.onetargetsdk.model.request.RequestTrack
 import com.g1.onetargetsdk.services.OneTargetService
@@ -22,17 +23,20 @@ class Analytics {
         private val logTag = Analytics::class.java.simpleName
         private var configuration: Configuration? = null
 
-        fun setup(configuration: Configuration): Boolean {
+        fun setup(configuration: Configuration, context: Context): Boolean {
             if (configuration.writeKey.isNullOrEmpty()) {
-                logE(logTag, "writeKey cannot be null or empty")
+                Utils.logE(logTag, "writeKey cannot be null or empty")
                 return false
             }
             if (configuration.getBaseUrlTracking().isEmpty()) {
-                logE(logTag, "base url cannot be null or empty")
+                Utils.logE(logTag, "base url cannot be null or empty")
                 return false
             }
             Companion.configuration = configuration
-            return true
+
+            val resultSetupIAM = IAM.setup(configuration = configuration, context = context)
+            Utils.logD(logTag, "resultSetupIAM $resultSetupIAM")
+            return resultSetupIAM
         }
 
         private fun onMsg(msg: String) {
@@ -44,16 +48,16 @@ class Analytics {
         @JvmStatic
         private fun service(): OneTargetService? {
             if (configuration == null) {
-                logE(logTag, "configuration not found")
+                Utils.logE(logTag, "configuration not found")
                 return null
             }
             if (configuration?.writeKey.isNullOrEmpty()) {
-                logE(logTag, "writeKey cannot be null or empty")
+                Utils.logE(logTag, "writeKey cannot be null or empty")
                 return null
             }
             val baseUrl = configuration?.getBaseUrlTracking()
             if (baseUrl.isNullOrEmpty()) {
-                logE(logTag, "base url cannot be null or empty")
+                Utils.logE(logTag, "base url cannot be null or empty")
                 return null
             }
             val isShowLog = configuration?.isShowLog
