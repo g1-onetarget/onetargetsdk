@@ -7,6 +7,7 @@ import com.g1.onetargetsdk.model.request.RequestTrack
 import com.g1.onetargetsdk.services.OneTargetService
 import com.g1.onetargetsdk.services.RetrofitClient
 import com.google.gson.Gson
+import com.onesignal.OneSignal
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -84,33 +85,54 @@ class Analytics {
             onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
             onFailure: ((Throwable) -> Unit)? = null,
         ) {
-            val deviceId = configuration?.deviceId ?: ""
-            val tmpIdentityId = hashMapOf<String, Any>(
-                "one_target_user_id" to deviceId
-            )
-            monitorEvent.identityId?.let { map ->
-                tmpIdentityId.putAll(map)
+            val tmpIdentityId = hashMapOf<String, Any>()
+            tmpIdentityId.apply {
+                configuration?.deviceId?.let { deviceId ->
+                    this["one_target_user_id"] = deviceId
+                }
+                OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    this.put("app_push_player_id", osUserId)
+                }
+                monitorEvent.identityId?.let { map ->
+                    this.putAll(map)
+                }
+                monitorEvent.identityId = this
             }
-            monitorEvent.identityId = tmpIdentityId
 
             if (monitorEvent.profile.isNullOrEmpty()) {
                 val tmpProfile = ArrayList<HashMap<String, Any>>()
-                val itemFirst = hashMapOf<String, Any>(
-                    "one_target_user_id" to deviceId
-                )
-                tmpProfile.add(itemFirst)
-                monitorEvent.profile = tmpProfile
+                tmpProfile.apply {
+                    val itemFirst = hashMapOf<String, Any>()
+                    configuration?.deviceId?.let { deviceId ->
+                        itemFirst["one_target_user_id"] = deviceId
+                    }
+                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                        itemFirst.put("app_push_player_id", osUserId)
+                    }
+                    this.add(itemFirst)
+                    monitorEvent.profile = this
+                }
             } else {
-                monitorEvent.profile?.firstOrNull()?.put("one_target_user_id", deviceId)
+                monitorEvent.profile?.firstOrNull()?.let { itemFirst ->
+                    configuration?.deviceId?.let { deviceId ->
+                        itemFirst.put("one_target_user_id", deviceId)
+                    }
+                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                        itemFirst.put("app_push_player_id", osUserId)
+                    }
+                }
             }
+
             monitorEvent.eventDate = System.currentTimeMillis()
-            val tmpEventData = hashMapOf<String, Any>(
-                "platform" to "Android"
-            )
-            monitorEvent.eventData?.let { map ->
-                tmpEventData.putAll(map)
+
+            val tmpEventData = hashMapOf<String, Any>()
+            tmpEventData.apply {
+                this["platform"] = "Android"
+                monitorEvent.eventData?.let { map ->
+                    this.putAll(map)
+                }
+                monitorEvent.eventData = this
             }
-            monitorEvent.eventData = tmpEventData
 
             val jsonIdentityId = Gson().toJson(monitorEvent.identityId)
             val jsonProfile = Gson().toJson(monitorEvent.profile)
@@ -143,30 +165,48 @@ class Analytics {
             }
             val monitorEvent = MonitorEvent()
 
-            val deviceId = configuration?.deviceId ?: ""
-            val tmpIdentityId = hashMapOf<String, Any>(
-                "one_target_user_id" to deviceId
-            )
-            identityId?.let { map ->
-                tmpIdentityId.putAll(map)
-            }
-            val tmpProfile = ArrayList<HashMap<String, Any>>()
-            if (profile.isNullOrEmpty()) {
-                val itemFirst = hashMapOf<String, Any>(
-                    "one_target_user_id" to deviceId
-                )
-                tmpProfile.add(itemFirst)
-            } else {
-                tmpProfile.addAll(profile)
-                val itemFirst = profile.first()
-                itemFirst["one_target_user_id"] = deviceId
+            val tmpIdentityId = hashMapOf<String, Any>()
+            tmpIdentityId.apply {
+                configuration?.deviceId?.let { deviceId ->
+                    this.put("one_target_user_id", deviceId)
+                }
+                OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    this.put("app_push_player_id", osUserId)
+                }
+                identityId?.let { map ->
+                    this.putAll(map)
+                }
             }
 
-            val tmpEventData = hashMapOf<String, Any>(
-                "platform" to "Android"
-            )
-            eventData?.let { map ->
-                tmpEventData.putAll(map)
+            val tmpProfile = ArrayList<HashMap<String, Any>>()
+            tmpProfile.apply {
+                if (profile.isNullOrEmpty()) {
+                    val itemFirst = hashMapOf<String, Any>()
+                    configuration?.deviceId?.let { deviceId ->
+                        itemFirst.put("one_target_user_id", deviceId)
+                    }
+                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                        itemFirst.put("app_push_player_id", osUserId)
+                    }
+                    this.add(itemFirst)
+                } else {
+                    this.addAll(profile)
+                    val itemFirst = profile.first()
+                    configuration?.deviceId?.let { deviceId ->
+                        itemFirst["one_target_user_id"] = deviceId
+                    }
+                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                        itemFirst["app_push_player_id"] = osUserId
+                    }
+                }
+            }
+
+            val tmpEventData = hashMapOf<String, Any>()
+            tmpEventData.apply {
+                this["platform"] = "Android"
+                eventData?.let { map ->
+                    this.putAll(map)
+                }
             }
 
             monitorEvent.workspaceId = workspaceId
@@ -191,41 +231,6 @@ class Analytics {
                 onFailure,
             )
         }
-
-//        @Deprecated("It would be better if tracking by POST")
-//        private fun callApiTrackGet(
-//            jsonIdentityId: String?,
-//            jsonProfile: String?,
-//            eventName: String?,
-//            eventDate: Long?,
-//            jsonEventData: String?,
-//            onResponse: ((isSuccessful: Boolean, code: Int, Any?) -> Unit)? = null,
-//            onFailure: ((Throwable) -> Unit)? = null,
-//        ) {
-//            val workSpaceId = configuration?.writeKey
-//            if (workSpaceId.isNullOrEmpty()) {
-//                return
-//            }
-//            service()?.trackGet(
-//                workspaceId = workSpaceId,
-//                identityId = jsonIdentityId,
-//                profile = jsonProfile,
-//                eventName = eventName,
-//                eventDate = eventDate.toString(),
-//                eventData = jsonEventData,
-//            )?.enqueue(object : Callback<Void> {
-//                override fun onResponse(
-//                    call: Call<Void>,
-//                    response: Response<Void>
-//                ) {
-//                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
-//                }
-//
-//                override fun onFailure(call: Call<Void>, t: Throwable) {
-//                    onFailure?.invoke(t)
-//                }
-//            })
-//        }
 
         private fun callApiTrackPost(
             jsonIdentityId: String?,
