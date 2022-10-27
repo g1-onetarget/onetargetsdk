@@ -40,6 +40,7 @@ class G1Application : Application() {
         configuration.writeKey = C.getWorkSpaceId()
         configuration.isShowLog = true
         configuration.isEnableIAM = true
+        configuration.oneTargetAppPushID = C.ONESIGNAL_APP_ID
         configuration.onShowIAM = { htmlContent: String, iamData: IAMData ->
             IAM.showIAMActivity(context = this, htmlContent = htmlContent, iamData = iamData)
         }
