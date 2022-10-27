@@ -37,8 +37,7 @@ Sau đó,  sync lại project.
             IAM.showIAMActivity(this, htmlContent, iamData)
             //or IAM.showIAMDialog(this, htmlContent, iamData)
         }
-        val resultSetupTracking = Analytics.setup(configuration)
-        val resultSetupIAM = IAM.setup(configuration, this)
+        Analytics.setup(configuration = configuration, context = this)
     }
 ```
 Example: https://gitlab.com/g1-data/onetarget-android/-/blob/main/app/src/main/java/com/g1/onetarget/app/G1Application.kt
