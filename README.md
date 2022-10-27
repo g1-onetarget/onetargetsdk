@@ -14,7 +14,7 @@ allprojects {
 **Step 2.**  Thêm dependency SDK ở file gradle (level app)
 ```css
 dependencies {
-    api 'com.github.g1-onetarget:onetargetsdk:1.2.9'
+    api 'com.github.g1-onetarget:onetargetsdk:1.3.1'
 }
 ```
 
@@ -32,6 +32,7 @@ Sau đó,  sync lại project.
         configuration.writeKey = "enter your workspace id"
         configuration.isShowLog = false
         configuration.isEnableIAM = true
+        configuration.oneTargetAppPushID = "enter your one signal app id"
         configuration.onShowIAM = { htmlContent, iamData ->
             IAM.showIAMActivity(this, htmlContent, iamData)
             //or IAM.showIAMDialog(this, htmlContent, iamData)
