@@ -12,7 +12,7 @@ import java.io.Serializable
  * freuss47@gmail.com
  */
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "UNCHECKED_CAST")
 fun <T : Serializable?> Intent.getSerializable(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         this.getSerializableExtra(key, clazz)!!
