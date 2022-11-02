@@ -15,7 +15,8 @@ object C {
     private const val workSpaceIdStag = "4d963ee6-9ccd-4cf0-b89f-b1730e1ff0e1"
     private const val workSpaceIdProd = ""//TODO fill
 
-    const val ONESIGNAL_APP_ID = "5ec0f33d-624b-41de-9ab4-c65b0218dc02"
+//    const val ONESIGNAL_APP_ID = "5ec0f33d-624b-41de-9ab4-c65b0218dc02"
+    const val ONESIGNAL_APP_ID = "d355f0df-6d85-4258-a871-82aaa4031b53"
 
     private var env = DEV
 
