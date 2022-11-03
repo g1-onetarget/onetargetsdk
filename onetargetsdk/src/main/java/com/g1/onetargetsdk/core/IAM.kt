@@ -84,6 +84,7 @@ class IAM {
             }
         }
 
+        @Suppress("unused")
         fun clear() {
             compositeDisposable.clear()
         }
@@ -407,6 +408,7 @@ class IAM {
             }
         }
 
+        @Suppress("unused")
         private fun hide(dialog: Dialog?) {
             if (dialog != null && dialog.isShowing) {
                 dialog.cancel()
