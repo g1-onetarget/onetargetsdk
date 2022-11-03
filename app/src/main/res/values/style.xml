@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@drawable/startup</item>
         <item name="android:navigationBarColor">@color/purple_700</item>
@@ -13,7 +13,7 @@
         </item>
     </style>
 
-    <style name="LightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorAccent">@color/purple_500</item>
@@ -30,14 +30,4 @@
         <item name="spinBars">false</item>
         <item name="color">@android:color/white</item>
     </style>
-
-    <!--    <style name="Theme.OneTargetAndroid" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
-    <!--        <item name="colorPrimary">@color/purple_200</item>-->
-    <!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
-    <!--        <item name="colorOnPrimary">@color/black</item>-->
-    <!--        <item name="colorSecondary">@color/teal_200</item>-->
-    <!--        <item name="colorSecondaryVariant">@color/teal_200</item>-->
-    <!--        <item name="colorOnSecondary">@color/black</item>-->
-    <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
-    <!--    </style>-->
 </resources>
