@@ -1,12 +1,12 @@
 package com.g1.onetarget.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import com.g1.onetarget.R
 import com.g1.onetarget.app.G1Application
 import com.g1.onetarget.common.C
@@ -24,7 +24,7 @@ import com.g1.onetargetsdk.model.IAMData
  * freuss47@gmail.com
  */
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        setupSDK()
@@ -34,6 +34,7 @@ class SplashActivity : AppCompatActivity() {
         goToHome()
     }
 
+    @Suppress("unused")
     private fun setupSDK() {
         C.setEnv(C.DEV)
 

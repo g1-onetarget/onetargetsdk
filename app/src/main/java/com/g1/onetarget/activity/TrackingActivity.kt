@@ -1,14 +1,12 @@
 package com.g1.onetarget.activity
 
 import android.annotation.SuppressLint
-import android.graphics.Color
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.Toolbar
 import com.g1.onetarget.R
 import com.g1.onetarget.common.C
 import com.g1.onetargetsdk.core.Analytics
@@ -23,15 +21,14 @@ import com.google.gson.GsonBuilder
  * +840766040293
  * freuss47@gmail.com
  */
-class TrackingActivity : AppCompatActivity() {
-    private var toolbar: Toolbar? = null
-    private var btTestTrackingByParams: AppCompatButton? = null
-    private var btTestTrackingByObject: AppCompatButton? = null
-    private var btAddToCart: AppCompatButton? = null
-    private var btInputPassengerInfo: AppCompatButton? = null
-    private var btPurchase: AppCompatButton? = null
-    private var tvInput: AppCompatTextView? = null
-    private var tvOutput: AppCompatTextView? = null
+class TrackingActivity : Activity() {
+    private var btTestTrackingByParams: Button? = null
+    private var btTestTrackingByObject: Button? = null
+    private var btAddToCart: Button? = null
+    private var btInputPassengerInfo: Button? = null
+    private var btPurchase: Button? = null
+    private var tvInput: TextView? = null
+    private var tvOutput: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +42,6 @@ class TrackingActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
-        toolbar = findViewById(R.id.toolbar)
         btTestTrackingByParams = findViewById(R.id.btTestTrackingByParams)
         btTestTrackingByObject = findViewById(R.id.btTestTrackingByObject)
         btAddToCart = findViewById(R.id.btAddToCart)
@@ -54,17 +50,8 @@ class TrackingActivity : AppCompatActivity() {
         tvInput = findViewById(R.id.tvInput)
         tvOutput = findViewById(R.id.tvOutput)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.let { actionBar ->
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setDisplayShowHomeEnabled(true)
-            actionBar.title = getString(R.string.sample_tracking)
-            toolbar?.apply {
-                setTitleTextColor(Color.WHITE)
-                setNavigationOnClickListener {
-                    finish()
-                }
-            }
+        findViewById<View>(R.id.btBack).setOnClickListener {
+            finish()
         }
 
         btTestTrackingByParams?.setOnClickListener {
@@ -99,11 +86,9 @@ class TrackingActivity : AppCompatActivity() {
         )
         val eventName = "event_name"
         val eventData = hashMapOf<String, Any>(
-            "pageTitle" to "Passenger Information",
-            "pagePath" to "/home"
+            "pageTitle" to "Passenger Information", "pagePath" to "/home"
         )
-        Analytics.trackEvent(
-            identityId = identityId,
+        Analytics.trackEvent(identityId = identityId,
             profile = profile,
             eventName = eventName,
             eventData = eventData,
@@ -113,15 +98,13 @@ class TrackingActivity : AppCompatActivity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" +
-                            "\nisSuccessful: $isSuccessful" +
-                            "\ncode: $code" +
-                            "\nresponse body: ${Gson().toJson(response)}"
+                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                        Gson().toJson(response)
+                    }"
             },
             onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
-            }
-        )
+            })
     }
 
     @SuppressLint("SetTextI18n")
@@ -154,28 +137,20 @@ class TrackingActivity : AppCompatActivity() {
         monitorEvent.profile = profile
         monitorEvent.eventName = "track_now_event"
         monitorEvent.eventData = hashMapOf(
-            "name" to "Loitp",
-            "bod" to "01/01/2000",
-            "player_id" to 123456
+            "name" to "Loitp", "bod" to "01/01/2000", "player_id" to 123456
         )
 
-        Analytics.trackEvent(
-            monitorEvent = monitorEvent,
-            onPreExecute = { input ->
-                printBeautyJson(input, tvInput)
-                tvOutput?.text = "Loading..."
-            },
-            onResponse = { isSuccessful, code, response ->
-                tvOutput?.text =
-                    "onResponse" +
-                            "\nisSuccessful: $isSuccessful" +
-                            "\ncode: $code" +
-                            "\nresponse body: ${Gson().toJson(response)}"
-            },
-            onFailure = { t ->
-                tvOutput?.text = "onFailure $t"
-            }
-        )
+        Analytics.trackEvent(monitorEvent = monitorEvent, onPreExecute = { input ->
+            printBeautyJson(input, tvInput)
+            tvOutput?.text = "Loading..."
+        }, onResponse = { isSuccessful, code, response ->
+            tvOutput?.text =
+                "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                    Gson().toJson(response)
+                }"
+        }, onFailure = { t ->
+            tvOutput?.text = "onFailure $t"
+        })
     }
 
     @SuppressLint("SetTextI18n")
@@ -208,8 +183,7 @@ class TrackingActivity : AppCompatActivity() {
             "ecommerce.items.0.flight_date" to "2022-09-23",
             "ecommerce.trip_route" to "SGN-HN",
         )
-        Analytics.trackEvent(
-            identityId = identityId,
+        Analytics.trackEvent(identityId = identityId,
             profile = profile,
             eventName = eventName,
             eventData = eventData,
@@ -219,15 +193,13 @@ class TrackingActivity : AppCompatActivity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" +
-                            "\nisSuccessful: $isSuccessful" +
-                            "\ncode: $code" +
-                            "\nresponse body: ${Gson().toJson(response)}"
+                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                        Gson().toJson(response)
+                    }"
             },
             onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
-            }
-        )
+            })
     }
 
     @SuppressLint("SetTextI18n")
@@ -262,8 +234,7 @@ class TrackingActivity : AppCompatActivity() {
             "profile.0.email" to "myemail@gmail.com",
             "profile.0.phone" to "0969696969",
         )
-        Analytics.trackEvent(
-            identityId = identityId,
+        Analytics.trackEvent(identityId = identityId,
             profile = profile,
             eventName = eventName,
             eventData = eventData,
@@ -273,15 +244,13 @@ class TrackingActivity : AppCompatActivity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" +
-                            "\nisSuccessful: $isSuccessful" +
-                            "\ncode: $code" +
-                            "\nresponse body: ${Gson().toJson(response)}"
+                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                        Gson().toJson(response)
+                    }"
             },
             onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
-            }
-        )
+            })
     }
 
     @SuppressLint("SetTextI18n")
@@ -330,8 +299,7 @@ class TrackingActivity : AppCompatActivity() {
             "ecommerce.items.2.quantity" to "1",
             "ecommerce.items.2.price" to "2000800",
         )
-        Analytics.trackEvent(
-            identityId = identityId,
+        Analytics.trackEvent(identityId = identityId,
             profile = profile,
             eventName = eventName,
             eventData = eventData,
@@ -341,15 +309,13 @@ class TrackingActivity : AppCompatActivity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" +
-                            "\nisSuccessful: $isSuccessful" +
-                            "\ncode: $code" +
-                            "\nresponse body: ${Gson().toJson(response)}"
+                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                        Gson().toJson(response)
+                    }"
             },
             onFailure = { t ->
                 tvOutput?.text = "onFailure $t"
-            }
-        )
+            })
     }
 
     private fun printBeautyJson(o: Any, textView: TextView?) {
