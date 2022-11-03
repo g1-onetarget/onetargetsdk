@@ -98,7 +98,7 @@ class TrackingActivity : Activity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                    "onResponse\nisSuccessful: $isSuccessful\ncode: $code" + "\nresponse body: ${
                         Gson().toJson(response)
                     }"
             },
@@ -145,7 +145,7 @@ class TrackingActivity : Activity() {
             tvOutput?.text = "Loading..."
         }, onResponse = { isSuccessful, code, response ->
             tvOutput?.text =
-                "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                "onResponse\nisSuccessful: $isSuccessful\ncode: $code" + "\nresponse body: ${
                     Gson().toJson(response)
                 }"
         }, onFailure = { t ->
@@ -193,7 +193,7 @@ class TrackingActivity : Activity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                    "onResponse\nisSuccessful: $isSuccessful\ncode: $code" + "\nresponse body: ${
                         Gson().toJson(response)
                     }"
             },
@@ -244,7 +244,7 @@ class TrackingActivity : Activity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                    "onResponse\nisSuccessful: $isSuccessful\ncode: $code" + "\nresponse body: ${
                         Gson().toJson(response)
                     }"
             },
@@ -309,7 +309,7 @@ class TrackingActivity : Activity() {
             },
             onResponse = { isSuccessful, code, response ->
                 tvOutput?.text =
-                    "onResponse" + "\nisSuccessful: $isSuccessful" + "\ncode: $code" + "\nresponse body: ${
+                    "onResponse\nisSuccessful: $isSuccessful\ncode: $code" + "\nresponse body: ${
                         Gson().toJson(response)
                     }"
             },
