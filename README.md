@@ -14,7 +14,7 @@ allprojects {
 **Step 2.**  Thêm dependency SDK ở file gradle (level app)
 ```css
 dependencies {
-    api 'com.github.g1-onetarget:onetargetsdk:1.3.1'
+    api 'com.github.g1-onetarget:onetargetsdk:1.3.2'
 }
 ```
 
