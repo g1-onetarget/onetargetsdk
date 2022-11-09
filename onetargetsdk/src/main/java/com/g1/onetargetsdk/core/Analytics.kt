@@ -90,7 +90,7 @@ class Analytics {
                 configuration?.deviceId?.let { deviceId ->
                     this["one_target_user_id"] = deviceId
                 }
-                OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                OS.getAppPushPlayerId()?.let { osUserId ->
                     this.put("app_push_player_id", osUserId)
                 }
                 monitorEvent.identityId?.let { map ->
@@ -106,7 +106,7 @@ class Analytics {
                     configuration?.deviceId?.let { deviceId ->
                         itemFirst["one_target_user_id"] = deviceId
                     }
-                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    OS.getAppPushPlayerId()?.let { osUserId ->
                         itemFirst.put("app_push_player_id", osUserId)
                     }
                     this.add(itemFirst)
@@ -117,7 +117,7 @@ class Analytics {
                     configuration?.deviceId?.let { deviceId ->
                         itemFirst.put("one_target_user_id", deviceId)
                     }
-                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    OS.getAppPushPlayerId()?.let { osUserId ->
                         itemFirst.put("app_push_player_id", osUserId)
                     }
                 }
@@ -170,7 +170,7 @@ class Analytics {
                 configuration?.deviceId?.let { deviceId ->
                     this.put("one_target_user_id", deviceId)
                 }
-                OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                OS.getAppPushPlayerId()?.let { osUserId ->
                     this.put("app_push_player_id", osUserId)
                 }
                 identityId?.let { map ->
@@ -185,7 +185,7 @@ class Analytics {
                     configuration?.deviceId?.let { deviceId ->
                         itemFirst.put("one_target_user_id", deviceId)
                     }
-                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    OS.getAppPushPlayerId()?.let { osUserId ->
                         itemFirst.put("app_push_player_id", osUserId)
                     }
                     this.add(itemFirst)
@@ -195,7 +195,7 @@ class Analytics {
                     configuration?.deviceId?.let { deviceId ->
                         itemFirst["one_target_user_id"] = deviceId
                     }
-                    OneSignal.getDeviceState()?.userId?.let { osUserId ->
+                    OS.getAppPushPlayerId()?.let { osUserId ->
                         itemFirst["app_push_player_id"] = osUserId
                     }
                 }

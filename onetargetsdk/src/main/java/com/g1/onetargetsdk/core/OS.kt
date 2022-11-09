@@ -1,6 +1,7 @@
 package com.g1.onetargetsdk.core
 
 import android.content.Context
+import com.g1.onetargetsdk.common.Utils
 import com.onesignal.OneSignal
 
 /**
@@ -24,6 +25,12 @@ class OS {
             // promptForPushNotifications will show the native Android notification permission prompt.
             // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
             OneSignal.promptForPushNotifications()
+        }
+
+        fun getAppPushPlayerId(): String? {
+            val userId = OneSignal.getDeviceState()?.userId
+            Utils.logE("OS", ">>>getAppPushPlayerId userId $userId")
+            return userId
         }
     }
 
