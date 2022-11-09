@@ -7,7 +7,6 @@ import com.g1.onetargetsdk.model.request.RequestTrack
 import com.g1.onetargetsdk.services.OneTargetService
 import com.g1.onetargetsdk.services.RetrofitClient
 import com.google.gson.Gson
-import com.onesignal.OneSignal
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,7 +86,7 @@ class Analytics {
         ) {
             val tmpIdentityId = hashMapOf<String, Any>()
             tmpIdentityId.apply {
-                configuration?.deviceId?.let { deviceId ->
+                OS.getDeviceId(configuration)?.let { deviceId ->
                     this["one_target_user_id"] = deviceId
                 }
                 OS.getAppPushPlayerId()?.let { osUserId ->
@@ -103,7 +102,7 @@ class Analytics {
                 val tmpProfile = ArrayList<HashMap<String, Any>>()
                 tmpProfile.apply {
                     val itemFirst = hashMapOf<String, Any>()
-                    configuration?.deviceId?.let { deviceId ->
+                    OS.getDeviceId(configuration)?.let { deviceId ->
                         itemFirst["one_target_user_id"] = deviceId
                     }
                     OS.getAppPushPlayerId()?.let { osUserId ->
@@ -114,7 +113,7 @@ class Analytics {
                 }
             } else {
                 monitorEvent.profile?.firstOrNull()?.let { itemFirst ->
-                    configuration?.deviceId?.let { deviceId ->
+                    OS.getDeviceId(configuration)?.let { deviceId ->
                         itemFirst.put("one_target_user_id", deviceId)
                     }
                     OS.getAppPushPlayerId()?.let { osUserId ->
@@ -167,7 +166,7 @@ class Analytics {
 
             val tmpIdentityId = hashMapOf<String, Any>()
             tmpIdentityId.apply {
-                configuration?.deviceId?.let { deviceId ->
+                OS.getDeviceId(configuration)?.let { deviceId ->
                     this.put("one_target_user_id", deviceId)
                 }
                 OS.getAppPushPlayerId()?.let { osUserId ->
@@ -182,7 +181,7 @@ class Analytics {
             tmpProfile.apply {
                 if (profile.isNullOrEmpty()) {
                     val itemFirst = hashMapOf<String, Any>()
-                    configuration?.deviceId?.let { deviceId ->
+                    OS.getDeviceId(configuration)?.let { deviceId ->
                         itemFirst.put("one_target_user_id", deviceId)
                     }
                     OS.getAppPushPlayerId()?.let { osUserId ->
@@ -192,7 +191,7 @@ class Analytics {
                 } else {
                     this.addAll(profile)
                     val itemFirst = profile.first()
-                    configuration?.deviceId?.let { deviceId ->
+                    OS.getDeviceId(configuration)?.let { deviceId ->
                         itemFirst["one_target_user_id"] = deviceId
                     }
                     OS.getAppPushPlayerId()?.let { osUserId ->

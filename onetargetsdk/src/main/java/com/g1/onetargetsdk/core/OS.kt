@@ -32,6 +32,15 @@ class OS {
             Utils.logE("OS", ">>>getAppPushPlayerId userId $userId")
             return userId
         }
+
+        fun getDeviceId(configuration: Configuration?): String? {
+            val appPushPlayerId = getAppPushPlayerId()
+            return if (appPushPlayerId.isNullOrEmpty()) {
+                configuration?.deviceId
+            } else {
+                appPushPlayerId
+            }
+        }
     }
 
 }
