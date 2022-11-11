@@ -34,12 +34,12 @@ class Analytics {
             }
             Companion.configuration = configuration
 
-            val resultSetupIAM = IAM.setup(configuration = configuration, context = context)
-            Utils.logD(logTag, "resultSetupIAM $resultSetupIAM")
-
             configuration.oneTargetAppPushID?.let { id ->
                 OS.setup(context = context, appId = id)
             }
+
+            val resultSetupIAM = IAM.setup(configuration = configuration, context = context)
+            Utils.logD(logTag, "resultSetupIAM $resultSetupIAM")
 
             return resultSetupIAM
         }

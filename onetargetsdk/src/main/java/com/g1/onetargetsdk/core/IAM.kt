@@ -120,7 +120,7 @@ class IAM {
             }
 
             Companion.configuration = configuration
-            onMsg("setup configuration deviceId: ${configuration.deviceId}")
+            onMsg("setup configuration deviceId: ${OS.getDeviceId(configuration)}")
             if (configuration.isEnableIAM) {
 
                 fun doLongPolling(c: Context) {
@@ -318,7 +318,7 @@ class IAM {
             }
             countApiPolling++
             val workSpaceId = configuration?.writeKey
-            val identityId = configuration?.deviceId
+            val identityId = OS.getDeviceId(configuration)
             if (workSpaceId.isNullOrEmpty() || identityId.isNullOrEmpty()) {
                 return
             }
