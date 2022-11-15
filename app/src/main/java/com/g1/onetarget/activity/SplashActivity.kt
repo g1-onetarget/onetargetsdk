@@ -49,6 +49,7 @@ class SplashActivity : Activity() {
         configuration.writeKey = C.getWorkSpaceId()
         configuration.isShowLog = true
         configuration.isEnableIAM = true
+        configuration.oneTargetAppPushID = C.getOneSignalAppId()
         configuration.onShowIAM = { htmlContent: String, iamData: IAMData ->
             IAM.showIAMDialog(activity = this, htmlContent = htmlContent, iamData = iamData)
         }
