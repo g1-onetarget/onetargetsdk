@@ -14,7 +14,7 @@ allprojects {
 **Step 2.**  Thêm dependency SDK ở file gradle (level app)
 ```css
 dependencies {
-    api 'com.github.g1-onetarget:onetargetsdk:1.3.4'
+    api 'com.github.g1-onetarget:onetargetsdk:1.3.5'
 }
 ```
 
@@ -28,7 +28,6 @@ Sau đó,  sync lại project.
 ```css
     private fun setupSDK() {
         val configuration = Configuration(this)
-        configuration.setEnvironmentProd()
         configuration.writeKey = "enter your workspace id"
         configuration.isShowLog = false
         configuration.isEnableIAM = true

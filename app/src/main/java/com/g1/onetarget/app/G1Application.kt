@@ -25,18 +25,18 @@ class G1Application : Application() {
     }
 
     private fun setupSDK() {
-        C.setEnv(C.DEV)
+//        C.setEnv(C.DEV)
 //        C.setEnv(C.STAG)
-//        C.setEnv(C.PROD)
+        C.setEnv(C.PROD)
 
         val configuration = Configuration(this)
-        if (C.isEnvDev()) {
-            configuration.setEnvironmentDev()
-        } else if (C.isEnvStag()) {
-            configuration.setEnvironmentStag()
-        } else if (C.isEnvProd()) {
-            configuration.setEnvironmentProd()
-        }
+//        if (C.isEnvDev()) {
+//            configuration.setEnvironmentDev()
+//        } else if (C.isEnvStag()) {
+//            configuration.setEnvironmentStag()
+//        } else if (C.isEnvProd()) {
+//            configuration.setEnvironmentProd()
+//        }
         configuration.writeKey = C.getWorkSpaceId()
         configuration.isShowLog = true
         configuration.isEnableIAM = true
