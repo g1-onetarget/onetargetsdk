@@ -14,6 +14,7 @@ import retrofit2.http.*
  */
 interface OneTargetService {
 
+    @Suppress("unused")
     @GET("/")
     fun trackGet(
         @Query("workspace_id") workspaceId: String?,
@@ -26,6 +27,11 @@ interface OneTargetService {
 
     @POST("/")
     fun trackPost(
+        @Body body: RequestTrack
+    ): Call<Void>
+
+    @POST("/tracking/tracking/events/")
+    fun trackPostStg(
         @Body body: RequestTrack
     ): Call<Void>
 

@@ -252,20 +252,37 @@ class Analytics {
             requestTrack.event_date = eventDate
             requestTrack.eventData = jsonEventData
 
-            service()?.trackPost(
-                requestTrack
-            )?.enqueue(object : Callback<Void> {
-                override fun onResponse(
-                    call: Call<Void>,
-                    response: Response<Void>
-                ) {
-                    onResponse?.invoke(response.isSuccessful, response.code(), response.body())
-                }
+            if (configuration?.isEnvStag() == true) {
+                service()?.trackPostStg(
+                    body = requestTrack
+                )?.enqueue(object : Callback<Void> {
+                    override fun onResponse(
+                        call: Call<Void>,
+                        response: Response<Void>
+                    ) {
+                        onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+                    }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    onFailure?.invoke(t)
-                }
-            })
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        onFailure?.invoke(t)
+                    }
+                })
+            } else {
+                service()?.trackPost(
+                    body = requestTrack
+                )?.enqueue(object : Callback<Void> {
+                    override fun onResponse(
+                        call: Call<Void>,
+                        response: Response<Void>
+                    ) {
+                        onResponse?.invoke(response.isSuccessful, response.code(), response.body())
+                    }
+
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        onFailure?.invoke(t)
+                    }
+                })
+            }
         }
     }
 }

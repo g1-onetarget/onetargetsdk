@@ -17,7 +17,7 @@ class Configuration(context: Context) {
         const val BASE_URL_TRACKING_DEV = "https://dev-pixel.cdp.link/"
 
         //https://app-stag.onetarget.vn/
-        const val BASE_URL_TRACKING_STAG = "https://pixel-stag.onetarget.vn/"
+        const val BASE_URL_TRACKING_STAG = "https://api-stag.onetarget.vn/"
         const val BASE_URL_TRACKING_PROD = "https://pixel.cdp.link/"
 
         const val BASE_URL_IAM_DEV = "https://api-dev.predict.marketing/"
@@ -68,6 +68,10 @@ class Configuration(context: Context) {
 
     fun getBaseUrlIAM(): String {
         return baseUrlIAM
+    }
+
+    fun isEnvStag(): Boolean {
+        return this.baseUrlTracking == BASE_URL_TRACKING_STAG && this.baseUrlIAM == BASE_URL_IAM_STAG
     }
 
 }
